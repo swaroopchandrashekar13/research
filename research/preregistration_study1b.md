@@ -2,10 +2,10 @@
 
 | Field | Value |
 |---|---|
-| Version | **1.0 (frozen)** — frozen 2026-10-19 after the exploratory pilot, approved by the researcher. v0.1 (hypotheses, before any code or data) → v0.2 (§3.5 implementation details, before any pilot output) → v1.0 (H5b added as a disclosed post-pilot amendment, §9). The freeze reference is the commit that introduces this line |
+| Version | **1.0 (frozen)** — frozen 2026-10-19 after the exploratory pilot, approved by the researcher. v0.1 (hypotheses, before any code or data) → v0.2 (§3.5 implementation details, before any pilot output) → v1.0 (H5b added as a disclosed post-pilot amendment, §9). [Freeze reference removed 2026-10-24: it pointed to version history that is no longer available; see docs/repair/HASH_REDACTIONS.md] |
 | Pilot disclosure | Exploratory pilot run on the 20% exploratory split only (`experiments/E3_semantic_dense/PILOT_MEMO.md`). The confirmatory split had not been touched when this version was frozen |
 | Date | drafted 2026-10-19, before any Study 1b code or data exists |
-| Relation to Study 1 | Extension. Study 1 (E1, pre-registration v1.0, frozen at `eb1de3c`) is complete and unchanged. Same datasets, splits, metrics, statistics and thresholds wherever possible, so results are comparable |
+| Relation to Study 1 | Extension. Study 1 (E1, pre-registration v1.0, frozen at [unresolvable commit reference removed 2026-10-24]) is complete and unchanged. Same datasets, splits, metrics, statistics and thresholds wherever possible, so results are comparable |
 | Motivation | (1) The protocol audit (provisional) found the most-cited semantic-vs-fixed comparison (Qu et al., NAACL Findings 2025) and 8 other papers compare arms of different chunk length at a fixed number of chunks. (2) Study 1 used lexical retrieval only; semantic chunkers are used with dense retrievers in practice. (3) Tier 2 found the retrieval reversal did **not** carry over to answer F1 for one 4B reader, so Study 1b is framed as a study of *retrieval-evaluation* protocols |
 | Authors | Researcher (PI); AI research assistant (drafting) |
 

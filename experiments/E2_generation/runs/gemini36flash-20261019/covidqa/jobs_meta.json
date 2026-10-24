@@ -70,7 +70,7 @@
   "temperature": 0.0,
   "seed": 7,
   "max_output_tokens": 256,
-  "git": "ed81702124bb35c96ca6918a7eac2d78026301df-dirty",
+  "git": "redacted: unresolvable historical Git commit (working tree was dirty)",
   "git_status": [
     "?? experiments/E2_generation/runs/"
   ],

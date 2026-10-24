@@ -79,7 +79,7 @@
   "temperature": 0.0,
   "seed": 7,
   "max_output_tokens": 256,
-  "git": "90ec24ee87a244fb4650caf6fe09e747ff826c13",
+  "git": "redacted: unresolvable historical Git commit",
   "git_status": [],
   "started_utc": "2026-10-19T07:30:40Z",
   "mean_context_words": 1183.105

@@ -1,9 +1,13 @@
 # Study 1b (E3) confirmatory results — semantic chunking and dense retrieval
 
-*2026-10-19 · pre-registration `research/preregistration_study1b.md` v1.0, frozen at `20502db` (decision 033) · run
-`runs/confirmatory-kaggle-gpu` (Kaggle Tesla T4, commit `0232e47`, clean tree; bge-m3 `5617a9f6` fp16) · analysis
-`analysis/confirmatory-kaggle-gpu` · 9,253 confirmatory queries (SQuAD 2.0 4,744 · COVID-QA 1,771 · CUAD 996 ·
-Qasper 1,742), never seen by the pilot.*
+*2026-10-19 · pre-registration `research/preregistration_study1b.md` v1.0 · run `runs/confirmatory-kaggle-gpu`
+(Kaggle Tesla T4, clean tree; bge-m3 revision `5617a9f6` fp16) · analysis `analysis/confirmatory-kaggle-gpu` · 9,253
+confirmatory queries (SQuAD 2.0 4,744 · COVID-QA 1,771 · CUAD 996 · Qasper 1,742), never seen by the pilot.*
+
+> **Provenance note (2026-10-24).** The project commit identifiers originally cited for the freeze and the run are
+> unresolvable (the original version history is no longer available) and were removed; see
+> `docs/repair/HASH_REDACTIONS.md`. The freeze chronology therefore cannot be independently verified. The decision
+> log this summary originally referred to is not in the repository.
 
 ## Integrity checks (before reading results)
 - All manifests `ok`; query lists equal the confirmatory split (the same 9,253 queries as Study 1).

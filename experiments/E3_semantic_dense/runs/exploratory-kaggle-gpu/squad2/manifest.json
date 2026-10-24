@@ -38,7 +38,7 @@
   },
   "config_sha256": "e7cc2bcd39772e6d233aa1dcdd010e075956c3a43a7034a47a884fc1d8b93602",
   "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16",
-  "git": "8ce22c78d09ff4b1d65952930219796e00ebac76",
+  "git": "redacted: unresolvable historical Git commit",
   "git_status": [],
   "versions": {
     "python": "3.13.15",

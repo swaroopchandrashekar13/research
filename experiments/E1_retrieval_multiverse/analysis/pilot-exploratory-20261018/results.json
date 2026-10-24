@@ -1490,22 +1490,22 @@
   "label": "EXPLORATORY",
   "source_manifests": {
     "squad2": {
-      "git": "acd6937c6a698a939d529a7cd157afabb9cc2060-dirty",
+      "git": "redacted: unresolvable historical Git commit (working tree was dirty)",
       "config_sha256": "d2d656e49d3ee8f81120c17dda57126a4b877e2a998e77d995d36c09dc209625",
       "started_utc": "2026-10-18T11:35:56+00:00"
     },
     "covidqa": {
-      "git": "acd6937c6a698a939d529a7cd157afabb9cc2060-dirty",
+      "git": "redacted: unresolvable historical Git commit (working tree was dirty)",
       "config_sha256": "7c1a2d444aa720c9c169223390e2ef5a2a52e8256db4804913875d8099dadd6e",
       "started_utc": "2026-10-18T11:36:20+00:00"
     },
     "cuad": {
-      "git": "acd6937c6a698a939d529a7cd157afabb9cc2060-dirty",
+      "git": "redacted: unresolvable historical Git commit (working tree was dirty)",
       "config_sha256": "eadb0385cd6927399a9e04cf1e86df30b45c8cc448aef3145eb8c675cea8bba1",
       "started_utc": "2026-10-18T11:36:49+00:00"
     },
     "qasper": {
-      "git": "acd6937c6a698a939d529a7cd157afabb9cc2060-dirty",
+      "git": "redacted: unresolvable historical Git commit (working tree was dirty)",
       "config_sha256": "9ff1dce295434f08acab25279910a50d774fc53c86cfb4babc0337d900334f82",
       "started_utc": "2026-10-18T11:37:23+00:00"
     }

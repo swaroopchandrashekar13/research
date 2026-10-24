@@ -1,7 +1,12 @@
 # E1 confirmatory results
 
-*2026-10-18 · pre-registration v1.0 frozen at commit `eb1de3c` (decision 013/014) · run `runs/confirmatory-20261018`
-(all four manifests: commit `eb1de3c`, empty `git status`) · analysis `analysis/confirmatory-20261018`*
+*2026-10-18 · pre-registration v1.0 (`research/preregistration.md`) · run `runs/confirmatory-20261018` (all four
+manifests: status `ok`, empty `git status`) · analysis `analysis/confirmatory-20261018`*
+
+> **Provenance note (2026-10-24).** The original version-control history of this project is no longer available. The
+> commit identifiers this summary and the run manifests originally cited cannot be resolved and were removed (see
+> `docs/repair/HASH_REDACTIONS.md`). The freeze chronology stated in the pre-registration therefore cannot be
+> independently verified. Content digests of the surviving files are recorded in `docs/repair/`.
 
 **Data:** confirmatory split (80% of documents, never seen by the pilot): SQuAD 2.0 4,744 · COVID-QA 1,771 ·
 CUAD 996 · Qasper 1,742 = **9,253 queries**. 16 chunkings × 16 BM25 configurations × admissible operating

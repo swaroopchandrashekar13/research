@@ -61,7 +61,7 @@
     "split_frac_exploratory": 0.2
   },
   "config_sha256": "9ff1dce295434f08acab25279910a50d774fc53c86cfb4babc0337d900334f82",
-  "git": "acd6937c6a698a939d529a7cd157afabb9cc2060-dirty",
+  "git": "redacted: unresolvable historical Git commit (working tree was dirty)",
   "versions": {
     "python": "3.13.16",
     "numpy": "2.5.3",

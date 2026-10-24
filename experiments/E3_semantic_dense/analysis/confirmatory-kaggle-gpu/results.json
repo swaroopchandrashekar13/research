@@ -688,25 +688,25 @@
   "label": "CONFIRMATORY",
   "source_manifests": {
     "squad2": {
-      "git": "0232e47a1c1d1b1cf3c3df9c0a0e91e81635ccaf",
+      "git": "redacted: unresolvable historical Git commit",
       "config_sha256": "d710251858556dea2b88464fcfe3a8e0db7cee7e2f62d7f3c3db8c5aa701dc27",
       "started_utc": "2026-10-19T18:17:10+00:00",
       "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"
     },
     "covidqa": {
-      "git": "0232e47a1c1d1b1cf3c3df9c0a0e91e81635ccaf",
+      "git": "redacted: unresolvable historical Git commit",
       "config_sha256": "57db4d13954f18f2b8b7bab2aad0a90098203e508eacb55715ab68248588ad4f",
       "started_utc": "2026-10-19T18:19:22+00:00",
       "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"
     },
     "cuad": {
-      "git": "0232e47a1c1d1b1cf3c3df9c0a0e91e81635ccaf",
+      "git": "redacted: unresolvable historical Git commit",
       "config_sha256": "761aa335d5256c7df29429cd4867f5790b9d2dbe0499bf3a8484af50902e4a9c",
       "started_utc": "2026-10-19T18:26:10+00:00",
       "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"
     },
     "qasper": {
-      "git": "0232e47a1c1d1b1cf3c3df9c0a0e91e81635ccaf",
+      "git": "redacted: unresolvable historical Git commit",
       "config_sha256": "dbee6eb4ccd15d88d620ff775d2ef5b33e5ac1cf4d1a04d848005bc7010b0e7c",
       "started_utc": "2026-10-19T18:33:30+00:00",
       "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"

@@ -10,8 +10,10 @@
 ## What ran
 - 4 datasets × 16 chunkings × 16 BM25 configurations × 9 operating points × 3 metrics; exploratory queries: SQuAD 1,184 · COVID-QA 248 · CUAD 248 · Qasper 460.
 - Wall-clock ≈ 3 min total on 4 vCPU (Qasper 104 s); peak RSS ≈ 350 MiB. Analysis ≈ 20 s.
-- Code: commit `acd6937` (manifests are flagged `-dirty` only because `analyze.py`/`figures.py` were untracked
-  new files during the run; run code was committed). Later runs record the exact `git status`.
+- Code: the manifests are flagged dirty because `analyze.py`/`figures.py` were untracked new files during the run.
+  Later runs record the exact `git status`. (The commit identifier originally cited here is unresolvable; the
+  original history is no longer available and the identifier was removed on 2026-10-24, see
+  `docs/repair/HASH_REDACTIONS.md`.)
 
 ## Exploratory results (as computed by `ragmv.analyze`)
 | ID | Estimate | 95% CI | Pre-registered threshold | Would-be verdict |

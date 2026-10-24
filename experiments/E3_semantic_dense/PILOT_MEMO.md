@@ -1,8 +1,12 @@
 # Study 1b pilot memo (EXPLORATORY split only)
 
-*2026-10-19 · run `runs/exploratory-kaggle-gpu` (Kaggle, Tesla T4, commit `8ce22c7`, clean tree; bge-m3
-`5617a9f6` fp16; torch 2.14.1 / transformers 5.20.1 / sentence-transformers 6.1.0) · analysis
-`analysis/exploratory-kaggle-gpu` · pre-registration v0.2. The confirmatory split has not been touched.*
+*2026-10-19 · run `runs/exploratory-kaggle-gpu` (Kaggle, Tesla T4, clean tree; bge-m3 revision `5617a9f6` fp16;
+torch 2.14.1 / transformers 5.20.1 / sentence-transformers 6.1.0) · analysis `analysis/exploratory-kaggle-gpu` ·
+pre-registration v0.2. The confirmatory split has not been touched.*
+
+> **Provenance note (2026-10-24).** The project commit identifier originally cited for this run is unresolvable (the
+> original version history is no longer available) and was removed; see `docs/repair/HASH_REDACTIONS.md`. The model
+> revision of bge-m3 is a Hugging Face model identifier and is kept.
 
 ## Purpose
 Runtime, chunk statistics and implementation checks before freezing (pre-registration §6). Hypothesis estimates below
@@ -47,5 +51,5 @@ at equal budget semantic wins 8% and fixed 67%. The common "semantic beats small
 With the dense retriever, fixed-512 rarely wins even under count-matched selection (8% of universes; BM25 in Study 1:
 79%), so a drop in *its* share cannot reach 20 pp. The protocol effect is large on the other side: the share favouring
 fixed-128 rises from 31% (count) to 92% (budget). As worded, H5 tests the wrong side of the contrast for this retriever.
-Options for the researcher before freezing are in STATE.md (decision G3-freeze). Whatever is chosen is logged as a
+Options for the researcher before freezing were recorded in a project state file that is not in this repository. Whatever is chosen is logged as a
 **post-pilot amendment** in the pre-registration's deviation log.

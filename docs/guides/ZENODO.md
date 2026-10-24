@@ -4,18 +4,17 @@ Zenodo archives a **GitHub release** and gives it a DOI. Archived files can neve
 metadata (authors, description, licence) can be edited later. So: get the repository right first, then release.
 
 ## Before the first release
-1. **Move the repository first, if you plan to, and keep its history.** A ZIP download/upload drops every commit,
-   including the dated pre-registration freezes (`eb1de3c`, `20502db`). Instead, while logged in to the destination
-   account, use GitHub's importer (<https://github.com/new/import>): paste
-   `https://github.com/swaroopchandrashekar13/reasearch.git` as the source, choose a new repository name, set it to
-   Public and start the import (full history and branches are copied). Or, with git on any computer:
-   `git clone --mirror https://github.com/swaroopchandrashekar13/reasearch.git` then, inside `reasearch.git`,
-   `git push --mirror https://github.com/<new-account>/<new-repo>.git` (create the empty repository first).
-   Then update `repository-code` in `CITATION.cff`, enable Zenodo for the **new** repository, and keep the old one
-   public and unchanged (its history is also evidence).
+1. **Repository and history.** The current repository is `https://github.com/swaroopchandrashekar13/research`. The
+   project's original version history is no longer available, so no earlier commit can serve as a timestamp for the
+   pre-registrations; do not cite historical commit identifiers anywhere (they were removed on 2026-10-24, see
+   `docs/repair/HASH_REDACTIONS.md`). The archived snapshot is identified by its release, its DOI (once Zenodo issues
+   one) and the SHA-256 content digests in `docs/repair/`.
 2. **Author:** Swaroop Chand J C (cited as "Chand J C, S."). Add your ORCID iD to `CITATION.cff` and `.zenodo.json`
-   when you have one (free at <https://orcid.org>).
-3. Check the metadata: `cffconvert --validate` and `python -c "import json; json.load(open('.zenodo.json'))"`.
+   only when you have one (free at <https://orcid.org>); never add a placeholder.
+3. **Release blockers.** Resolve the items listed under "Release blockers" in `docs/repair/REPAIR_REPORT.md`
+   (in particular third-party text in `generations.jsonl`, see `LICENSE-DATA.md`) before making a public release.
+4. Check the metadata: `cffconvert --validate` (if installed) and
+   `python -I -c "import json; json.load(open('.zenodo.json'))"`; `python -I tools/validate_artifacts.py`.
 
 ## Enable Zenodo (one time, in the browser)
 1. <https://zenodo.org> → **Log in** → **Log in with GitHub** (authorise the Zenodo app).

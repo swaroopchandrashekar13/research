@@ -1,8 +1,12 @@
 # E2 Tier 2 results — answer quality (EXPLORATORY)
 
 *2026-10-19 · plan `ANALYSIS_PLAN.md` (written before any job) · run `runs/qwen3-4b-kaggle-gpu` (Kaggle, Tesla T4,
-llama-cpp-python 0.3.36 CUDA, commit `089e9a4`, clean tree) · analysis `analysis/qwen3-4b-kaggle-gpu` · this is the
-analysed run under decision 029 (first complete run).*
+llama-cpp-python 0.3.36 CUDA, clean tree) · analysis `analysis/qwen3-4b-kaggle-gpu` · this is the analysed run under
+the "first complete run" rule in `research/preregistration.md` §8.*
+
+> **Provenance note (2026-10-24).** The commit identifier originally cited for this run is unresolvable (the original
+> version history is no longer available) and was removed; see `docs/repair/HASH_REDACTIONS.md`. The decision log
+> this summary originally referred to is not in the repository.
 
 **Not part of the frozen confirmatory hypotheses (H1–H3); it cannot change their verdicts.**
 
