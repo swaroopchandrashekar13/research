@@ -1,0 +1,4 @@
+# Study 1b semantic chunkers and dense retrieval (bge-m3) only; a GPU is needed in practice.
+torch==2.14.1
+transformers==5.20.1
+sentence-transformers==6.1.0

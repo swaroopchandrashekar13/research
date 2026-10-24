@@ -1,0 +1,4 @@
+# Tier 2 answer generation only (ragmv.generate). llama-cpp-python builds from source (no wheels on PyPI).
+google-genai==2.31.0
+llama-cpp-python==0.3.36
+huggingface_hub==2.2.0

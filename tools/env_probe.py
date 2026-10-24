@@ -1,6 +1,9 @@
 """Record the execution environment so every experiment can cite the hardware and software it ran on.
 
-Usage: python tools/env_probe.py [--out env/environment.json]
+Usage: python tools/env_probe.py --out <new file> [--no-network] [--overwrite]
+
+`env/environment.json` is the historical record of the environment the Study 1 runs used; the probe refuses to
+overwrite an existing file unless --overwrite is given, so write new probes to a new path.
 
 Network reachability is probed with short HTTPS requests; a host counts as reachable
 only if it answers with any HTTP status (proxy denials surface as connection errors).
@@ -86,11 +89,14 @@ def probe(check_network: bool = True) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--out", default="env/environment.json")
+    parser.add_argument("--out", required=True, help="new output file (existing files are not overwritten)")
     parser.add_argument("--no-network", action="store_true")
+    parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
-    info = probe(check_network=not args.no_network)
     out = Path(args.out)
+    if out.exists() and not args.overwrite:
+        parser.error(f"{out} exists (it may be a historical record); choose a new --out or pass --overwrite")
+    info = probe(check_network=not args.no_network)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(info, indent=2) + "\n")
     print(json.dumps(info, indent=2))

@@ -1,0 +1,10 @@
+# Core analysis, retrieval and figure dependencies (the versions that produced the stored results).
+# Install the package itself afterwards with: python -m pip install --no-deps -e .
+numpy==2.5.3
+PyYAML==6.0.1
+bm25s==0.2.13
+PyStemmer==2.2.0.3
+scipy==1.18.1
+statsmodels==0.15.0
+pandas==3.0.5
+matplotlib==3.11.2

@@ -6,7 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "ragmv"
 version = "0.1.0"
 description = "Multiverse analysis of chunking comparisons in retrieval-augmented generation"
-requires-python = ">=3.11"
+# numpy 2.5.3 and scipy 1.18.1 (the pinned versions that produced the results) require Python >= 3.12.
+requires-python = ">=3.12"
 dependencies = [
   "numpy==2.5.3",
   "PyYAML==6.0.1",
@@ -14,8 +15,14 @@ dependencies = [
   "PyStemmer==2.2.0.3",
   "scipy==1.18.1",
   "statsmodels==0.15.0",
+  "pandas==3.0.5",
   "matplotlib==3.11.2",
 ]
+
+[project.optional-dependencies]
+test = ["pytest==8.3.3"]
+generation = ["google-genai==2.31.0", "llama-cpp-python==0.3.36", "huggingface_hub==2.2.0"]
+dense = ["torch==2.14.1", "transformers==5.20.1", "sentence-transformers==6.1.0"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
