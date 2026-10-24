@@ -103,6 +103,71 @@
       "universes_with_a_CI_bound_within_2^-11_of_zero": 673,
       "universes_total": 24960
     },
+    "H5_seed_sensitivity": {
+      "label": "POST-HOC: per-universe verdict bootstrap seed varied; seed 7 is pre-registered",
+      "by_seed": {
+        "7": {
+          "H5": 0.19444444444444445,
+          "H5b": 0.5833333333333333,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "1": {
+          "H5": 0.21527777777777776,
+          "H5b": 0.5833333333333333,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "2": {
+          "H5": 0.21527777777777776,
+          "H5b": 0.5347222222222221,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "3": {
+          "H5": 0.21527777777777776,
+          "H5b": 0.5833333333333333,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "4": {
+          "H5": 0.24305555555555552,
+          "H5b": 0.5833333333333333,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "5": {
+          "H5": 0.21527777777777776,
+          "H5b": 0.5833333333333333,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "6": {
+          "H5": 0.21527777777777776,
+          "H5b": 0.5555555555555556,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "8": {
+          "H5": 0.24305555555555552,
+          "H5b": 0.5833333333333333,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "9": {
+          "H5": 0.24305555555555552,
+          "H5b": 0.5833333333333333,
+          "universes_count": 48,
+          "universes_budget": 36
+        },
+        "10": {
+          "H5": 0.21527777777777776,
+          "H5b": 0.5555555555555556,
+          "universes_count": 48,
+          "universes_budget": 36
+        }
+      }
+    },
     "tier2_mde": {
       "P1/f1": {
         "stored_pooled_sd": 0.06833540959970544,

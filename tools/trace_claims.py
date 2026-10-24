@@ -145,6 +145,10 @@ def table() -> dict[str, tuple[str, str]]:
     add("AuditExposedLo", pct(c - h), "Wilson 95% lower bound")
     add("AuditExposedHi", pct(c + h), "Wilson 95% upper bound")
     sv = j("SV")["posthoc"]
+    h5 = [v["H5"] for s, v in sv["H5_seed_sensitivity"]["by_seed"].items() if s != "7"]
+    add("HFiveSeedMin", pct(min(h5)), f"{P['SV']}: min posthoc.H5_seed_sensitivity (seeds != 7) (POST-HOC)")
+    add("HFiveSeedMax", pct(max(h5)), f"{P['SV']}: max posthoc.H5_seed_sensitivity (seeds != 7) (POST-HOC)")
+    add("HFiveSeedN", str(len(h5)), f"{P['SV']}: number of alternative seeds (POST-HOC)")
     add("SensBHPooledEst", pct(sv["BH_family_P1"]["pooled_over_datasets"]), f"{P['SV']}: posthoc.BH_family_P1.pooled_over_datasets (POST-HOC)")
     add("EtwoPoneFoneMdeStrat", f"{sv['tier2_mde']['P1/f1']['equal_weight_estimand']:.3f}", f"{P['SV']}: posthoc.tier2_mde['P1/f1'] (POST-HOC)")
     for key, d in (("PosthocEquivElements", "PH1"), ("PosthocEquivElementsB", "PH3")):

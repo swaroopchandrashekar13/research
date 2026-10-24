@@ -268,6 +268,19 @@ def study1(run_dir: Path, results: dict, checks: list, post: dict) -> None:
 
 
 # ------------------------------------------------------------------------------------------------ Study 1b
+def study1b_seed_sensitivity(run_dir: Path, post: dict, seeds=(1, 2, 3, 4, 5, 6, 8, 9, 10)) -> None:
+    """POST-HOC: H5/H5b point estimates under other verdict-bootstrap seeds (the plan fixes seed 7)."""
+    run = load_run(run_dir)
+    out = {}
+    for seed in (7,) + tuple(seeds):
+        v = {p: [percentile_verdicts(diffs(run, d, "fixed-128", "fixed-512", p, 512, ["dense"]), seed=seed)[0]
+                 for d in DATASETS] for p in ("count", "budget")}
+        c, b = shares(v["count"]), shares(v["budget"])
+        out[seed] = {"H5": c["B"] - b["B"], "H5b": b["A"] - c["A"], "universes_count": c["n"], "universes_budget": b["n"]}
+    post["H5_seed_sensitivity"] = {"label": "POST-HOC: per-universe verdict bootstrap seed varied; seed 7 is pre-registered",
+                                   "by_seed": out}
+
+
 def study1b(run_dir: Path, results: dict, checks: list) -> None:
     run = load_run(run_dir)
     lengths = {d: {s["chunking"]: s["chunk_words_mean"] for s in run[d]["manifest"]["chunk_stats"]} for d in DATASETS}
@@ -364,6 +377,7 @@ def main(argv=None) -> int:
     checks, post = [], {}
     study1(E1 / "runs/confirmatory-20261018", json.loads((E1 / "analysis/confirmatory-20261018/results.json").read_text()), checks, post)
     study1b(E3 / "runs/confirmatory-kaggle-gpu", json.loads((E3 / "analysis/confirmatory-kaggle-gpu/results.json").read_text()), checks)
+    study1b_seed_sensitivity(E3 / "runs/confirmatory-kaggle-gpu", post)
     tier2(json.loads((E2 / "analysis/qwen3-4b-kaggle-gpu/results.json").read_text()), checks, post)
     Path(args.out_json).write_text(json.dumps({"checks": checks, "posthoc": post}, indent=2))
     lines = ["| Status | Check | Detail |", "|---|---|---|"]

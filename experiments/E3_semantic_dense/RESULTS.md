@@ -37,7 +37,10 @@ bootstrap 58.7 pp [50.0, 63.3] · all budgets 53.7 pp [49.7, 60.9] · BM25 only 
   an interpretation, not an identified mechanism.
 - **The effect holds with a dense retriever** (H4 dense-only 49.8 pp; H5b 58.3 pp). With bge-m3 large chunks are
   weaker even at equal k, so H5's fixed-512 share has little room to fall — the pilot predicted this floor, and H5 is
-  inconclusive, not falsified. Reported as pre-registered.
+  inconclusive, not falsified. Reported as pre-registered. *Post-hoc check (2026-10-24): the H5 verdict is
+  sensitive to Monte-Carlo error — with nine other verdict-bootstrap seeds the estimate is 21.5–24.3 pp, which would
+  meet the support rule (only 48 and 36 dense P1 universes; `docs/repair/statistical_verification.json`). The
+  pre-specified seed 7 gives 19.4 pp; H5 is best read as unresolved.*
 
 ## Limits
 One embedding model; the clustering defaults (λ = 0.5, threshold 0.5) let clusters fill the 512-word cap with

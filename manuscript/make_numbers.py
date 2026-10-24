@@ -158,6 +158,8 @@ def main(argv=None) -> None:
     # post-hoc checks of 2026-10-24 (labelled as such in the text)
     ver = json.loads(args.stat_verification.read_text())["posthoc"]
     m["SensBHPooledEst"] = pp(ver["BH_family_P1"]["pooled_over_datasets"])
+    h5 = [v["H5"] for s, v in ver["H5_seed_sensitivity"]["by_seed"].items() if s != "7"]
+    m["HFiveSeedMin"], m["HFiveSeedMax"], m["HFiveSeedN"] = pp(min(h5)), pp(max(h5)), str(len(h5))
     m["EtwoPoneFoneMdeStrat"] = f"{ver['tier2_mde']['P1/f1']['equal_weight_estimand']:.3f}"
     for key, path in (("PosthocEquivElements", args.posthoc_e1), ("PosthocEquivElementsB", args.posthoc_e3)):
         n, bad = equivalence_elements(path / "selection_equivalence.json")

@@ -53,6 +53,9 @@ Each result macro used in `manuscript/main.tex`, its value in `numbers.tex`, the
 | `\HFiveEst` | 19.4 | 19.4 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.estimate |
 | `\HFiveHi` | 41.7 | 41.7 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.ci95[1] |
 | `\HFiveLo` | 16.7 | 16.7 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.ci95[0] |
+| `\HFiveSeedMax` | 24.3 | 24.3 | docs/repair/statistical_verification.json: max posthoc.H5_seed_sensitivity (seeds != 7) (POST-HOC) |
+| `\HFiveSeedMin` | 21.5 | 21.5 | docs/repair/statistical_verification.json: min posthoc.H5_seed_sensitivity (seeds != 7) (POST-HOC) |
+| `\HFiveSeedN` | 9 | 9 | docs/repair/statistical_verification.json: number of alternative seeds (POST-HOC) |
 | `\HFiveVerdict` | inconclusive | inconclusive | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.verdict |
 | `\HFourBBudget` | 71.3 | 71.3 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H4b.budget_share |
 | `\HFourBCount` | 6.9 | 6.9 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H4b.count_share |
@@ -117,4 +120,4 @@ Each result macro used in `manuscript/main.tex`, its value in `numbers.tex`, the
 | `\StwoTwoFiveSixBudgetA` | 39.8 | 39.8 | experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json: verdict_shares.S2-256.budget.support_A |
 | `\StwoTwoFiveSixCountA` | 36.1 | 36.1 | experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json: verdict_shares.S2-256.count.support_A |
 
-112 macros used; 112 recomputed identically; 0 mismatched or untraced.
+115 macros used; 115 recomputed identically; 0 mismatched or untraced.
