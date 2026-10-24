@@ -1,14 +1,14 @@
 {
-  "title": "Chunking verdicts under count- and budget-matched retrieval: code, pre-registrations and results",
+  "title": "Chunking verdicts under count- and budget-matched retrieval: code, analysis plans and results",
   "upload_type": "software",
   "access_right": "open",
-  "license": "MIT",
+  "license": "other-open",
   "creators": [
     {
       "name": "Chand J C, Swaroop"
     }
   ],
-  "description": "<p>Code, pre-registrations, deviation logs, run manifests and per-query results for a pre-registered multiverse analysis of how the retrieval-selection protocol (a fixed number of chunks vs a fixed word budget) changes chunking verdicts in retrieval-augmented generation. Includes an extension to semantic chunking and dense retrieval (bge-m3), an exploratory answer-quality check (Qwen3-4B) and a provisional protocol audit of recent chunking studies.</p><p>Code is MIT-licensed; results, documents and figures are CC BY 4.0 (see LICENSE-DATA.md). The four source datasets are not redistributed; they are downloaded and hash-checked by the included fetch script.</p>",
+  "description": "<p>Code, written analysis plans (pre-registration documents), deviation logs, run manifests and per-query results for a multiverse analysis of how the retrieval-selection protocol (a fixed number of chunks vs a fixed word budget) changes chunking verdicts in retrieval-augmented generation. Includes an extension to semantic chunking and dense retrieval (bge-m3), an exploratory answer-quality check (Qwen3-4B) and a provisional, single-coded protocol audit of recent chunking studies. The original version history is unavailable, so the timing of the analysis plans cannot be independently verified.</p><p>Code is MIT-licensed; project-written results, documents and figures are CC BY 4.0 (see LICENSE-DATA.md). The four source datasets are not redistributed; they are downloaded and hash-checked by the included fetch script. Gold answer strings and model answers stored in the generation logs remain under the source datasets' licences (SQuAD 2.0 CC BY-SA 4.0, COVID-QA Apache-2.0, CUAD and Qasper CC BY 4.0).</p>",
   "keywords": [
     "retrieval-augmented generation",
     "chunking",
@@ -17,5 +17,5 @@
     "pre-registration",
     "information retrieval"
   ],
-  "notes": "Results, documents and figures: CC BY 4.0. Gold answer strings from SQuAD 2.0, COVID-QA, CUAD and Qasper remain under those datasets' licences."
+  "notes": "Licences: code MIT; project-written results, documents and figures CC BY 4.0; third-party strings in experiments/E2_generation/runs/**/generations.jsonl remain under the source datasets' licences (see LICENSE-DATA.md). Release blocker before deposit: the owner must decide how those strings are distributed."
 }

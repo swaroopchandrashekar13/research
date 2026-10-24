@@ -1,0 +1,822 @@
+{
+ "checked": "2026-10-24",
+ "results": {
+  "arabicrag2025": {
+   "source": "arXiv API 2506.06339",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Jumana Alsubhi",
+    "Mohammad D. Alahmadi",
+    "Ahmed Alhusayni",
+    "Ibrahim Aldailami",
+    "Israa Hamdine",
+    "Ahmad Shabana",
+    "Yazeed Iskandar",
+    "Suhayb Khayyat"
+   ],
+   "record_year": 2025,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2506.06339"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "bell2022multiverse": {
+   "source": "arXiv API 2206.05985",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Samuel J. Bell",
+    "Onno P. Kampman",
+    "Jesse Dodge",
+    "Neil D. Lawrence"
+   ],
+   "record_year": 2022,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2206.05985"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "benjamini1995fdr": {
+   "source": "Semantic Scholar DOI:10.1111/j.2517-6161.1995.tb02031.x",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Y. Benjamini",
+    "Y. Hochberg"
+   ],
+   "record_year": 1995,
+   "year_gap": 0,
+   "record_venue": "",
+   "record_ids": {
+    "MAG": "2110065044",
+    "DOI": "10.1111/J.2517-6161.1995.TB02031.X",
+    "CorpusId": 45174121
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "beyondchunkthenembed2026": {
+   "source": "arXiv API 2602.16974",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Yongjie Zhou",
+    "Shuai Wang",
+    "Bevan Koopman",
+    "Guido Zuccon"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2602.16974"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "bhat2025chunksize": {
+   "source": "arXiv API 2505.21700",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Sinchana Ramakanth Bhat",
+    "Max Rudat",
+    "Jannis Spiekermann",
+    "Nicolas Flores-Herr"
+   ],
+   "record_year": 2025,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2505.21700"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "chen2024bgem3": {
+   "source": "Semantic Scholar DOI:10.18653/v1/2024.findings-acl.137",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Jianlyu Chen",
+    "Shi-Tao Xiao",
+    "Peitian Zhang",
+    "Kun Luo",
+    "De-Fu Lian",
+    "Zheng Liu"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "Annual Meeting of the Association for Computational Linguistics",
+   "record_ids": {
+    "DBLP": "conf/acl/ChenXZLLL24",
+    "ArXiv": "2402.03216",
+    "DOI": "10.18653/v1/2024.findings-acl.137",
+    "CorpusId": 267413218
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "chunkembedsensitivity2026": {
+   "source": "arXiv API 2603.06976",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Muhammad Arslan Shaukat",
+    "Muntasir Adnan",
+    "Carlos C. N. Kuhn"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2603.06976"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "chunkingacademic2026": {
+   "source": "arXiv API 2607.01852",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Valentin J. J. Kreileder",
+    "Johannes Reisinger",
+    "Andreas Fischer"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2607.01852"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "chunkingcost2026": {
+   "source": "arXiv API 2606.00881",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Mateusz Śmigielski",
+    "Michał Rajkowski",
+    "Mateusz Zbrocki",
+    "Michał Bernacki-Janson",
+    "Karol Kunicki",
+    "Julianna Godziszewska",
+    "Maciej Piasecki",
+    "Konrad Wojtasik"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2606.00881"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "dasigi2021qasper": {
+   "source": "Semantic Scholar DOI:10.18653/v1/2021.naacl-main.365",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Pradeep Dasigi",
+    "Kyle Lo",
+    "Iz Beltagy",
+    "Arman Cohan",
+    "Noah A. Smith",
+    "Matt Gardner"
+   ],
+   "record_year": 2021,
+   "year_gap": 0,
+   "record_venue": "North American Chapter of the Association for Computational Linguistics",
+   "record_ids": {
+    "MAG": "3161820423",
+    "DBLP": "conf/naacl/DasigiLBCSG21",
+    "ArXiv": "2105.03011",
+    "ACL": "2021.naacl-main.365",
+    "DOI": "10.18653/V1/2021.NAACL-MAIN.365",
+    "CorpusId": 234093776
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "dodge2019showyourwork": {
+   "source": "arXiv API 1909.03004",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Jesse Dodge",
+    "Suchin Gururangan",
+    "Dallas Card",
+    "Roy Schwartz",
+    "Noah A. Smith"
+   ],
+   "record_year": 2019,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "1909.03004"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "duarte2024lumberchunker": {
+   "source": "arXiv API 2406.17526",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "André V. Duarte",
+    "João Marques",
+    "Miguel Graça",
+    "Miguel Freire",
+    "Lei Li",
+    "Arlindo L. Oliveira"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2406.17526"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "freechunker2025": {
+   "source": "arXiv API 2510.20356",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Wenxuan Zhang",
+    "Yuan-Hao Jiang",
+    "Yang Cao",
+    "Yonghe Wu"
+   ],
+   "record_year": 2025,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2510.20356"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "gao2023ragsurvey": {
+   "source": "arXiv API 2312.10997",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Yunfan Gao",
+    "Yun Xiong",
+    "Xinyu Gao",
+    "Kangxiang Jia",
+    "Jinliu Pan",
+    "Yuxi Bi",
+    "Yi Dai",
+    "Jiawei Sun",
+    "Meng Wang",
+    "Haofen Wang"
+   ],
+   "record_year": 2023,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2312.10997"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "garrido2026chunksize": {
+   "source": "arXiv API 2607.24767",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "German Garrido-Lestache Belinchon",
+    "Hugo Garrido-Lestache Belinchon"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2607.24767"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "gunther2024latechunking": {
+   "source": "arXiv API 2409.04701",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Michael Günther",
+    "Isabelle Mohr",
+    "Daniel James Williams",
+    "Bo Wang",
+    "Han Xiao"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2409.04701"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "hendrycks2021cuad": {
+   "source": "arXiv API 2103.06268",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Dan Hendrycks",
+    "Collin Burns",
+    "Anya Chen",
+    "Spencer Ball"
+   ],
+   "record_year": 2021,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2103.06268"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "hichunk2025": {
+   "source": "arXiv API 2509.11552",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Wensheng Lu",
+    "Keyu Chen",
+    "Ruizhi Qiao",
+    "Xing Sun"
+   ],
+   "record_year": 2025,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2509.11552"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "jimenoyepes2024financial": {
+   "source": "arXiv API 2402.05131",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Antonio Jimeno Yepes",
+    "Yao You",
+    "Jan Milczek",
+    "Sebastian Laverde",
+    "Renyu Li"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2402.05131"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "kamalloo2023evaluating": {
+   "source": "Semantic Scholar ACL:2023.acl-long.307",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Ehsan Kamalloo",
+    "Nouha Dziri",
+    "C. Clarke",
+    "Davood Rafiei"
+   ],
+   "record_year": 2023,
+   "year_gap": 0,
+   "record_venue": "Annual Meeting of the Association for Computational Linguistics",
+   "record_ids": {
+    "DBLP": "conf/acl/KamallooDCR23",
+    "ACL": "2023.acl-long.307",
+    "ArXiv": "2305.06984",
+    "DOI": "10.48550/arXiv.2305.06984",
+    "CorpusId": 258615193
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "lewis2020rag": {
+   "source": "arXiv API 2005.11401",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Patrick Lewis",
+    "Ethan Perez",
+    "Aleksandra Piktus",
+    "Fabio Petroni",
+    "Vladimir Karpukhin",
+    "Naman Goyal",
+    "Heinrich Küttler",
+    "Mike Lewis",
+    "Wen-tau Yih",
+    "Tim Rocktäschel",
+    "Sebastian Riedel",
+    "Douwe Kiela"
+   ],
+   "record_year": 2020,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2005.11401"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "lu2024bm25s": {
+   "source": "arXiv API 2407.03618",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Xing Han Lù"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2407.03618"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "metachunking2024": {
+   "source": "arXiv API 2410.12788",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Jihao Zhao",
+    "Zhiyuan Ji",
+    "Yuchen Feng",
+    "Pengnian Qi",
+    "Simin Niu",
+    "Bo Tang",
+    "Feiyu Xiong",
+    "Zhiyu Li"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2410.12788"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "miller2024errorbars": {
+   "source": "arXiv API 2411.00640",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Evan Miller"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2411.00640"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "moc2025": {
+   "source": "arXiv API 2503.09600",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Jihao Zhao",
+    "Zhiyuan Ji",
+    "Zhaoxin Fan",
+    "Hanyu Wang",
+    "Simin Niu",
+    "Bo Tang",
+    "Feiyu Xiong",
+    "Zhiyu Li"
+   ],
+   "record_year": 2025,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2503.09600"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "moller2020covidqa": {
+   "source": null,
+   "identity_ok": false,
+   "error": "no record found"
+  },
+  "muthyam2026ragstability": {
+   "source": "arXiv API 2606.28337",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Bharath Simha Reddy Muthyam"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2606.28337"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "pdfparsingfin2026": {
+   "source": "arXiv API 2604.12047",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Omar El Bachyr",
+    "Yewei Song",
+    "Saad Ezzini",
+    "Jacques Klein",
+    "Tegawendé F. Bissyandé",
+    "Anas Zilali",
+    "Ulrick Ble",
+    "Anne Goujon"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2604.12047"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "qu2025semanticchunking": {
+   "source": "arXiv API 2410.13070",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Renyi Qu",
+    "Ruixuan Tu",
+    "Forrest Bao"
+   ],
+   "record_year": 2024,
+   "year_gap": 1,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2410.13070"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "queryadaptivechunking2026": {
+   "source": "arXiv API 2605.22834",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Mudit Rastogi"
+   ],
+   "record_year": 2026,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2605.22834"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "qwen2025qwen3": {
+   "source": "arXiv API 2505.09388",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "An Yang",
+    "Anfeng Li",
+    "Baosong Yang",
+    "Beichen Zhang",
+    "Binyuan Hui",
+    "Bo Zheng",
+    "Bowen Yu",
+    "Chang Gao",
+    "Chengen Huang",
+    "Chenxu Lv",
+    "Chujie Zheng",
+    "Dayiheng Liu",
+    "Fan Zhou",
+    "Fei Huang",
+    "Feng Hu",
+    "Hao Ge",
+    "Haoran Wei",
+    "Huan Lin",
+    "Jialong Tang",
+    "Jian Yang",
+    "Jianhong Tu",
+    "Jianwei Zhang",
+    "Jianxin Yang",
+    "Jiaxi Yang",
+    "Jing Zhou",
+    "Jingren Zhou",
+    "Junyang Lin",
+    "Kai Dang",
+    "Keqin Bao",
+    "Kexin Yang",
+    "Le Yu",
+    "Lianghao Deng",
+    "Mei Li",
+    "Mingfeng Xue",
+    "Mingze Li",
+    "Pei Zhang",
+    "Peng Wang",
+    "Qin Zhu",
+    "Rui Men",
+    "Ruize Gao",
+    "Shixuan Liu",
+    "Shuang Luo",
+    "Tianhao Li",
+    "Tianyi Tang",
+    "Wenbiao Yin",
+    "Xingzhang Ren",
+    "Xinyu Wang",
+    "Xinyu Zhang",
+    "Xuancheng Ren",
+    "Yang Fan",
+    "Yang Su",
+    "Yichang Zhang",
+    "Yinger Zhang",
+    "Yu Wan",
+    "Yuqiong Liu",
+    "Zekun Wang",
+    "Zeyu Cui",
+    "Zhenru Zhang",
+    "Zhipeng Zhou",
+    "Zihan Qiu"
+   ],
+   "record_year": 2025,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2505.09388"
+   },
+   "authors_in_yaml_complete": false,
+   "identity_ok": true
+  },
+  "rajpurkar2018squad2": {
+   "source": "Semantic Scholar DOI:10.18653/v1/P18-2124",
+   "title_similarity": 0.991,
+   "first_author_match": true,
+   "record_authors": [
+    "Pranav Rajpurkar",
+    "Robin Jia",
+    "Percy Liang"
+   ],
+   "record_year": 2018,
+   "year_gap": 0,
+   "record_venue": "Annual Meeting of the Association for Computational Linguistics",
+   "record_ids": {
+    "ACL": "P18-2124",
+    "DBLP": "journals/corr/abs-1806-03822",
+    "MAG": "2963323070",
+    "ArXiv": "1806.03822",
+    "DOI": "10.18653/v1/P18-2124",
+    "CorpusId": 47018994
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "rau2024bergen": {
+   "source": "arXiv API 2407.01102",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "David Rau",
+    "Hervé Déjean",
+    "Nadezhda Chirkova",
+    "Thibault Formal",
+    "Shuai Wang",
+    "Vassilina Nikoulina",
+    "Stéphane Clinchant"
+   ],
+   "record_year": 2024,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2407.01102"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "reconstructingcontext2025": {
+   "source": "arXiv API 2504.19754",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Carlo Merola",
+    "Jaspinder Singh"
+   ],
+   "record_year": 2025,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "2504.19754"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "robertson2009bm25": {
+   "source": "Semantic Scholar DOI:10.1561/1500000019",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "S. Robertson",
+    "H. Zaragoza"
+   ],
+   "record_year": 2009,
+   "year_gap": 0,
+   "record_venue": "Foundations and Trends in Information Retrieval",
+   "record_ids": {
+    "MAG": "2155482025",
+    "DBLP": "journals/ftir/RobertsonZ09",
+    "DOI": "10.1561/1500000019",
+    "CorpusId": 207178704
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "simonsohn2020speccurve": {
+   "source": "Semantic Scholar DOI:10.1038/s41562-020-0912-z",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "U. Simonsohn",
+    "J. Simmons",
+    "Leif D. Nelson"
+   ],
+   "record_year": 2020,
+   "year_gap": 0,
+   "record_venue": "Nature Human Behaviour",
+   "record_ids": {
+    "MAG": "3044225844",
+    "DOI": "10.1038/s41562-020-0912-z",
+    "CorpusId": 220810602,
+    "PubMed": "32719546"
+   },
+   "authors_in_yaml_complete": false,
+   "identity_ok": true
+  },
+  "smucker2007sigtests": {
+   "source": null,
+   "identity_ok": false,
+   "error": "no record found"
+  },
+  "steegen2016multiverse": {
+   "source": "Semantic Scholar DOI:10.1177/1745691616658637",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "S. Steegen",
+    "F. Tuerlinckx",
+    "A. Gelman",
+    "Wolf Vanpaemel"
+   ],
+   "record_year": 2016,
+   "year_gap": 0,
+   "record_venue": "Perspectives on Psychological Science",
+   "record_ids": {
+    "MAG": "2526501380",
+    "DOI": "10.1177/1745691616658637",
+    "CorpusId": 1735676,
+    "PubMed": "27694465"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "urbano2019sigtesting": {
+   "source": "arXiv API 1905.11096",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Julián Urbano",
+    "Harlley Lima",
+    "Alan Hanjalic"
+   ],
+   "record_year": 2019,
+   "year_gap": 0,
+   "record_venue": "arXiv",
+   "record_ids": {
+    "ArXiv": "1905.11096"
+   },
+   "authors_in_yaml_complete": false,
+   "identity_ok": true
+  }
+ }
+}

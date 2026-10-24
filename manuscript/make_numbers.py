@@ -1,9 +1,13 @@
-"""Generate manuscript/numbers.tex: every number in the paper as a LaTeX macro, read from the logged result files.
+"""Generate numbers.tex: the paper's result numbers as LaTeX macros, read from the logged result files.
 
-Usage: python -I manuscript/make_numbers.py   (rerun after any analysis change; never type a result by hand)
+Usage: python -I manuscript/make_numbers.py [--e1 results.json] [--e2 results.json] [--e3 results.json]
+                                           [--e3-run RUN_DIR] [--audit coding.csv] [--out numbers.tex]
+Defaults are the repository's analysed results and manuscript/numbers.tex. Design constants (dataset names, grid
+sizes, seeds, thresholds) are written literally in the manuscript; result values come from these macros.
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import math
@@ -13,7 +17,25 @@ ROOT = Path(__file__).resolve().parents[1]
 E1 = ROOT / "experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json"
 E2 = ROOT / "experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json"
 E3 = ROOT / "experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json"
+E3RUN = ROOT / "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu"
 AUDIT = ROOT / "literature/protocol_audit/coding.csv"
+OUT = ROOT / "manuscript" / "numbers.tex"
+POSTHOC_E1 = ROOT / "experiments/E1_retrieval_multiverse/analysis/posthoc-charmetric-20261024"
+POSTHOC_E3 = ROOT / "experiments/E3_semantic_dense/analysis/posthoc-charmetric-bm25-20261024"
+STATVER = ROOT / "docs/repair/statistical_verification.json"
+
+
+def equivalence_elements(path: Path) -> tuple[int, int]:
+    rep = json.loads(path.read_text())
+    n = bad = 0
+    for d, cs in rep.items():
+        if d.startswith("_"):
+            continue
+        for c, v in cs.items():
+            if not c.startswith("_"):
+                n += v["elements_scores"] + v["elements_words"]
+                bad += v["mismatch_scores"] + v["mismatch_words"]
+    return n, bad
 
 
 def pp(x: float) -> str:  # proportion -> percentage points / percent, one decimal
@@ -31,9 +53,20 @@ def wilson(k: int, n: int, z: float = 1.959963984540054):
     return c - h, c + h
 
 
-def main() -> None:
+def main(argv=None) -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--e1", type=Path, default=E1)
+    ap.add_argument("--e2", type=Path, default=E2)
+    ap.add_argument("--e3", type=Path, default=E3)
+    ap.add_argument("--e3-run", type=Path, default=E3RUN)
+    ap.add_argument("--audit", type=Path, default=AUDIT)
+    ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--posthoc-e1", type=Path, default=POSTHOC_E1)
+    ap.add_argument("--posthoc-e3", type=Path, default=POSTHOC_E3)
+    ap.add_argument("--stat-verification", type=Path, default=STATVER)
+    args = ap.parse_args(argv)
     m: dict[str, str] = {}
-    e1 = json.loads(E1.read_text())
+    e1 = json.loads(args.e1.read_text())
     m["EoneNq"] = f"{sum(e1['n_queries'].values()):,}"
     for d, n in e1["n_queries"].items():
         m[f"EoneNq{d.replace('2', 'two').capitalize()}"] = f"{n:,}"
@@ -61,14 +94,14 @@ def main() -> None:
         if "ci95" in r:
             m[f"{key}Lo"], m[f"{key}Hi"] = pp(r["ci95"][0]), pp(r["ci95"][1])
 
-    e2 = json.loads(E2.read_text())
+    e2 = json.loads(args.e2.read_text())
     for c, key in (("P1", "Pone"), ("S3-256", "Sthree")):
         for meas, mk in (("f1", "Fone"), ("em", "Em"), ("coverage", "Cov")):
             r = e2["pooled"][c][meas]
             m[f"Etwo{key}{mk}"], m[f"Etwo{key}{mk}Lo"], m[f"Etwo{key}{mk}Hi"] = f3(r["did"]), f3(r["lo"]), f3(r["hi"])
             m[f"Etwo{key}{mk}Mde"] = f"{r['mde']:.3f}"
 
-    e3 = json.loads(E3.read_text())
+    e3 = json.loads(args.e3.read_text())
     for h, key in (("H4", "HFour"), ("H4b", "HFourB"), ("H5", "HFive"), ("H5b", "HFiveB")):
         r = e3[h]
         m[f"{key}Est"], m[f"{key}Lo"], m[f"{key}Hi"] = pp(r["estimate"]), pp(r["ci95"][0]), pp(r["ci95"][1])
@@ -86,7 +119,7 @@ def main() -> None:
     for c, key in (("semantic-bp", "SemBp"), ("semantic-cl", "SemCl")):
         lens = [e3["mean_chunk_words"][d][c] for d in e3["mean_chunk_words"]]
         m[f"{key}Min"], m[f"{key}Max"] = f"{min(lens):.0f}", f"{max(lens):.0f}"
-    run3 = E3.parents[2] / "runs" / E3.parent.name
+    run3 = args.e3_run
     nc = [s["noncontiguous_share"] for d in e3["datasets"]
           for s in json.loads((run3 / d / "manifest.json").read_text())["chunk_stats"] if s["chunking"] == "semantic-cl"]
     m["SemClNoncontigMin"] = pp(min(nc))
@@ -109,26 +142,35 @@ def main() -> None:
         m[f"EtwoSquad{key}BudgetFone"] = f"{sq[arm + '|budget1024']['f1']:.2f}"
         m[f"EtwoSquad{key}BudgetCov"] = f"{sq[arm + '|budget1024']['coverage']:.2f}"
 
-    rows = [r for r in csv.DictReader(open(AUDIT)) if r["included"] == "yes"]
+    rows = [r for r in csv.DictReader(open(args.audit)) if r["included"] == "yes"]
     n = len(rows)
     fixed_k = sum(r["selection_protocol"] == "fixed_k" for r in rows)
     budget = sum(r["selection_protocol"] in ("fixed_budget", "both") for r in rows)
     unc = sum(r["uncertainty_reported"] in ("CI", "significance_test") for r in rows)
     m["AuditN"], m["AuditFixedK"], m["AuditBudget"], m["AuditUncertainty"] = str(n), str(fixed_k), str(budget), str(unc)
     import sys
-    sys.path.insert(0, str(AUDIT.parent))
+    sys.path.insert(0, str(args.audit.parent))
     from analyze_audit import exposure  # the audit's own rules, not a re-implementation
     exposed = sum(exposure(r).startswith("exposed") for r in rows)
     lo, hi = wilson(exposed, n)
     m["AuditExposed"], m["AuditExposedPct"], m["AuditExposedLo"], m["AuditExposedHi"] = str(exposed), pp(exposed / n), pp(lo), pp(hi)
 
-    import shutil  # keep the manuscript folder self-contained (Overleaf uploads only this folder)
-    (ROOT / "manuscript" / "figures").mkdir(exist_ok=True)
-    shutil.copy(E1.parent / "figures" / "verdict_dumbbell.pdf", ROOT / "manuscript" / "figures" / "verdict_dumbbell.pdf")
+    # post-hoc checks of 2026-10-24 (labelled as such in the text)
+    ver = json.loads(args.stat_verification.read_text())["posthoc"]
+    m["SensBHPooledEst"] = pp(ver["BH_family_P1"]["pooled_over_datasets"])
+    m["EtwoPoneFoneMdeStrat"] = f"{ver['tier2_mde']['P1/f1']['equal_weight_estimand']:.3f}"
+    for key, path in (("PosthocEquivElements", args.posthoc_e1), ("PosthocEquivElementsB", args.posthoc_e3)):
+        n, bad = equivalence_elements(path / "selection_equivalence.json")
+        if bad:
+            raise SystemExit(f"{path}: selection equivalence failed ({bad} mismatches); post-hoc numbers not usable")
+        m[key] = f"{n:,}"
+    flips = json.loads((args.posthoc_e1 / "summary.json").read_text())["universe_verdict_changes_vs_stored"]
+    m["PosthocCharFlips"], m["PosthocUniverses"] = f"{flips['char']['changed']:,}", f"{flips['char']['total']:,}"
     out = ["% Generated by manuscript/make_numbers.py from logged results. Do not edit by hand."]
     out += [f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in sorted(m.items())]
-    (ROOT / "manuscript" / "numbers.tex").write_text("\n".join(out) + "\n")
-    print(f"{len(m)} macros written")
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text("\n".join(out) + "\n")
+    print(f"{len(m)} macros written to {args.out}")
 
 
 if __name__ == "__main__":

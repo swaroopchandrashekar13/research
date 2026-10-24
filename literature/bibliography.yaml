@@ -365,6 +365,7 @@ entries:
     url: https://aclanthology.org/2025.findings-naacl.114
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2410.13070; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Semantic chunking's cost is not justified by consistent gains over fixed-size chunking across document retrieval, evidence retrieval and answer generation."
     directions: [C4, C5]
@@ -378,6 +379,7 @@ entries:
     url: https://arxiv.org/abs/2606.00881
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2606.00881; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Chunking-method comparison vs cost (title-level only)."
     directions: [C4]
@@ -391,6 +393,7 @@ entries:
     url: https://arxiv.org/abs/2604.12047
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2604.12047; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Varies PDF parser, chunking and LLM on FinanceBench plus a new table QA set (TableQuest); code and configs released."
     directions: [C3, C4, C5]
@@ -404,6 +407,7 @@ entries:
     url: https://arxiv.org/abs/2607.01852
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2607.01852; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Cluster-based semantic vs fixed/recursive chunking on theses; reports RAGAS faithfulness of limited reliability."
     directions: [C4, C5]
@@ -430,6 +434,7 @@ entries:
     url: https://arxiv.org/abs/2411.00640
     peer_reviewed: false
     verification: L1
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2411.00640; content level unchanged"
     snippet_summary: "Evals as experiments; formulas for CIs, paired model comparison and eval planning (power)."
     directions: [C5]
 
@@ -454,6 +459,7 @@ entries:
     url: https://proceedings.neurips.cc/paper_files/paper/2022/hash/750337e1301941f81ae31a90e0a1c181-Abstract.html
     peer_reviewed: true
     verification: L1
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2206.05985; content level unchanged"
     snippet_summary: "Multiverse analysis for ML using a GP surrogate + Bayesian experimental design; case studies on adaptive optimizers and large-batch generalization."
     directions: [C5]
 
@@ -715,6 +721,7 @@ entries:
     url: https://ciir-publications.cs.umass.edu/getpdf.php?id=744
     peer_reviewed: true
     verification: L1
+    identity_check: "2026-10-24: identity NOT confirmed (lookup rate-limited; no identifier in this entry); source: none; content level unchanged"
     snippet_summary: "Compares paired t, Wilcoxon, sign, bootstrap and randomization tests on TREC MAP differences; little practical difference between randomization, bootstrap and t tests."
     directions: [C5]
 
@@ -727,6 +734,7 @@ entries:
     url: https://arxiv.org/abs/1905.11096
     peer_reviewed: null
     verification: L1
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 1905.11096; content level unchanged"
     snippet_summary: "Simulation from TREC data; >500M p-values across tests, measures, topic-set sizes and effect sizes; t-test most popular in IR papers."
     directions: [C5]
 
@@ -739,6 +747,7 @@ entries:
     url: https://aclanthology.org/2024.findings-emnlp.449/
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2407.01102; content level unchanged"
     snippet_summary: >-
       Read (2026-10-18) the authors' 13-page slide deck shipped in the official repository (github.com/naver/bergen,
       documentation/BERGEN.pdf). RQs: which metrics, which datasets, does retrieval quality help generation, LLM size,
@@ -758,6 +767,7 @@ entries:
     url: https://arxiv.org/abs/2606.28337
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2606.28337; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: >-
       56 runs varying chunk size, top-k, embedding reranking, probabilistic retrieval noise and seeds on a fixed
@@ -775,6 +785,7 @@ entries:
     url: https://arxiv.org/abs/2505.21700
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2505.21700; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: >-
       Fixed-size chunking across six datasets (incl. NarrativeQA, NewsQA, NQ, TechQA, CovidQA) and two embedders
@@ -792,6 +803,7 @@ entries:
     url: https://arxiv.org/abs/2607.24767
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2607.24767; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Sentence / paragraph / chapter chunks of undergraduate textbooks; Reciprocal Rank over 100 LLM-generated prompts."
     directions: [C5]
@@ -806,6 +818,7 @@ entries:
     url: https://arxiv.org/abs/2602.16974
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2602.16974; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Reproduces and compares chunking methods; best strategy depends on task (structure-based beats LLM-guided in-corpus; LumberChunker wins in-document; late chunking helps in-corpus, hurts in-document)."
     directions: [C5]
@@ -820,6 +833,7 @@ entries:
     url: https://arxiv.org/abs/2603.06976
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2603.06976; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Title-level only."
     directions: [C5]
@@ -834,6 +848,7 @@ entries:
     url: https://arxiv.org/abs/2504.19754
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2504.19754; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Early vs late chunking, contextual retrieval, across segmenters and embedding models."
     directions: [C5]
@@ -847,6 +862,7 @@ entries:
     url: https://arxiv.org/abs/2509.11552
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2509.11552; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Hierarchical chunking method and evaluation."
     directions: [C5]
@@ -860,6 +876,7 @@ entries:
     url: https://arxiv.org/abs/2410.12788
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2410.12788; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Perplexity- and margin-sampling chunkers; PPL chunking best in re-ranking experiments."
     directions: [C5]
@@ -873,6 +890,7 @@ entries:
     url: https://arxiv.org/abs/2510.20356
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2510.20356; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Cross-granularity chunking framework (title-level)."
     directions: [C5]
@@ -886,6 +904,7 @@ entries:
     url: https://arxiv.org/abs/2503.09600
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2503.09600; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Mixture of chunking learners (title-level)."
     directions: [C5]
@@ -899,6 +918,7 @@ entries:
     url: https://arxiv.org/abs/2605.22834
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2605.22834; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Title-level only."
     directions: [C5]
@@ -912,6 +932,7 @@ entries:
     url: https://arxiv.org/abs/2506.06339
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2506.06339; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Semantic chunking underperformed across its datasets (secondary summary)."
     directions: [C5]
@@ -925,6 +946,7 @@ entries:
     url: https://arxiv.org/abs/2402.05131
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2402.05131; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Element-type (structure-based) chunking of SEC filings beats paragraph/fixed chunking on FinanceBench across 128-512-word chunk sizes (secondary summary)."
     directions: [C5]
@@ -938,6 +960,7 @@ entries:
     url: https://arxiv.org/abs/2406.17526
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2406.17526; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "LLM-guided segmentation; average 334 tokens per chunk vs 79 for paragraph-level chunking (snippet) - chunk-length imbalance relevant to our protocol question."
     directions: [C5]
@@ -951,6 +974,7 @@ entries:
     url: https://arxiv.org/abs/2409.04701
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2409.04701; content level unchanged"
     verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
     snippet_summary: "Embed full text first, then pool per chunk; v3 July 2025."
     directions: [C5]
@@ -965,6 +989,7 @@ entries:
     url: https://aclanthology.org/D19-1224/
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 1909.03004; content level unchanged"
     snippet_summary: >-
       Test-set scores alone are insufficient to decide which model is best; proposes expected validation performance as a
       function of computation budget; finds recent comparisons whose conclusion would change with more or less compute.
@@ -979,6 +1004,7 @@ entries:
     url: https://aclanthology.org/2023.acl-long.307/
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar ACL:2023.acl-long.307; content level unchanged"
     snippet_summary: >-
       Lexical matching (EM/F1) fails when candidate answers are not in the gold list, increasingly so for long LLM
       answers; manual evaluation on NQ-open shows true performance of all models is underestimated.
@@ -993,6 +1019,7 @@ entries:
     url: https://doi.org/10.1177/1745691616658637
     peer_reviewed: true
     verification: L1
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar DOI:10.1177/1745691616658637; content level unchanged"
     snippet_summary: >-
       Proposes multiverse analysis: run the analysis across all reasonable data-processing choices to show how fragile or
       robust a finding is (example: fertility and religiosity/political attitudes).
@@ -1009,6 +1036,7 @@ entries:
     url: https://arxiv.org/abs/2005.11401
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2005.11401; content level unchanged"
     snippet_summary: >-
       Combines a pre-trained seq2seq generator (parametric memory) with a dense vector index of Wikipedia accessed by a
       neural retriever (non-parametric memory); two formulations (same passages for the whole output vs per token);
@@ -1024,6 +1052,7 @@ entries:
     url: https://arxiv.org/abs/2312.10997
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2312.10997; content level unchanged"
     snippet_summary: >-
       Survey of RAG for LLMs (hallucination, outdated knowledge, untraceable reasoning); reviews naive, advanced and
       modular RAG and their retrieval, generation and augmentation components, and evaluation.
@@ -1038,6 +1067,7 @@ entries:
     url: https://aclanthology.org/P18-2124/
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar DOI:10.18653/v1/P18-2124; content level unchanged"
     snippet_summary: >-
       SQuAD 2.0: existing SQuAD data plus over 50,000 unanswerable questions written adversarially by crowdworkers to
       look similar to answerable ones; systems must abstain when the paragraph does not support an answer.
@@ -1052,6 +1082,7 @@ entries:
     url: https://aclanthology.org/2020.nlpcovid19-acl.18/
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: ACL Anthology BibTeX 2020.nlpcovid19-acl.18 (raw/moller2020covidqa__ACL_anthology.bib); content level unchanged"
     snippet_summary: >-
       2,019 question/answer pairs annotated by volunteer biomedical experts on scientific articles about COVID-19;
       RoBERTa fine-tuned on SQuAD plus COVID-QA beats SQuAD only.
@@ -1066,6 +1097,7 @@ entries:
     url: https://arxiv.org/abs/2103.06268
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2103.06268; content level unchanged"
     snippet_summary: >-
       Contract Understanding Atticus Dataset: over 13,000 annotations by legal experts; the task is to highlight
       salient contract portions for human review; Transformer performance is nascent and depends on model design and
@@ -1081,6 +1113,7 @@ entries:
     url: https://aclanthology.org/2021.naacl-main.365/
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar DOI:10.18653/v1/2021.naacl-main.365; content level unchanged"
     snippet_summary: >-
       QASPER: 5,049 questions over 1,585 NLP papers, written from title and abstract only and answered from the full
       text with supporting evidence; strong QA models trail humans by at least 27 F1 points.
@@ -1095,6 +1128,7 @@ entries:
     url: https://www.nowpublishers.com/article/Details/INR-019
     peer_reviewed: true
     verification: L1
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar DOI:10.1561/1500000019; content level unchanged"
     snippet_summary: >-
       Conceptual account of the probabilistic relevance framework and the ranking models derived from it: binary
       independence model, relevance feedback, BM25 and BM25F; parameter optimisation.
@@ -1109,6 +1143,7 @@ entries:
     url: https://arxiv.org/abs/2407.03618
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2407.03618; content level unchanged"
     snippet_summary: >-
       Python BM25 implementation depending only on NumPy and SciPy; eager scoring at index time into sparse matrices;
       up to 500x faster than the most popular Python framework; reproduces five BM25 variants of Kamphuis et al. (2020).
@@ -1123,6 +1158,7 @@ entries:
     url: https://doi.org/10.1111/j.2517-6161.1995.tb02031.x
     peer_reviewed: true
     verification: L1
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar DOI:10.1111/j.2517-6161.1995.tb02031.x; content level unchanged"
     snippet_summary: >-
       Introduces the false discovery rate as an alternative to familywise error control; a sequential Bonferroni-type
       procedure controls FDR for independent test statistics, with substantial power gains in simulation.
@@ -1137,6 +1173,7 @@ entries:
     url: https://aclanthology.org/2024.findings-acl.137/
     peer_reviewed: true
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar DOI:10.18653/v1/2024.findings-acl.137; content level unchanged"
     snippet_summary: >-
       BGE M3 embedding model: more than 100 languages; dense, multi-vector and sparse retrieval in one model; inputs
       up to 8,192 tokens; self-knowledge distillation across retrieval modes.
@@ -1151,6 +1188,7 @@ entries:
     url: https://arxiv.org/abs/2505.09388
     peer_reviewed: false
     verification: L2
+    identity_check: "2026-10-24: identity confirmed; source: arXiv API 2505.09388; content level unchanged"
     snippet_summary: >-
       Qwen3 family of dense and mixture-of-experts LLMs from 0.6B to 235B parameters; thinking and non-thinking modes
       in one model with a thinking budget.
@@ -1158,15 +1196,16 @@ entries:
     notes: "Reader model of the answer-quality check (Qwen3-4B). Abstract and author list read via the arXiv API (2026-10-20)."
   - key: simonsohn2020speccurve
     title: "Specification curve analysis"
-    authors: ["Uri Simonsohn", "Simmons", "Nelson (given names not seen)"]
+    authors: ["Uri Simonsohn", "J. Simmons", "Leif D. Nelson"]
     year: 2020
     venue: "Nature Human Behaviour 4(11):1208-1214"
     id: "doi:10.1038/s41562-020-0912-z"
     url: https://doi.org/10.1038/s41562-020-0912-z
     peer_reviewed: true
     verification: L1
+    identity_check: "2026-10-24: identity confirmed; source: Semantic Scholar DOI:10.1038/s41562-020-0912-z; content level unchanged"
     snippet_summary: >-
       Results depend on arbitrary analytic choices; proposes identifying all reasonable specifications, displaying all
       results in one curve and joint inference across specifications; publisher correction in 4(11):1215.
     directions: [C5]
-    notes: "Origin of the specification-curve figures. Journal page not reachable from the container (2026-10-20); metadata from the search index only. Given names of Simmons and Nelson not seen in the index; fill in from the journal page."
+    notes: "Origin of the specification-curve figures. Authors as listed by Semantic Scholar for the DOI on 2026-10-24 (U. Simonsohn, J. Simmons, Leif D. Nelson); the second author's full given name is not shown there and was not filled in from memory. Journal page not reachable from the container."

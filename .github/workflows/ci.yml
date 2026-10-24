@@ -1,0 +1,98 @@
+# Least-privilege CI: read-only token, no secrets, nothing is pushed or published, no paid services.
+# A workflow file is not evidence that CI ran; see the Actions tab for actual runs.
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      with_data:
+        description: "Also download the four public datasets (~110 MB) and run the data-dependent checks"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: install, import, unit + synthetic integration tests, artefact checks (py${{ matrix.python }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install (exactly as in README.md)
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements/core.txt -r requirements/test.txt
+          .venv/bin/python -m pip install --no-deps -e .
+      - name: Syntax and imports
+        run: |
+          .venv/bin/python -m compileall -q src tests tools manuscript experiments literature
+          .venv/bin/python -I -c "import ragmv.analyze, ragmv.analyze1b, ragmv.analyze_generation, ragmv.charmetric, ragmv.chunking, ragmv.data, ragmv.evaluate, ragmv.evaluate_multi, ragmv.fetch, ragmv.figures, ragmv.generate, ragmv.integrity, ragmv.retrieval, ragmv.run, ragmv.run1b, ragmv.semantic, ragmv.stats, ragmv.dense"
+      - name: Unit and synthetic integration tests (data-dependent and optional-SDK tests are reported as skipped)
+        run: .venv/bin/python -m pytest -q -rs
+      - name: Stored-artefact validation (offline)
+        run: .venv/bin/python -I tools/validate_artifacts.py
+      - name: Bibliography schema and hash-reference scan
+        run: |
+          .venv/bin/python -I tools/check_bibliography.py
+          .venv/bin/python -I tools/redact_git_refs.py --check
+          .venv/bin/python -I tools/scan_hex_refs.py
+
+  manuscript:
+    name: build the canonical manuscript from generated displays
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install TeX Live and the package
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended lmodern latexmk
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements/core.txt
+          .venv/bin/python -m pip install --no-deps -e .
+      - name: Regenerate displays into a scratch directory and compare with the committed ones
+        run: .venv/bin/python -I manuscript/build_displays.py --out "$RUNNER_TEMP/displays" --compare manuscript
+      - name: Build in a clean directory and check for undefined references
+        run: .venv/bin/python -I manuscript/build_pdf.py --workdir "$RUNNER_TEMP/build"
+
+  data:
+    name: data-dependent checks (opt-in)
+    if: github.event_name == 'workflow_dispatch' && inputs.with_data
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements/core.txt -r requirements/test.txt
+          .venv/bin/python -m pip install --no-deps -e .
+          .venv/bin/python -I -m ragmv.fetch
+          RAGMV_DATA_ROOT=data/raw .venv/bin/python -m pytest -q -rs
+          .venv/bin/python -I tools/validate_artifacts.py --data-root data/raw

@@ -1,0 +1,54 @@
+{
+ "rows": [
+  {
+   "label": "P1: fixed-128 vs fixed-512",
+   "count": -0.7877604166666666,
+   "budget": 0.7361111111111112
+  },
+  {
+   "label": "S1-64: fixed-64 vs fixed-128",
+   "count": -0.8411458333333334,
+   "budget": -0.22083333333333333
+  },
+  {
+   "label": "S1-128: fixed-128 vs fixed-256",
+   "count": -0.7408854166666666,
+   "budget": 0.54296875
+  },
+  {
+   "label": "S1-256: fixed-256 vs fixed-512",
+   "count": -0.6328125,
+   "budget": 0.7586805555555555
+  },
+  {
+   "label": "S2-128: fixed-128-o25 vs fixed-128",
+   "count": 0.4973958333333333,
+   "budget": 0.5322916666666666
+  },
+  {
+   "label": "S2-256: fixed-256-o25 vs fixed-256",
+   "count": 0.3255208333333333,
+   "budget": 0.3658854166666667
+  },
+  {
+   "label": "S3-128: paragraph-128 vs fixed-128",
+   "count": 0.5859375,
+   "budget": 0.796875
+  },
+  {
+   "label": "S3-256: paragraph-256 vs fixed-256",
+   "count": 0.47656250000000006,
+   "budget": 0.7630208333333333
+  },
+  {
+   "label": "S3-512: paragraph-512 vs fixed-512",
+   "count": 0.11979166666666667,
+   "budget": 0.5920138888888888
+  },
+  {
+   "label": "S4-256: sentence-256 vs fixed-256",
+   "count": 0.17447916666666666,
+   "budget": 0.3854166666666667
+  }
+ ]
+}

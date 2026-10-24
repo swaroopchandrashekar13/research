@@ -1,6 +1,8 @@
-% Revised manuscript. Prior version is preserved in backups/.
-% Empirical values come from the repository-generated numbers.tex and tables/.
-% Bibliographic keys follow the research repository. See audit/ for checks.
+% Canonical manuscript (the public entry point). Result values come from the generated numbers.tex and tables/,
+% figures from figures/ (all produced by manuscript/build_displays.py from the logged results); refs.bib is generated
+% by manuscript/make_bib.py from literature/bibliography.yaml. Build: python -I manuscript/build_pdf.py.
+% Anonymous submission: compile main_anonymous.tex (no author block). Corrections of 2026-10-24 are listed in
+% Appendix A and docs/repair/REPAIR_REPORT.md.
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage[T1]{fontenc}
@@ -15,10 +17,15 @@
 \newcommand{\pp}{\ensuremath{\,\mathrm{pp}}}
 \newcommand{\chunk}[1]{\texttt{#1}}
 \newcommand{\ind}{\mathbb{1}}
-% Compatibility with the repository's generated audit table.
-% Bibliographic identity checks and full-text checks are logged separately.
+% The generated audit table cites with \citeL; entries not yet read in full carry a note in the reference list.
 \newcommand{\citeL}[1]{\cite{#1}}
-\newcommand{\AuthorName}{}
+\providecommand{\AnonymousSubmission}{0}
+\ifnum\AnonymousSubmission=1
+  \newcommand{\AuthorName}{}
+\else
+  \newcommand{\AuthorName}{Swaroop Chand J C}
+\fi
+% Affiliation and e-mail are left empty on purpose: none has been supplied.
 \newcommand{\AuthorAffiliation}{}
 \newcommand{\AuthorEmail}{}
 \captionsetup{font=small,labelfont=bf,skip=6pt}
@@ -43,8 +50,8 @@
 \renewenvironment{table}[1][htbp]{\RepoTable[htbp]}{\EndRepoTable}
 \renewenvironment{table*}[1][htbp]{\RepoTable[htbp]}{\EndRepoTable}
 
-\hypersetup{pdftitle={Chunking Verdicts in Retrieval-Augmented Generation Depend on the Evaluation Protocol: A Pre-registered Multiverse Analysis},pdfsubject={Pre-registered analysis of chunking evaluation protocols}}
-\title{Chunking Verdicts in Retrieval-Augmented Generation Depend on the Evaluation Protocol:\texorpdfstring{\\}{ }A Pre-registered Multiverse Analysis}
+\hypersetup{pdftitle={Chunking Verdicts in Retrieval-Augmented Generation Depend on the Evaluation Protocol: A Multiverse Analysis},pdfsubject={Multiverse analysis of chunking evaluation protocols},pdfauthor={\AuthorName}}
+\title{Chunking Verdicts in Retrieval-Augmented Generation Depend on the Evaluation Protocol:\texorpdfstring{\\}{ }A Multiverse Analysis}
 \author{\AuthorName}
 \date{}
 \makeatletter
@@ -53,7 +60,8 @@
     {\LARGE \@title\par}
     \ifx\AuthorName\@empty\else
       \vskip 0.8em {\large \AuthorName\par}
-      \AuthorAffiliation\par\texttt{\AuthorEmail}\par
+      \ifx\AuthorAffiliation\@empty\else\AuthorAffiliation\par\fi
+      \ifx\AuthorEmail\@empty\else\texttt{\AuthorEmail}\par\fi
     \fi
   \end{center}
   \vskip 0.8em
@@ -63,7 +71,7 @@
 \maketitle
 
 \begin{abstract}
-Comparisons of chunking strategies in retrieval-augmented generation can fix the number of retrieved passages while allowing their total length to vary. Coverage-based metrics may then reward the extra text rather than better segmentation. We examine this dependence in two pre-registered multiverse studies across four English question-answering datasets and \EoneNq{} held-out queries. Matching retrieval by word budget rather than chunk count reduces support for 512-word over 128-word chunks by \HOneEst{} percentage points (95\% CI [\HOneLo, \HOneHi]). In semantic-breakpoint comparisons, support for the shorter arm rises by \HFourEst{} points ([\HFourLo, \HFourHi]). Semantic clustering and dense retrieval also show protocol sensitivity, although the original dense-retrieval hypothesis is inconclusive. An exploratory Qwen3-4B evaluation finds positive retrieval-coverage contrasts but no corresponding positive answer-F1 interaction. The results show why a chunking preference must be tied to its operating constraint. We recommend reporting both retrieval depth and retrieved-text budget, and evaluating answer quality separately.
+Comparisons of chunking strategies in retrieval-augmented generation can fix the number of retrieved passages while allowing their total length to vary. Coverage-based metrics may then reward the extra text rather than better segmentation. We examine this dependence in two multiverse studies with written analysis plans, across four English question-answering datasets and \EoneNq{} held-out queries, using word-level evidence-span metrics. Matching retrieval by word budget rather than chunk count reduces support for 512-word over 128-word chunks by \HOneEst{} percentage points (95\% CI [\HOneLo, \HOneHi]). In semantic-breakpoint comparisons, support for the shorter arm rises by \HFourEst{} points ([\HFourLo, \HFourHi]). Semantic clustering and dense retrieval also show protocol sensitivity, although the original dense-retrieval hypothesis is inconclusive. An exploratory Qwen3-4B evaluation finds positive retrieval-coverage contrasts, inconclusive answer-F1 interactions that do not establish the absence of an effect, and an exact-match interaction in the opposite direction. The results show why a chunking preference must be tied to its operating constraint. We recommend reporting both retrieval depth and retrieved-text budget, and evaluating answer quality separately.
 \end{abstract}
 
 \section{Introduction}
@@ -75,7 +83,7 @@ We ask how strongly this choice affects the direction and statistical support of
 
 The primary comparison is between \chunk{fixed-128} and \chunk{fixed-512}. Support for the larger arm falls by \HOneEst\pp{} under budget matching. The overlap comparisons change much less, while paragraph and semantic chunkers show substantial sensitivity when their realized lengths differ from those of the fixed windows. A dense-retrieval extension shows that the starting preference also depends on the retriever. Finally, an answer-generation experiment tests whether the retrieval pattern carries over to the end task.
 
-Our contribution is an estimate of protocol sensitivity across two pre-registered studies, together with an answer-level check that establishes the limits of the retrieval result. A provisional audit of recent chunking studies provides context for the evaluation choices. We do not propose a new chunking algorithm. Nor do we treat one protocol as universally correct: the objective is to make explicit the constraint under which a chunking preference holds.
+Our contribution is an estimate of protocol sensitivity across two studies analysed according to written plans, together with an answer-level check that probes the limits of the retrieval result. A provisional audit of recent chunking studies provides context for the evaluation choices. We do not propose a new chunking algorithm. Nor do we treat one protocol as universally correct: the objective is to make explicit the constraint under which a chunking preference holds.
 
 \section{Related work}\label{sec:related}
 \paragraph{Chunking strategies and their evaluation.}
@@ -93,7 +101,7 @@ Multiverse analysis and specification-curve analysis expose a result's dependenc
 
 \section{Problem formulation}\label{sec:problem}
 \subsection{Chunks, selected text and budgets}
-A chunk is represented by character intervals and the identity of its document. Most chunkers in this study return one contiguous interval per chunk; clustering can join non-adjacent intervals. We define a word as a maximal non-whitespace run. Let $w(c)$ be the number of words in chunk $c$, and let $r_{q,C}(i)$ be the chunk ranked at position $i$ for query $q$ under chunker $C$.
+We define a word as a maximal non-whitespace run. A chunk is represented by half-open word intervals and the identity of its document. Most chunkers in this study return one contiguous interval per chunk; clustering can join non-adjacent intervals. Let $w(c)$ be the number of words in chunk $c$, and let $r_{q,C}(i)$ be the chunk ranked at position $i$ for query $q$ under chunker $C$.
 
 Count-matched selection returns the first $k$ chunks. Counting every selected word occurrence, its text allowance is
 \begin{equation}
@@ -104,7 +112,7 @@ For complete fixed-length chunks, this is $kW$. Terminal fragments and other pac
 
 Budget-matched selection takes chunks in rank order until $B$ words have been selected, truncating the final chunk to the remaining allowance. Overlapping text is charged each time it appears. When enough text is available, $T^{(B)}_{q,C}=B$. Intervals within a non-contiguous chunk are traversed in document order before truncation.
 
-Let $R_{q,C}$ be the union of the document-tagged character positions selected by either protocol. Evidence is scored against this union, which counts a repeated position only once. Thus $R_{q,C}$ and $T_{q,C}$ measure different things: unique character positions and word occurrences, respectively. Equal word budgets need not produce equal unique-text coverage.
+Let $R_{q,C}$ be the union of the document-tagged word positions selected by either protocol. Evidence is scored against this union, which counts a repeated position only once. Thus $R_{q,C}$ and $T_{q,C}$ measure different things: unique word positions and word occurrences, respectively. Equal word budgets need not produce equal unique-text coverage.
 
 \subsection{Span metrics}
 For the nonempty set of gold evidence spans $G_q$, we compute
@@ -114,7 +122,7 @@ For the nonempty set of gold evidence spans $G_q$, we compute
 \mathrm{coverage}(q,C)&=\max_{g\in G_q}\frac{|g\cap R_{q,C}|}{|g|}.
 \label{eq:coverage}
 \end{align}
-Lengths here are measured in characters. Extending the set of selected positions cannot reduce any of these scores. This monotonicity does not imply that longer chunks from a different ranking must retrieve more evidence; it explains why an increased text allowance can help these metrics without improving precision.
+Lengths here are measured in words. Gold evidence is annotated as character spans; each span is mapped to the half-open interval of words it overlaps, so a span boundary inside a word extends the span to that whole word, and a span that touches only whitespace is dropped. The analysis plans define the three metrics over characters; the stored results, and every result reported here, use this word mapping. We disclose the discrepancy as a correction (Appendix~\ref{app:deviations}). A separate post-hoc analysis rescored the identical, re-executed BM25 selections with character-based definitions; it changed no hypothesis verdict (Appendix~\ref{app:charmetric}). Extending the set of selected positions cannot reduce any of these scores. This monotonicity does not imply that longer chunks from a different ranking must retrieve more evidence; it explains why an increased text allowance can help these metrics without improving precision.
 
 The metrics reward any qualifying span, or the best-covered span. They neither require all spans needed for a multi-part answer nor penalize irrelevant text. Their scope is evidence acquisition under these definitions, not the reader's ability to use the evidence.
 
@@ -156,8 +164,8 @@ Count matching uses $k\in\{1,3,5,10\}$. Budget matching uses $B\in\{128,256,512,
 
 P1 compares \chunk{fixed-128} with \chunk{fixed-512}. S1 compares neighboring fixed sizes $W$ and $2W$. S2 compares overlap with no overlap at the same cap; S3 compares paragraph packing with fixed windows. S3-256 is designated for H1b and H2. S4, sentence packing versus fixed windows, is exploratory. For P1, the factorial design yields $4\times16\times4\times3=\PoneUniversesCount$ count-matched and $4\times16\times3\times3=\PoneUniversesBudget$ admissible budget-matched universes.
 
-\subsection{Pre-registration and analysis}
-Study 1's hypotheses and thresholds were committed before the exploratory pilot. Version 1.0 was frozen on 18 October 2026, after the pilot and before the confirmatory run. The pilot used only exploratory documents. Appendix~\ref{app:deviations} records the subsequent changes, including the correction to a sensitivity-analysis interval.
+\subsection{Analysis plan}
+Study 1's hypotheses, thresholds and analysis follow its written plan (pre-registration document, version 1.0). The plan describes its own revision history, but the version-control history that would establish when each version was written is no longer available, so we treat the plan as the specification of the analysis and make no claim about its timing. The pilot used only exploratory documents. Appendix~\ref{app:deviations} lists the changes recorded in the plan's deviation log, including the correction to a sensitivity-analysis interval, and the corrections made during the repository review.
 
 H1 predicts a decline of at least 20 percentage points in support for \chunk{fixed-512} under budget matching. The pre-registered support rule requires a point estimate of at least 20 points and a 95\% interval excluding zero; an upper bound below 20 falsifies the threshold claim. This rule does not require the lower bound itself to exceed 20. H1b applies the corresponding 10-point threshold to the increase in support for \chunk{paragraph-256}.
 
@@ -170,9 +178,9 @@ n=\left(\frac{(1.96+0.8416)\sigma_d}{0.02}\right)^2.
 \end{equation}
 H3 predicts $n>500$ in more than half of the admissible S2/S3 universes. This is a variance-based planning calculation, not an experiment in which additional queries were collected.
 
-Individual verdicts use 2,000 paired percentile-bootstrap resamples with seed 7. Support shares are correlated because universes reuse queries. We therefore estimate uncertainty in shares and their differences with 1,000 joint resamples, drawing queries within each dataset and applying the same draw to all its universes. Within a joint replicate, normal-approximation intervals replace a nested percentile bootstrap. Universes have equal weight; in this balanced grid, datasets consequently have equal representation despite different query counts.
+Each universe's verdict uses a 95\% paired percentile-bootstrap interval from 2,000 query resamples (seed 7). Support shares are correlated because universes reuse queries. We therefore estimate uncertainty in shares and their differences with 1,000 joint replicates (seed 11): in each replicate, queries are resampled within each dataset and the same draw is applied to all of that dataset's universes, and verdicts inside the replicate use normal-approximation intervals instead of a nested percentile bootstrap. H2's replicates use the same query-level scheme (seed 13). Universes have equal weight; in this balanced grid, datasets consequently have equal representation despite different query counts.
 
-Five pre-specified sensitivity analyses apply Benjamini--Hochberg adjustment at 5\% within each contrast~\cite{benjamini1995fdr}, exclude SQuAD, retain only the default retriever, resample documents together with all their queries, or admit all budgets. The document-cluster analysis addresses dependence among queries from the same document. Multiplicity adjustment is used as a robustness check, not as an unconditional false-discovery guarantee for every correlated setting.
+Five pre-specified sensitivity analyses apply Benjamini--Hochberg adjustment at 5\%~\cite{benjamini1995fdr}, exclude SQuAD, retain only the default retriever, resample documents instead of queries, or admit all budgets. The adjustment is applied separately to the universes of each claim, protocol and dataset; the plan's wording says ``within claim'', and pooling the family over datasets would give \SensBHPooledEst\pp{} instead of \SensBHEst\pp{} (post-hoc check). The document-cluster analysis is a separate resampling scheme: both the per-universe verdict intervals and the joint replicates draw whole documents with all their queries, which addresses dependence among queries from the same document. Multiplicity adjustment is used as a robustness check, not as an unconditional false-discovery guarantee for every correlated setting.
 
 \subsection{Results}
 \paragraph{The primary contrast.}
@@ -225,7 +233,7 @@ H5b & Shorter-arm gain, dense P1 & \HFiveBEst\pp & [\HFiveBLo, \HFiveBHi] & \HFi
 
 \section{Study 1b: semantic chunking and dense retrieval}\label{sec:study1b}
 \subsection{Design}
-Study 1b extends the configurations while retaining the datasets, confirmatory queries, metrics and analysis procedure. It is not an independent replication on new data. Its pre-registration was frozen on 19 October 2026, after the exploratory pilot and before the confirmatory run.
+Study 1b extends the configurations while retaining the datasets, confirmatory queries, metrics and analysis procedure. It is not an independent replication on new data. Its written plan (version 1.0) specifies the analysis; as for Study 1, the timing of its versions cannot be verified because the original version-control history is unavailable.
 
 \paragraph{Semantic chunkers.}
 The \chunk{semantic-bp} arm embeds sentences individually and inserts a boundary when the cosine distance between adjacent sentences exceeds the document's 95th percentile, calculated with linear interpolation. A one-sentence document becomes one chunk. Overlong sentences are split first; groups exceeding 512 words are repacked with the sentence rule. The percentile is fixed in our design rather than attributed to Qu et al.'s evaluated settings.
@@ -246,7 +254,7 @@ For each dataset and contrast, the shorter arm is determined from corpus-average
 
 H4 predicts a shorter-arm support gain of at least 20 percentage points across breakpoint contrasts and retrievers. H4b uses a 10-point threshold for clustering. H5 retains H1's larger-arm formulation under dense retrieval: a decline of at least 20 points in support for \chunk{fixed-512}.
 
-The exploratory pilot showed that the larger arm was already infrequently supported with dense retrieval, limiting how far its share could fall. We therefore added H5b before the confirmatory run: a 20-point increase in support for the shorter arm. H5b changes the estimand and is reported as an amendment. H5 remains the original test.
+The exploratory pilot showed that the larger arm was already infrequently supported with dense retrieval, limiting how far its share could fall. The plan's deviation log records H5b as an amendment made in response: a 20-point increase in support for the shorter arm. H5b changes the estimand and is reported as an amendment. H5 remains the original test.
 
 \subsection{Results}
 Across breakpoint comparisons, shorter-arm support rises from \HFourCount\% to \HFourBudget\%, a gain of \HFourEst\pp{} (95\% CI [\HFourLo, \HFourHi]). H4 is \HFourVerdict. The gain remains when retrievers are examined separately: \HFourBmOnlyEst\pp{} for BM25 and \HFourDenseOnlyEst\pp{} for dense retrieval. Table~\ref{tab:e3sens} reports the sensitivity analyses.
@@ -280,23 +288,23 @@ A positive difference-in-differences (DiD) means that A gains relative to B when
 \subsection{Results}
 All scheduled generations completed. Coverage DiD is \EtwoPoneCov{} (95\% CI [\EtwoPoneCovLo, \EtwoPoneCovHi]) for P1 and \EtwoSthreeCov{} ([\EtwoSthreeCovLo, \EtwoSthreeCovHi]) for S3-256. Both contrasts are positive, consistent with the retrieval studies.
 
-Answer F1 does not show the corresponding positive interaction. The pooled DiDs are \EtwoPoneFone{} ([\EtwoPoneFoneLo, \EtwoPoneFoneHi]) and \EtwoSthreeFone{} ([\EtwoSthreeFoneLo, \EtwoSthreeFoneHi]); both intervals include zero. This leaves the answer-F1 interaction unresolved rather than establishing equivalence.
+Answer F1 does not show a detectable positive interaction. The pooled DiDs are \EtwoPoneFone{} ([\EtwoPoneFoneLo, \EtwoPoneFoneHi]) and \EtwoSthreeFone{} ([\EtwoSthreeFoneLo, \EtwoSthreeFoneHi]); both intervals include zero. This leaves the answer-F1 interaction unresolved: it does not establish that the protocol has no effect on answers, and effects of the size this design can detect remain compatible with the data for S3-256.
 
 For P1, exact match moves in the opposite direction: \EtwoPoneEm{} ([\EtwoPoneEmLo, \EtwoPoneEmHi]). The pooled cell means show the 128-word arm ahead at top-5 (\EtwoEmOneTwoEightCount{} versus \EtwoEmFiveTwelveCount), but the 512-word arm ahead at the matched budget (\EtwoEmFiveTwelveBudget{} versus \EtwoEmOneTwoEightBudget). These cell means are descriptive and have no separately reported intervals. Table~\ref{tab:e2did} gives the full contrasts.
 \input{tables/e2_did}
 
-The P1 F1 MDE is \EtwoPoneFoneMde. An MDE describes statistical sensitivity under a power calculation; it is not an observed bound that excludes larger effects. The confidence intervals are the basis for interpreting this experiment.
+The P1 F1 MDE is \EtwoPoneFoneMde{} (computed from the standard deviation of all 200 queries; the MDE of the equal-weight estimand is \EtwoPoneFoneMdeStrat{}, a post-hoc check). An MDE describes statistical sensitivity under a power calculation; it is not an observed bound that excludes larger effects. The confidence intervals are the basis for interpreting this experiment.
 
 Output length also matters. \EtwoTruncCuad{} of \EtwoJobsCuad{} CUAD outputs and \EtwoTruncQasper{} of \EtwoJobsQasper{} Qasper outputs reached the generation cap (Table~\ref{tab:e2diag}). The cap may affect scores for long answers, but we did not isolate that effect. An additional exploratory observation concerns SQuAD at the matched budget: F1 is \EtwoSquadFiveTwelveBudgetFone{} with the longer passages and \EtwoSquadOneTwoEightBudgetFone{} with the shorter passages, at similar coverage (\EtwoSquadFiveTwelveBudgetCov{} and \EtwoSquadOneTwoEightBudgetCov{}). Passage continuity is a possible explanation, not an established mechanism.
 
 \section{A provisional audit of chunking evaluations}\label{sec:audit}
-The protocol audit covers \AuditN{} empirical chunking studies published or posted in 2024--2026. Candidates were identified through logged web searches. Inclusion requires a comparison of at least two chunkings on a retrieval or answer metric and a conclusion about that comparison. The candidate list, coding protocol and conventions are maintained in \path{literature/protocol_audit/}.
+The protocol audit covers \AuditN{} empirical chunking studies published or posted in 2024--2026. Four of the candidates come from logged web searches (entries 7, 16 and 18 of the search log); the other 15 come from later search sessions whose queries, dates and hit counts were not logged, so the candidate frame cannot be reproduced from the log. Inclusion requires a comparison of at least two chunkings on a retrieval or answer metric and a conclusion about that comparison. The candidate list, coding protocol and conventions are maintained in \path{literature/protocol_audit/}.
 
 We code the headline comparison's selection protocol, whether arm lengths differ, whether retrieved text volume is reported, whether uncertainty accompanies the chunking contrast, and the metric type. The exposure rule identifies count-based comparisons between unequal-length arms. It includes one reciprocal-rank comparison coded as ``other'', rather than fixed-$k$, under the recorded convention.
 
 The coding contains \AuditFixedK{} fixed-count studies, \AuditBudget{} budget-matched study and \AuditUncertainty{} studies reporting a confidence interval or significance test for a chunking contrast. \AuditExposed{} entries are classified as exposed; one reports retrieved text volume. The complete coding appears in Table~\ref{tab:audit}.
 
-The audit remains single-coded, with independent reliability assessment pending. Its exposed share is \AuditExposedPct\% (Wilson interval [\AuditExposedLo, \AuditExposedHi]\%), but this interval does not account for coding error or the non-probability selection of papers. We therefore use the audit as context, not as a prevalence estimate or evidence that the included papers' conclusions are wrong. Establishing exposure also requires attention to the metric: precision-sensitive evaluation is not interchangeable with the coverage metrics studied here.
+The audit is provisional: all codes were assigned by a single coder (an AI research assistant), no blind independent coding has been done, and no reliability coefficient is available. Its exposed share is \AuditExposedPct\% (Wilson interval [\AuditExposedLo, \AuditExposedHi]\%), but this interval does not account for coding error or the non-probability selection of papers. We therefore use the audit as context, not as a prevalence estimate or evidence that the included papers' conclusions are wrong. Establishing exposure also requires attention to the metric: precision-sensitive evaluation is not interchangeable with the coverage metrics studied here.
 
 \section{Discussion}\label{sec:discussion}
 \subsection{What changes when the protocol changes?}
@@ -316,7 +324,7 @@ Statistical summaries need the same precision. Support shares require universe c
 
 \section{Limitations and threats to validity}\label{sec:limitations}
 \paragraph{Measurement.}
-Our span metrics reward any qualifying or best-covered evidence span and do not penalize irrelevant context. They need not predict precision, complete multi-hop evidence acquisition, factuality or answer quality. Word budgets count repeated occurrences, whereas coverage is measured on unique character positions.
+Our span metrics reward any qualifying or best-covered evidence span and do not penalize irrelevant context. They need not predict precision, complete multi-hop evidence acquisition, factuality or answer quality. Word budgets count repeated occurrences, whereas coverage is measured on unique word positions. The metrics are computed on words, not on characters as the plans state; a post-hoc character-based rescoring of the BM25 selections changed no hypothesis verdict, but its effect on the dense-retrieval results was not quantified.
 
 \paragraph{Implementation and scope.}
 Sentence splitting is rule-based, paragraph boundaries depend on blank lines, and budget selection can truncate a chunk. Each semantic chunker uses one setting. The clustering arm is mostly non-contiguous and close to its cap. Same-cap overlap contrasts differ in realized lengths and redundancy, so they are not exact mechanistic controls. The study covers four English collections, one lexical family and one dense encoder. Study 1b reuses Study 1's confirmatory queries. The answer check uses one quantized reader, a small query sample and an output cap that truncated some responses.
@@ -325,15 +333,15 @@ Sentence splitting is rule-based, paragraph boundaries depend on blank lines, an
 Universes are correlated settings, not independent replications. Joint query resampling preserves their shared-query dependence but does not sample new datasets; document dependence is addressed by a sensitivity analysis. Support shares depend on the grid, its weights and the significance rule. H3 uses an approximate power calculation. The answer experiment is exploratory, not a multiplicity-controlled family of confirmatory tests.
 
 \paragraph{Study history and audit.}
-H5b was added after the exploratory pilot and before confirmatory evaluation. A document-bootstrap sensitivity interval was corrected after the Study 1 run. Both changes remain explicit in Appendix~\ref{app:deviations}. The literature audit has not completed independent double-coding and should not support a definitive claim about the prevalence of protocol-related problems.
+H5b is recorded in the plan's deviation log as a post-pilot amendment, and a document-bootstrap sensitivity interval as corrected after the Study 1 run. Both remain explicit in Appendix~\ref{app:deviations}. The original version-control history of the project is unavailable, so the timing of the plans relative to the runs cannot be independently verified. The literature audit has not completed independent double-coding and should not support a definitive claim about the prevalence of protocol-related problems.
 
 \section{Conclusion}
 Chunking verdicts depend on the retrieval-selection protocol. Matching words instead of chunk count reduces support for the larger fixed arm by \HOneEst\pp{} in the primary lexical comparison. In breakpoint comparisons, the shorter arm gains \HFourEst\pp{}. These are changes in support shares within the evaluated grid, not universal rankings of chunkers. The original dense-retrieval hypothesis remains inconclusive, while its disclosed shorter-arm amendment is supported.
 
-The answer-quality check does not establish a corresponding positive F1 interaction. The practical lesson is to state what the comparison holds constant: report retrieval depth and text budget, and test answer quality rather than infer it from evidence coverage.
+The answer-quality check does not detect a corresponding positive F1 interaction, and it does not establish that there is none. The practical lesson is to state what the comparison holds constant: report retrieval depth and text budget, and test answer quality rather than infer it from evidence coverage.
 
 \section{Reproducibility}\label{sec:reproducibility}
-The research repository is available at \\url{https://github.com/swaroopchandrashekar13/rag-research}. It records the pre-registrations, deviation logs, dataset manifests, run configurations and analysis outputs. Numerical results in the text and hypothesis summary use macros generated by \\path{manuscript/make_numbers.py}; the detailed result tables are included directly from the outputs of \\path{manuscript/make_tables.py}. Re-running these scripts after an analysis update keeps the manuscript linked to the results. Bibliographic keys are maintained in \\path{refs.bib}.
+The research repository is available at \url{https://github.com/swaroopchandrashekar13/research}. It records the analysis plans, deviation logs, dataset manifests with SHA-256 digests, run configurations, per-query results and analysis outputs. Result values in the text and in the hypothesis summary are macros generated by \path{manuscript/make_numbers.py}; the result tables are generated by \path{manuscript/make_tables.py} and the figures by \path{ragmv.figures}, all from the logged result files; design constants (dataset names, grid sizes, seeds, thresholds) are written directly in the text. \path{docs/repair/CLAIM_TRACE.md} maps each reported number to its source. The bibliography is generated from \path{literature/bibliography.yaml}.
 
 
 \FloatBarrier
@@ -342,12 +350,12 @@ The research repository is available at \\url{https://github.com/swaroopchandras
 
 \clearpage
 \appendix
-\section{Deviations from the pre-registrations}\label{app:deviations}
-Table~\ref{tab:deviations} summarizes the logged changes in the two pre-registration documents. H5b adds a secondary hypothesis without replacing H5. The post-run Study 1 correction changes the document-cluster sensitivity interval, not its point estimate or verdict.
+\section{Deviations from the analysis plans and corrections}\label{app:deviations}
+Table~\ref{tab:deviations} summarizes the changes logged in the two plans' deviation logs and the corrections made during the repository review of 2026-10-24. The timing column reports what the logs record; with the original version-control history unavailable, it cannot be independently verified. H5b adds a secondary hypothesis without replacing H5. The post-run Study 1 correction changes the document-cluster sensitivity interval, not its point estimate or verdict. Section-number errors in the plans' cross-references are corrected in an erratum that leaves the plans' text unchanged.
 \begin{table}[htbp]\centering\footnotesize
-\caption{Study-plan deviations and their timing.}\label{tab:deviations}
+\caption{Study-plan deviations (as logged) and repository-review corrections.}\label{tab:deviations}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.55cm}>{\raggedright\arraybackslash}p{5.5cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}\toprule
-Study & Change & Timing and consequence\\\midrule
+Study & Change & Timing as logged, and consequence\\\midrule
 Study 1 & Restrict main budgets to $B\geq\max(W_A,W_B)$; retain all budgets for sensitivity analysis & Before the pilot and confirmatory run; a smoke test showed that smaller budgets force truncation of the first chunk.\\
 Study 1 & Add document-cluster resampling & Before the runs; multiple queries are nested in a small number of SQuAD articles.\\
 Study 1 & Align the $\eta^2$ description with the analytic implementation & After the pilot and before freezing; the estimand and thresholds are unchanged.\\
@@ -355,7 +363,11 @@ Study 1 & Correct query-level resampling inside the document-cluster sensitivity
 Answer check & Replace the hosted reader with local Qwen3-4B; fix the sample and operating points & Before analyzed generation, following API-quota limits; the check remains exploratory.\\
 Study 1b & Specify implementation details & During implementation, before pilot output.\\
 Study 1b & Add H5b and retain H5 & After the exploratory pilot, before the confirmatory run; a new secondary estimand is disclosed.\\
-Study 1b & Retain the clustering defaults despite near-cap chunks & After the pilot; the configuration is not tuned to improve the observed outcome.\\\bottomrule
+Study 1b & Retain the clustering defaults despite near-cap chunks & After the pilot; the configuration is not tuned to improve the observed outcome.\\\midrule
+All & Correction: the metrics are computed on word intervals (gold character spans mapped to the words they overlap), whereas the plans define them over characters & Found in the 2026-10-24 review; the reported results are unchanged and described as word-based; a post-hoc character-based rescoring of re-executed BM25 selections changes no verdict (Appendix~\ref{app:charmetric}).\\
+Study 1 & Correction: the Benjamini--Hochberg family is claim, protocol and dataset, not claim alone & Found in the review; the description is corrected; pooling over datasets gives \SensBHPooledEst\pp{} instead of \SensBHEst\pp{}.\\
+Study 1 & Correction: the net-share figure had been drawn from a separate 1,000-resample recomputation & Redrawn from the analysed 2,000-resample shares; points moved by at most 0.009.\\
+Answer check & Correction: the reported MDE uses the pooled standard deviation of all queries & An MDE for the equal-weight estimand is reported alongside (post-hoc); values agree to about 0.001.\\\bottomrule
 \end{tabular}
 \end{table}
 
@@ -390,6 +402,11 @@ The tables below give corpus-level chunk lengths, per-dataset results, sensitivi
 \caption{S3-256 coverage differences: paragraph packing minus fixed windows at a 256-word cap, with 95\% paired-bootstrap intervals. Universes are sorted by effect within each dataset. The near-zero CUAD effects show that the paragraph-packing result is not uniform across domains.}
 \label{fig:s3curve}
 \end{figure}
+
+\FloatBarrier
+\section{Post-hoc sensitivity: character-based metrics}\label{app:charmetric}
+This analysis was not pre-registered. Rankings were not stored, so BM25 retrieval was re-executed with the stored configuration. Before attributing any difference to the metric, we checked that the re-executed word scores and word counts equal the stored arrays: all \PosthocEquivElements{} stored Study 1 values and \PosthocEquivElementsB{} stored Study 1b BM25 values match exactly. The identical selections were then scored with literal characters (whitespace between separately retrieved chunks is covered by neither chunk) and with non-whitespace characters, and analysed with the unchanged pre-registered code and thresholds. Table~\ref{tab:charmetric} reports the result. No hypothesis verdict changes. The literal-character definition changes \PosthocCharFlips{} of \PosthocUniverses{} Study 1 universe verdicts, mostly for strict containment, and none reverses sign. Removing float16 storage changes none. The dense-retrieval arm of Study 1b was not re-executed, so the effect of the definition on H4, H4b, H5 and H5b as pooled over both retrievers is unquantified.
+\input{tables/posthoc_charmetric}
 
 \FloatBarrier
 \section{Generation diagnostics}\label{app:diagnostics}

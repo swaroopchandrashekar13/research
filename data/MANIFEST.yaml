@@ -1,6 +1,8 @@
 # Dataset provenance. Raw data is NOT committed (see .gitignore); `python -I -m ragmv.fetch` downloads
 # from the original sources and refuses files whose SHA256 differs from the values below.
-# Licences: "verified" means a licence file was read from the source; otherwise the status is stated.
+# Licences: "verified-repo-licence" = a licence file was read from the source repository; "dataset-card" = the licence
+# field of the publisher's or authors' Hugging Face dataset card (an authoritative statement, but not a licence file and
+# not legal advice). Neither is a legal clearance for redistribution.
 
 datasets:
   squad2:
@@ -9,8 +11,8 @@ datasets:
       - url: https://raw.githubusercontent.com/rajpurkar/SQuAD-explorer/master/dataset/dev-v2.0.json
         path: data/raw/squad2/dev-v2.0.json
         sha256: 80a5225e94905956a6446d296ca1093975c4d3b3260f1d6c8f68bc2ab77182d8
-    licence: "CC BY-SA 4.0 per the Hugging Face dataset card (L1); mirrors disagree; not stated in the source repo README"
-    licence_status: unverified
+    licence: "CC BY-SA 4.0 per the authors' Hugging Face dataset card rajpurkar/squad_v2 (checked 2026-10-24); not stated in the source repository README; the SQuAD website was not reachable from the checking environment"
+    licence_status: dataset-card
     retrieved: 2026-10-18
 
   covidqa:
@@ -19,7 +21,7 @@ datasets:
       - url: https://raw.githubusercontent.com/deepset-ai/COVID-QA/master/data/question-answering/COVID-QA.json
         path: data/raw/covidqa/COVID-QA.json
         sha256: 291abf17f4bc2bd343838fd8ef5debb6278bbbb61b262db1f1bd58048fff76b9
-    licence: "Apache-2.0 (repository LICENSE file read 2026-10-18)"
+    licence: "Apache-2.0 (repository LICENSE file; re-read 2026-10-24; the deepset/covid_qa_deepset dataset card agrees)"
     licence_status: verified-repo-licence
     retrieved: 2026-10-18
 
@@ -33,8 +35,8 @@ datasets:
         # Member digests derived 2026-10-24 from the archive above after its SHA-256 matched (data-integrity repair).
         members:
           test.json: {sha256: 007b6a40b0c65247f881627375c3d2e9b6aeeb5dfa89957494feed0765a1a073, size: 7378232}
-    licence: "not stated in repository readme; to verify"
-    licence_status: unverified
+    licence: "CC BY 4.0 per the publisher's Hugging Face dataset card theatticusproject/cuad-qa (checked 2026-10-24); the repository README could not be fetched on that date"
+    licence_status: dataset-card
     retrieved: 2026-10-18
 
   qasper:
@@ -52,10 +54,13 @@ datasets:
         extract: [qasper-test-v0.3.json]
         members:  # derived 2026-10-24 from the hash-verified archive
           qasper-test-v0.3.json: {sha256: 6e29ad410e6e39aa1936017fb965b30a20eb2e7751997f55b97c9d281aa884e5, size: 18078957}
-    licence: "not stated in the archive README; to verify"
-    licence_status: unverified
+    licence: "CC BY 4.0 per the publisher's Hugging Face dataset card allenai/qasper (checked 2026-10-24); not stated in the archive README"
+    licence_status: dataset-card
     retrieved: 2026-10-18
 
 policy: >-
-  We do not redistribute any dataset. Derived artefacts committed to this repository are aggregate statistics
-  and per-query metric values keyed by the original question IDs, never source text.
+  We do not redistribute any dataset file. Most derived artefacts are aggregate statistics and per-query metric values
+  keyed by the original question IDs. Exception (corrected 2026-10-24; the earlier text said "never source text"):
+  experiments/E2_generation/runs/**/generations.jsonl stores each sampled question's gold answer strings (copied from
+  the datasets) and the model's answers, which often reproduce passage wording. Those strings remain under the source
+  datasets' licences (SQuAD 2.0 CC BY-SA 4.0, COVID-QA Apache-2.0, CUAD and Qasper CC BY 4.0); see LICENSE-DATA.md.
