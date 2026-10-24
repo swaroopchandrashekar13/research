@@ -1,0 +1,4 @@
+# Study 1b only (semantic chunkers + dense retrieval); tested versions
+torch==2.14.1
+transformers==5.20.1
+sentence-transformers==6.1.0

@@ -1,0 +1,54 @@
+# Dataset provenance. Raw data is NOT committed (see .gitignore); `python -I -m ragmv.fetch` downloads
+# from the original sources and refuses files whose SHA256 differs from the values below.
+# Licences: "verified" means a licence file was read from the source; otherwise the status is stated.
+
+datasets:
+  squad2:
+    description: "SQuAD 2.0 dev set; 35 Wikipedia articles (median ~4,000 words), 5,928 answerable questions with answer spans"
+    files:
+      - url: https://raw.githubusercontent.com/rajpurkar/SQuAD-explorer/master/dataset/dev-v2.0.json
+        path: data/raw/squad2/dev-v2.0.json
+        sha256: 80a5225e94905956a6446d296ca1093975c4d3b3260f1d6c8f68bc2ab77182d8
+    licence: "CC BY-SA 4.0 per the Hugging Face dataset card (L1); mirrors disagree; not stated in the source repo README"
+    licence_status: unverified
+    retrieved: 2026-10-18
+
+  covidqa:
+    description: "COVID-QA (deepset); 147 biomedical papers (median ~3,600 words), 2,019 questions with answer spans"
+    files:
+      - url: https://raw.githubusercontent.com/deepset-ai/COVID-QA/master/data/question-answering/COVID-QA.json
+        path: data/raw/covidqa/COVID-QA.json
+        sha256: 291abf17f4bc2bd343838fd8ef5debb6278bbbb61b262db1f1bd58048fff76b9
+    licence: "Apache-2.0 (repository LICENSE file read 2026-10-18)"
+    licence_status: verified-repo-licence
+    retrieved: 2026-10-18
+
+  cuad:
+    description: "CUAD v1 test split; 102 commercial contracts (median ~3,900 words), 4,182 clause questions, 1,244 answerable"
+    files:
+      - url: https://raw.githubusercontent.com/TheAtticusProject/cuad/main/data.zip
+        path: data/raw/cuad/data.zip
+        sha256: f8161d18bea4e9c05e78fa6dda61c19c846fb8087ea969c172753bc2f45b999a
+        extract: [test.json]
+    licence: "not stated in repository readme; to verify"
+    licence_status: unverified
+    retrieved: 2026-10-18
+
+  qasper:
+    description: "Qasper v0.3 (AllenAI); NLP papers with paragraph structure (median ~3,300 words), questions with evidence paragraphs"
+    files:
+      - url: https://qasper-dataset.s3.us-west-2.amazonaws.com/qasper-train-dev-v0.3.tgz
+        path: data/raw/qasper/qasper-train-dev-v0.3.tgz
+        sha256: a28fdf966db827bcee3d873107d6b6669864fb7ca8fbf73a192f5e39191bdb5a
+        extract: [qasper-dev-v0.3.json]
+      - url: https://qasper-dataset.s3.us-west-2.amazonaws.com/qasper-test-and-evaluator-v0.3.tgz
+        path: data/raw/qasper/qasper-test-and-evaluator-v0.3.tgz
+        sha256: 72a52a41193e2838b8074f80ac074b94f956b84886c36a61c58a7df4171bdd72
+        extract: [qasper-test-v0.3.json]
+    licence: "not stated in the archive README; to verify"
+    licence_status: unverified
+    retrieved: 2026-10-18
+
+policy: >-
+  We do not redistribute any dataset. Derived artefacts committed to this repository are aggregate statistics
+  and per-query metric values keyed by the original question IDs, never source text.

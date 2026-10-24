@@ -1,0 +1,1172 @@
+# Verified bibliography — single source of truth for every citation in this project.
+#
+# verification levels (see literature/PROTOCOL.md):
+#   L0  not checked (from memory) — must never be cited
+#   L1  existence confirmed in a search index (title + arXiv ID/DOI/venue URL); content known only from snippets
+#   L2  abstract read on the primary page (arXiv abs / venue page)
+#   L3  full text read; extracted fields checked against the paper
+#
+# Every entry below is at most L1 as of 2026-10-18: the container's network policy blocks
+# arxiv.org, semanticscholar.org, crossref.org, openreview.net and publisher sites, so no
+# primary page could be opened. Fields marked null were not visible in the index.
+# peer_reviewed: true only when a venue listing (not just the arXiv record) was seen in the index.
+
+entries:
+
+  # ---------- Agent fault tolerance, recovery, exactly-once side effects ----------
+  - key: mohammadi2026atomix
+    title: "Atomix: Timely, Transactional Tool Use for Reliable Agentic Workflows"
+    authors: ["Mohammadi et al. (MPI-SWS; full list not seen)"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2602.14849"
+    url: https://arxiv.org/abs/2602.14849
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: >-
+      Transaction layer for tool calls: epochs, per-resource frontiers, commit on progress predicates;
+      buffers bufferable effects, compensates externalized ones; evaluated on tau-bench with a
+      clean-success audit for duplicate effects.
+    directions: [C1]
+
+  - key: crab2026
+    title: "Crab: A Semantics-Aware Checkpoint/Restore Runtime for Agent Sandboxes"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2604.28138"
+    url: https://arxiv.org/abs/2604.28138
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Host-side checkpoint/restore for agent sandboxes; reports 100% recovery correctness on Terminal-Bench and SWE-Bench with <=1.9% overhead (snippet)."
+    directions: [C1]
+
+  - key: verifiedtoolcalls2026
+    title: "Verified Tool Calls Improve LLM Agent Reliability Under Non-Atomic Failures"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2608.02645"
+    url: https://arxiv.org/abs/2608.02645
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Retry-only baselines repeat already-succeeded actions; verify-before-retry plus idempotent execution reduces duplicates under ambiguous tool responses."
+    directions: [C1, C2]
+
+  - key: li2026exactlyonce
+    title: "Where Does Exactly-Once Live? Model, Harness, and Tool-Contract Effects on Duplicate Side Effects in LLM Agents"
+    authors: ["Jiapeng Li"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2609.29095"
+    url: https://arxiv.org/abs/2609.29095
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: >-
+      LIMBO deterministic sandbox (6 services, 12 fault modes, ledger of committed effects; 25,930 episodes).
+      Model matters when read-back reveals state; otherwise duplicates are common even for frontier models.
+      Idempotency keys cut duplicate rate 28% -> 4%; harness mattered little. Proves no verification-only
+      policy is exactly-once under late commits without a bound on in-flight time.
+    directions: [C1]
+
+  - key: chang2025sagallm
+    title: "SagaLLM: Context Management, Validation, and Transaction Guarantees for Multi-Agent LLM Planning"
+    authors: ["Chang", "Geng (Stanford; given names not seen)"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2503.11951"
+    url: https://arxiv.org/abs/2503.11951
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Saga pattern for multi-agent planning: persistent memory, compensation, independent validation agents; relaxes atomicity/isolation."
+    directions: [C1]
+
+  - key: cordon2026
+    title: "Cordon: Semantic Transactions for Tool-Using LLM (title truncated in index)"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2606.17573"
+    url: https://arxiv.org/abs/2606.17573
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Semantic transactions; intercepts policy-violating effects before commit (45/45 in its evaluation, snippet)."
+    directions: [C1]
+
+  - key: belayer2026
+    title: "Belayer: Efficient Fault Tolerance for LLM Agentic RL Training"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2608.14635"
+    url: https://arxiv.org/abs/2608.14635
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Fault tolerance for agentic RL; notes replay of non-idempotent actions duplicates persistent effects."
+    directions: [C1]
+
+  # ---------- Tool failures, silent errors, fabrication ----------
+  - key: sun2024toolsfail
+    title: "Tools Fail: Detecting Silent Errors in Faulty Tools"
+    authors: ["Jimin Sun", "So Yeon Min", "Yingshan Chang", "Yonatan Bisk"]
+    year: 2024
+    venue: "EMNLP 2024 (main), pp. 14272-14289"
+    id: "2024.emnlp-main.790; arXiv:2406.19228"
+    url: https://aclanthology.org/2024.emnlp-main.790
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "Taxonomy of silent tool errors (input/context/tool); broken-calculator setting and embodied planning; prompting interventions (Disclaimer, Confidence, Checklist) improve detection; LLMs often accept wrong tool outputs."
+    directions: [C2]
+
+  - key: soni2026toolfailbench
+    title: "ToolFailBench: Diagnosing Tool-Use Failures in LLM Agents"
+    authors: ["Harsh Soni"]
+    year: 2026
+    venue: "ICML 2026 (listed on icml.cc)"
+    id: "arXiv:2607.04686"
+    url: https://arxiv.org/abs/2607.04686
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "1,000 tasks, 5 domains; 'parametric traps' where tool return contradicts memorized value; labels Tool-Skip / Result-Ignore / Output-Fabrication / Unnecessary-Tool-Use; best of 19 models 86.33% clean tool-use rate."
+    directions: [C2]
+
+  - key: whentoolsfail2026
+    title: "When Tools Fail: Benchmarking Dynamic Replanning and Anomaly Recovery in LLM Agents"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2606.05806"
+    url: https://arxiv.org/abs/2606.05806
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Benchmark of replanning/recovery when tools misbehave."
+    directions: [C1, C2]
+
+  - key: agentnoisebench2026
+    title: "AgentNoiseBench: Benchmarking Robustness of Tool-Using LLM Agents Under Noisy Condition"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2602.11348"
+    url: https://arxiv.org/abs/2602.11348
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Robustness of tool-using agents under noisy conditions."
+    directions: [C2]
+
+  - key: agentprop2026
+    title: "Evaluating Tool-Using Language Agents: Judge Reliability, Propagation Cascades, and Runtime Mitigation in AgentProp-Bench"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2604.16706"
+    url: https://arxiv.org/abs/2604.16706
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Injected-error propagation; a runtime interceptor cut hallucination on GPT-4o-mini 55.8% -> 32.8% but not significantly on Gemini-2.0-Flash (snippet)."
+    directions: [C2]
+
+  - key: zhang2025miragebench
+    title: "MIRAGE-Bench: LLM Agent is Hallucinating and Where to Find Them"
+    authors: ["Weichen Zhang et al. (full list not seen)"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2507.21017"
+    url: https://arxiv.org/abs/2507.21017
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Hallucination in interactive agent settings, LLM-as-judge labelling of risky actions."
+    directions: [C2]
+
+  - key: shielda2025
+    title: "SHIELDA: Structured Handling of Exceptions in LLM-Driven Agentic Workflows"
+    authors: null
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2508.07935"
+    url: https://arxiv.org/abs/2508.07935
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Structured exception-handling framework for agentic workflows."
+    directions: [C2]
+
+  - key: catchbench2026
+    title: "CatchBench: When Can an Agent Failure Be Caught?"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2608.22808"
+    url: https://arxiv.org/abs/2608.22808
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Detectability of injected agent faults (dependency-state failures)."
+    directions: [C2, C3]
+
+  - key: silentagentic2026
+    title: "When Passing Tests Hides Vulnerabilities: An Empirical Study of Silent Failures in Agentic Systems"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2609.10548"
+    url: https://arxiv.org/abs/2609.10548
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Empirical study of silent failures in agentic systems (title-level only)."
+    directions: [C2]
+
+  # ---------- RAG ingestion, corpus faults, robustness ----------
+  - key: silentfailurerag2026
+    title: "Silent-failure detection in RAG pipelines: A controlled fault-injection study of multi-layer quality gates"
+    authors: null
+    year: 2026
+    venue: "Elsevier journal (PII S2590-1230..., consistent with Results in Engineering; not confirmed)"
+    id: "PII S259012302604096X"
+    url: https://www.sciencedirect.com/science/article/pii/S259012302604096X
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: >-
+      Offline fault injection on BM25, BGE-dense and hybrid+rerank pipelines; 12 faults across retrieval,
+      context, prompt and fallback (stale index, chunk-boundary corruption, embedding mismatch, top-k truncation,
+      reranker disabling, distractor injection, context overflow/shuffle, prompt drift, citation suppression,
+      fallback bypass, duplicate-source inflation); 146,016 traces. Several faults keep answer-level acceptability
+      while degrading evidence, citation, abstention or provenance; a composite multi-layer gate beats
+      single-layer detectors. Does not estimate prevalence in live traffic; gates need per-deployment calibration.
+    directions: [C3, C5]
+    notes: "Closest prior work to C3. Must be read in full (L3) before C3 can be claimed novel."
+
+  - key: zhang2025ohrbench
+    title: "OCR Hinders RAG: Evaluating the Cascading Impact of OCR on Retrieval-Augmented Generation"
+    authors: ["Zhang et al. (Shanghai AI Laboratory; full list not seen)"]
+    year: 2025
+    venue: "ICCV 2025"
+    id: "arXiv:2412.02592"
+    url: https://openaccess.thecvf.com/content/ICCV2025/html/Zhang_OCR_Hinders_RAG_Evaluating_the_Cascading_Impact_of_OCR_on_ICCV_2025_paper.html
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "OHRBench: unstructured PDFs/document images from 7 domains with QA; semantic vs formatting OCR noise injected at varying degrees; best OCR still costs >=14% end-to-end F1 (secondary summary); edit distance does not track RAG performance. Data and eval code on GitHub (opendatalab/OHR-Bench)."
+    directions: [C3, C4]
+
+  - key: barnett2024sevenfailure
+    title: "Seven Failure Points When Engineering a Retrieval Augmented Generation System"
+    authors: ["Scott Barnett", "Stefanus Kurniawan", "Srikanth Thudumu", "Zach Brannelly", "Mohamed Abdelrazek"]
+    year: 2024
+    venue: "CAIN 2024 (IEEE/ACM 3rd Intl. Conf. on AI Engineering), pp. 194-199"
+    id: "arXiv:2401.05856"
+    url: https://arxiv.org/abs/2401.05856
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "Experience report from three case studies; seven failure points (missing content, missed top-ranked docs, not in context, not extracted, wrong format, incorrect specificity, incomplete); validation feasible only during operation."
+    directions: [C3]
+
+  - key: robustrag2024
+    title: "Certifiably Robust RAG against Retrieval Corruption"
+    authors: null
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2405.15556"
+    url: https://arxiv.org/abs/2405.15556
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "RobustRAG isolate-then-aggregate defense with certifiable robustness against adversarial corpus corruption."
+    directions: [C3]
+
+  - key: reliabilityrag2025
+    title: "ReliabilityRAG: Effective and Provably Robust Defense for RAG-based Web-Search"
+    authors: null
+    year: 2025
+    venue: "NeurIPS 2025 (poster listing)"
+    id: "arXiv:2509.23519"
+    url: https://neurips.cc/virtual/2025/poster/119236
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "Maximum independent set over a contradiction graph, favouring reliable sources; adversarial setting."
+    directions: [C3]
+
+  - key: nie2026poisonfails
+    title: "When Poison Fails After Retrieval: Revisiting Corpus Poisoning under Chunking and Reranking Pipelines"
+    authors: ["Xi Nie", "Hongwei Li", "Shenghao Wu", "Mingxuan Li", "Jiachen Li", "Wenbo Jiang"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2606.11265"
+    url: https://arxiv.org/abs/2606.11265
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Document-level poisoning attacks lose effectiveness after chunking + reranking ('retrieval granularity mismatch'); Signal Retention Rate metric; chunk-aware attack CRCP keeps ASR >88%."
+    directions: [C3, C5]
+    notes: "Methodological precedent: realistic pipeline stages change published conclusions."
+
+  - key: ragops2025
+    title: "RAGOps: Operating and Managing Retrieval-Augmented Generation Pipelines"
+    authors: null
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2506.03401"
+    url: https://arxiv.org/abs/2506.03401
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Operations/management of RAG pipelines (title-level only)."
+    directions: [C3]
+
+  - key: ragtester2026
+    title: "RAG-TESTER: Automated End-to-End Testing of Retrieval-Augmented Large Language Models"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2608.00054"
+    url: https://arxiv.org/abs/2608.00054
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "LLM-generated test documents + oracle-based end-to-end testing; abstract/results not seen."
+    directions: [C3]
+
+  - key: chunkcoverage2026
+    title: "Testing Retrieval-Augmented Generation Systems with Chunk Coverage"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2607.18155"
+    url: https://arxiv.org/abs/2607.18155
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Coverage criterion over chunks for RAG testing (title-level only)."
+    directions: [C3, C5]
+
+  - key: rare2026
+    title: "RARE (benchmark construction over highly redundant corpora; exact title not seen)"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2604.19047"
+    url: https://www.emergentmind.com/papers/2604.19047
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Strong retriever drops from 66.4% PerfRecall@10 (4-hop General-Wiki) to 5.0-27.9% on redundant domain corpora (secondary summary)."
+    directions: [C3]
+
+  - key: wang2024ragunlearning
+    title: "When Machine Unlearning Meets Retrieval-Augmented Generation (RAG): Keep Secret or Forget Knowledge?"
+    authors: ["Wang", "Zhu", "Ye", "Zhou (given names not seen)"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2410.15267"
+    url: https://arxiv.org/abs/2410.15267
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Uses edits to the RAG knowledge base to simulate unlearning of an LLM; not a deletion-propagation benchmark."
+    directions: [C3]
+
+  # ---------- Chunking, parsing, RAG design decisions ----------
+  - key: qu2025semanticchunking
+    title: "Is Semantic Chunking Worth the Computational Cost?"
+    authors: ["Renyi Qu", "Ruixuan Tu", "Forrest Sheng Bao"]
+    year: 2025
+    venue: "Findings of NAACL 2025, pp. 2155-2177"
+    id: "2025.findings-naacl.114; arXiv:2410.13070"
+    url: https://aclanthology.org/2025.findings-naacl.114
+    peer_reviewed: true
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Semantic chunking's cost is not justified by consistent gains over fixed-size chunking across document retrieval, evidence retrieval and answer generation."
+    directions: [C4, C5]
+
+  - key: chunkingcost2026
+    title: "Chunking Methods on Retrieval-Augmented Generation - Effectiveness Evaluation Against Computational Cost and Limitations"
+    authors: ["Mateusz Śmigielski", "Michał Rajkowski", "Mateusz Zbrocki", "Michał Bernacki-Janson", "Karol Kunicki", "Julianna Godziszewska", "Maciej Piasecki", "Konrad Wojtasik"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2606.00881"
+    url: https://arxiv.org/abs/2606.00881
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Chunking-method comparison vs cost (title-level only)."
+    directions: [C4]
+
+  - key: pdfparsingfin2026
+    title: "Empirical Evaluation of PDF Parsing and Chunking for Financial Question Answering with RAG"
+    authors: ["Omar El Bachyr", "Yewei Song", "Saad Ezzini", "Jacques Klein", "Tegawendé F. Bissyandé", "Anas Zilali", "Ulrick Ble", "Anne Goujon"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2604.12047"
+    url: https://arxiv.org/abs/2604.12047
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Varies PDF parser, chunking and LLM on FinanceBench plus a new table QA set (TableQuest); code and configs released."
+    directions: [C3, C4, C5]
+
+  - key: chunkingacademic2026
+    title: "Evaluating Chunking Strategies for Retrieval-Augmented Generation on Academic Texts"
+    authors: ["Valentin J. J. Kreileder", "Johannes Reisinger", "Andreas Fischer"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2607.01852"
+    url: https://arxiv.org/abs/2607.01852
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Cluster-based semantic vs fixed/recursive chunking on theses; reports RAGAS faithfulness of limited reliability."
+    directions: [C4, C5]
+
+  - key: zhao2026ragdesign
+    title: "Understanding the (Fundamental) Design Decisions of Retrieval-Augmented Generation Systems"
+    authors: ["Shengming Zhao", "Yuchen Shao", "Yuheng Huang", "Jiayang Song", "Zhijie Wang", "Chengcheng Wan", "Lei Ma"]
+    year: 2026
+    venue: "ACM TOSEM (journal ref on arXiv listing)"
+    id: "arXiv:2411.19463"
+    url: https://arxiv.org/abs/2411.19463
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "Three LLMs x six datasets; optimal retrieval volume is task-dependent; prompting methods act as orthogonal pathways."
+    directions: [C5]
+
+  # ---------- Evaluation methodology and statistics ----------
+  - key: miller2024errorbars
+    title: "Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations"
+    authors: ["Evan Miller"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2411.00640"
+    url: https://arxiv.org/abs/2411.00640
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Evals as experiments; formulas for CIs, paired model comparison and eval planning (power)."
+    directions: [C5]
+
+  - key: heineman2025signalnoise
+    title: "Signal and Noise: A Framework for Reducing Uncertainty in Language Model Evaluation"
+    authors: ["Heineman et al. (AI2 / UW; full list not seen)"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2508.13144"
+    url: https://arxiv.org/abs/2508.13144
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Signal (separating better/worse models) and noise (sensitivity to training-step variability); higher SNR benchmarks better for small-scale decisions."
+    directions: [C5]
+
+  - key: bell2022multiverse
+    title: "Modeling the Machine Learning Multiverse"
+    authors: ["Samuel J. Bell", "Onno Kampman", "Jesse Dodge", "Neil D. Lawrence"]
+    year: 2022
+    venue: "NeurIPS 2022"
+    id: "arXiv:2206.05985"
+    url: https://proceedings.neurips.cc/paper_files/paper/2022/hash/750337e1301941f81ae31a90e0a1c181-Abstract.html
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "Multiverse analysis for ML using a GP surrogate + Bayesian experimental design; case studies on adaptive optimizers and large-batch generalization."
+    directions: [C5]
+
+  - key: caseawarejudge2026
+    title: "Case-Aware LLM-as-a-Judge Evaluation for Enterprise-Scale RAG Systems"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2602.20379"
+    url: https://arxiv.org/abs/2602.20379
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Conversation-level tests (Wilcoxon + bootstrap) to avoid correlated-turn inflation; second judge shows moderate-to-strong agreement, some conclusions judge-sensitive."
+    directions: [C5]
+
+  - key: vera2024
+    title: "VERA: Validation and Evaluation of Retrieval-Augmented Systems"
+    authors: null
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2409.03759"
+    url: https://arxiv.org/abs/2409.03759
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Bootstraps RAG metrics because single runs mislead."
+    directions: [C5]
+
+  - key: judgereliability2024
+    title: "Can You Trust LLM Judgments? Reliability of LLM-as-a-Judge"
+    authors: null
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2412.12509"
+    url: https://arxiv.org/abs/2412.12509
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Seed-only variation of judge outputs; McDonald's omega for consistency."
+    directions: [C5]
+
+  - key: toolfailurespower2025
+    title: "Benchmarking Failures in Tool-Augmented Language Models"
+    authors: null
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2503.14227"
+    url: https://arxiv.org/abs/2503.14227
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Includes a power analysis (~92 queries for a medium effect at strict alpha, snippet)."
+    directions: [C2, C5]
+
+  # ---------- Root-cause analysis agents ----------
+  - key: xu2025openrca
+    title: "OpenRCA: Can Large Language Models Locate the Root Cause of Software Failures?"
+    authors: ["Xu et al. (Microsoft; full list not seen)"]
+    year: 2025
+    venue: "ICLR 2025"
+    id: null
+    url: https://iclr.cc/virtual/2025/poster/32093
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "335 failures, 3 enterprise systems, >68 GB logs/metrics/traces; best (Claude 3.5 + RCA-agent) solved 11.34%."
+    directions: [C6]
+
+  - key: openrcapitfalls2026
+    title: "(failure analysis of OpenRCA agents; exact title not seen)"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2602.09937"
+    url: https://arxiv.org/abs/2602.09937
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "1,675 runs, five LLMs, 12 pitfall types; hallucinated data interpretation and incomplete exploration persist across models."
+    directions: [C6]
+
+  - key: gopal2026rcarealworld
+    title: "How Far Can Root Cause Analysis Go on Real-World Telemetry Data?"
+    authors: ["Gopal", "Krishnan (given names not seen)"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2607.13548"
+    url: https://arxiv.org/abs/2607.13548
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Causal discovery and LLM multi-agent systems fail on OpenRCA; proposes structured pipeline; a half-hour telemetry segment is ~2 GB."
+    directions: [C6]
+
+  # ---------- On-device agents ----------
+  - key: tinyllm2025
+    title: "TinyLLM: Evaluation and Optimization of Small Language Models for Agentic Tasks on Edge Devices"
+    authors: null
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2511.22138"
+    url: https://arxiv.org/abs/2511.22138
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Sub-3B models on BFCL function calling; DPO fine-tuning; latency/accuracy trade-offs; privacy argued qualitatively."
+    directions: [C7]
+
+  - key: devicedecides2026
+    title: "The Device Decides: Benchmarking the Reliability of Agentic SLMs at the Edge"
+    authors: null
+    year: 2026
+    venue: "NeurIPS 2026 listing (acceptance status not confirmed)"
+    id: null
+    url: https://neurips.cc/virtual/2026/171187
+    peer_reviewed: null
+    verification: L1
+    snippet_summary: "Same model completes 0.54 of a multi-step suite on one device vs 0.04 on another."
+    directions: [C7]
+
+  - key: beyondbinary2026
+    title: "Beyond Binary Benchmarks: Telemetry-Grounded Evaluation of On-Device Computer-Using Agents"
+    authors: null
+    year: 2026
+    venue: "NeurIPS 2026 listing (acceptance status not confirmed)"
+    id: null
+    url: https://neurips.cc/virtual/2026/171317
+    peer_reviewed: null
+    verification: L1
+    snippet_summary: "Dynamic context, not weights, dominates VRAM for on-device computer-use agents; argues for memory/latency traces."
+    directions: [C7]
+
+  # ---------- Agent security, authorization outside the model ----------
+  - key: debenedetti2025camel
+    title: "Defeating Prompt Injections by Design"
+    authors: ["Edoardo Debenedetti", "Ilia Shumailov", "Tianqi Fan", "Jamie Hayes", "Nicholas Carlini", "Daniel Fabian", "Christoph Kern", "Chongyang Shi", "Andreas Terzis", "Florian Tramèr"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2503.18813"
+    url: https://arxiv.org/abs/2503.18813
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "CaMeL: control/data-flow extraction + capability-tracking interpreter; AgentDojo 77% with provable security vs 84% undefended (v2; v1 reported 67%)."
+    directions: [C9]
+
+  - key: debenedetti2024agentdojo
+    title: "AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents"
+    authors: ["Debenedetti", "Zhang", "Balunović", "Beurer-Kellner", "Fischer", "Tramèr (given names not all seen)"]
+    year: 2024
+    venue: "NeurIPS 2024 Datasets and Benchmarks Track"
+    id: "arXiv:2406.13352"
+    url: https://proceedings.neurips.cc/paper_files/paper/2024/hash/97091a5177d8dc64b1da8bf3e1f6fb54-Abstract.html
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "97 tasks, 629 security test cases; formal utility checks on environment state; SOTA LLMs fail many tasks even without attacks."
+    directions: [C9]
+    notes: "v1 title omitted 'Prompt Injection'."
+
+  - key: narisetty2026oob
+    title: "Adaptive Evaluation of Out-of-Band Defenses Against Prompt Injection in LLM Agents"
+    authors: ["Narisetty et al."]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2606.26479"
+    url: https://arxiv.org/abs/2606.26479
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Frames CaMeL, FIDES, Progent, RTBAS, FORGE via Biba integrity / reference monitors / least privilege; adaptive evaluation."
+    directions: [C9]
+
+  # ---------- Tool / agent discovery at scale ----------
+  - key: mcpzero2025
+    title: "MCP-Zero: Active Tool Discovery for Autonomous LLM Agents"
+    authors: null
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2506.01056"
+    url: https://arxiv.org/abs/2506.01056
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Agent requests tools itself instead of preloaded schemas."
+    directions: [C10]
+
+  - key: livemcpbench2025
+    title: "LiveMCPBench: Can Agents Navigate an Ocean of MCP Tools?"
+    authors: null
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2508.01780"
+    url: https://arxiv.org/abs/2508.01780
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "527 tools across 70 MCP servers; retrieval errors ~half of failures (secondary)."
+    directions: [C10]
+
+  - key: humanmcp2026
+    title: "HumanMCP: A Human-Like Query Dataset for Evaluating MCP Tool Retrieval Performance"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2602.23367"
+    url: https://arxiv.org/abs/2602.23367
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Human-like queries over 2,800 tools / 308 MCP servers."
+    directions: [C10]
+
+  # ---------- Memory / feedback poisoning ----------
+  - key: chen2024agentpoison
+    title: "AgentPoison: Red-teaming LLM Agents via Poisoning Memory or Knowledge Bases"
+    authors: ["Chen et al. (full list not seen)"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2407.12784"
+    url: https://arxiv.org/abs/2407.12784
+    peer_reviewed: null
+    verification: L1
+    snippet_summary: ">80% attack success at <0.1% poison rate, <1% benign drop."
+    directions: [C8]
+    notes: "NeurIPS 2024 acceptance is from memory (L0) — confirm before citing a venue."
+
+  - key: memorypoisondefense2026
+    title: "Memory Poisoning Attack and Defense on Memory Based LLM-Agents"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2601.05504"
+    url: https://arxiv.org/abs/2601.05504
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Revisits MINJA under realistic deployments; sanitization depends on trust-threshold calibration."
+    directions: [C8]
+
+  - key: smsr2026
+    title: "SMSR: Certified Defence Against Runtime Memory Poisoning in Persistent LLM Agent Systems"
+    authors: null
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2606.12703"
+    url: https://arxiv.org/abs/2606.12703
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "HMAC provenance signing + randomized ablation + majority verdict; 15 enterprise KB scenarios."
+    directions: [C8]
+
+  # ---------- Surveys / general ----------
+  - key: aifaultinjection2024
+    title: "A Survey on Failure Analysis and Fault Injection in AI Systems"
+    authors: null
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2407.00125"
+    url: https://arxiv.org/abs/2407.00125
+    peer_reviewed: false
+    verification: L1
+    snippet_summary: "Survey of failure analysis and fault injection across AI system layers."
+    directions: [C1, C3]
+
+  # ---------- Added during the C5 novelty challenge ----------
+  - key: smucker2007sigtests
+    title: "A Comparison of Statistical Significance Tests for Information Retrieval Evaluation"
+    authors: ["Smucker", "Allan", "Carterette (given names not seen)"]
+    year: 2007
+    venue: "CIKM 2007"
+    id: null
+    url: https://ciir-publications.cs.umass.edu/getpdf.php?id=744
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: "Compares paired t, Wilcoxon, sign, bootstrap and randomization tests on TREC MAP differences; little practical difference between randomization, bootstrap and t tests."
+    directions: [C5]
+
+  - key: urbano2019sigtesting
+    title: "Statistical Significance Testing in Information Retrieval: An Empirical Analysis of Type I, Type II and Type III Errors"
+    authors: ["Urbano", "Lima", "Hanjalic (given names not seen)"]
+    year: 2019
+    venue: "arXiv (SIGIR 2019 venue not confirmed in index)"
+    id: "arXiv:1905.11096"
+    url: https://arxiv.org/abs/1905.11096
+    peer_reviewed: null
+    verification: L1
+    snippet_summary: "Simulation from TREC data; >500M p-values across tests, measures, topic-set sizes and effect sizes; t-test most popular in IR papers."
+    directions: [C5]
+
+  - key: rau2024bergen
+    title: "BERGEN: A Benchmarking Library for Retrieval-Augmented Generation"
+    authors: ["David Rau", "Hervé Déjean", "Nadezhda Chirkova", "Thibault Formal", "Shuai Wang", "Stéphane Clinchant", "Vassilina Nikoulina"]
+    year: 2024
+    venue: "Findings of EMNLP 2024"
+    id: "2024.findings-emnlp.449; arXiv:2407.01102"
+    url: https://aclanthology.org/2024.findings-emnlp.449/
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      Read (2026-10-18) the authors' 13-page slide deck shipped in the official repository (github.com/naver/bergen,
+      documentation/BERGEN.pdf). RQs: which metrics, which datasets, does retrieval quality help generation, LLM size,
+      fine-tuning. Zero-shot RAG, top-5 documents, KILT Wikipedia passages (fixed passages). Recommended baseline:
+      SPLADE-v3 + DeBERTa-v3 reranker + SOLAR-10.7B, top-5. Repo docs show fixed default chunking per dataset
+      (e.g., 100 words / 20 overlap). No analysis of conclusion stability, significance, or chunking as a factor
+      appears in the slides or repo documentation.
+    directions: [C5]
+    notes: "L2 = author-provided summary + repo docs, not the full paper. Raise to L3 when aclanthology.org is reachable."
+  # ---------- Added 2026-10-18 (session 2): chunking / RAG-stability threats ----------
+  - key: muthyam2026ragstability
+    title: "A Systems-Level Analysis of Sensitivity, Robustness, and Stability in Retrieval-Augmented Generation"
+    authors: ["Bharath Simha Reddy Muthyam"]
+    year: 2026
+    venue: arXiv (cs.IR)
+    id: "arXiv:2606.28337"
+    url: https://arxiv.org/abs/2606.28337
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: >-
+      56 runs varying chunk size, top-k, embedding reranking, probabilistic retrieval noise and seeds on a fixed
+      500-question QA subset (20,958 contexts). Retrieval metrics improve with broader retrieval while EM/F1 move
+      non-monotonically; small chunks cause preprocessing answer loss; variance higher in broad regimes.
+    directions: [C5]
+    notes: "Closest threat to C5. Single dataset; per-configuration description; no k-vs-budget matching or conclusion-flip inference seen at L1."
+
+  - key: bhat2025chunksize
+    title: "Rethinking Chunk Size For Long-Document Retrieval: A Multi-Dataset Analysis"
+    authors: ["Sinchana Ramakanth Bhat", "Max Rudat", "Jannis Spiekermann", "Nicolas Flores-Herr"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2505.21700"
+    url: https://arxiv.org/abs/2505.21700
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: >-
+      Fixed-size chunking across six datasets (incl. NarrativeQA, NewsQA, NQ, TechQA, CovidQA) and two embedders
+      (Stella, Snowflake). Small chunks (64-128) best for short factoid answers, large (512-1024) for broader context;
+      embedders respond differently to chunk size.
+    directions: [C5]
+    notes: "Establishes that 'the optimal chunk size varies'; C5 must go beyond this (protocol artefacts, inference, power)."
+
+  - key: garrido2026chunksize
+    title: "The Effect of Text Chunk Size on Retrieval-Augmented Generation Performance"
+    authors: ["German Garrido-Lestache Belinchon", "Hugo Garrido-Lestache Belinchon"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2607.24767"
+    url: https://arxiv.org/abs/2607.24767
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Sentence / paragraph / chapter chunks of undergraduate textbooks; Reciprocal Rank over 100 LLM-generated prompts."
+    directions: [C5]
+
+  # ---------- Added 2026-10-18 (session 4): chunking-comparison papers for the protocol audit ----------
+  - key: beyondchunkthenembed2026
+    title: "Beyond Chunk-Then-Embed: A Comprehensive Taxonomy and Evaluation of Document Chunking Strategies for Information Retrieval"
+    authors: ["Yongjie Zhou", "Shuai Wang", "Bevan Koopman", "Guido Zuccon"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2602.16974"
+    url: https://arxiv.org/abs/2602.16974
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Reproduces and compares chunking methods; best strategy depends on task (structure-based beats LLM-guided in-corpus; LumberChunker wins in-document; late chunking helps in-corpus, hurts in-document)."
+    directions: [C5]
+    notes: "Close prior work (task dependence). Priority-1 full-text read: does it control retrieved-text amount?"
+
+  - key: chunkembedsensitivity2026
+    title: "A Systematic Investigation of Document Chunking Strategies and Embedding Sensitivity"
+    authors: ["Muhammad Arslan Shaukat", "Muntasir Adnan", "Carlos C. N. Kuhn"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2603.06976"
+    url: https://arxiv.org/abs/2603.06976
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Title-level only."
+    directions: [C5]
+    notes: "Priority-1 full-text read (possible overlap)."
+
+  - key: reconstructingcontext2025
+    title: "Reconstructing Context: Evaluating Advanced Chunking Strategies for Retrieval-Augmented Generation"
+    authors: ["Carlo Merola", "Jaspinder Singh"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2504.19754"
+    url: https://arxiv.org/abs/2504.19754
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Early vs late chunking, contextual retrieval, across segmenters and embedding models."
+    directions: [C5]
+
+  - key: hichunk2025
+    title: "HiChunk: Evaluating and Enhancing Retrieval-Augmented Generation with Hierarchical Chunking"
+    authors: ["Wensheng Lu", "Keyu Chen", "Ruizhi Qiao", "Xing Sun"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2509.11552"
+    url: https://arxiv.org/abs/2509.11552
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Hierarchical chunking method and evaluation."
+    directions: [C5]
+
+  - key: metachunking2024
+    title: "Meta-Chunking: Learning Text Segmentation and Semantic Completion via Logical Perception"
+    authors: ["Jihao Zhao", "Zhiyuan Ji", "Yuchen Feng", "Pengnian Qi", "Simin Niu", "Bo Tang", "Feiyu Xiong", "Zhiyu Li"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2410.12788"
+    url: https://arxiv.org/abs/2410.12788
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Perplexity- and margin-sampling chunkers; PPL chunking best in re-ranking experiments."
+    directions: [C5]
+
+  - key: freechunker2025
+    title: "FreeChunker: A Cross-Granularity Chunking Framework"
+    authors: ["Wenxuan Zhang", "Yuan-Hao Jiang", "Yang Cao", "Yonghe Wu"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2510.20356"
+    url: https://arxiv.org/abs/2510.20356
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Cross-granularity chunking framework (title-level)."
+    directions: [C5]
+
+  - key: moc2025
+    title: "MoC: Mixtures of Text Chunking Learners for Retrieval-Augmented Generation System"
+    authors: ["Jihao Zhao", "Zhiyuan Ji", "Zhaoxin Fan", "Hanyu Wang", "Simin Niu", "Bo Tang", "Feiyu Xiong", "Zhiyu Li"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2503.09600"
+    url: https://arxiv.org/abs/2503.09600
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Mixture of chunking learners (title-level)."
+    directions: [C5]
+
+  - key: queryadaptivechunking2026
+    title: "Query-Adaptive Semantic Chunking for Retrieval-Augmented Generation: A Dynamic Strategy with Contextual Window Expansion"
+    authors: ["Mudit Rastogi"]
+    year: 2026
+    venue: arXiv
+    id: "arXiv:2605.22834"
+    url: https://arxiv.org/abs/2605.22834
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Title-level only."
+    directions: [C5]
+
+  - key: arabicrag2025
+    title: "Optimizing RAG Pipelines for Arabic: A Systematic Analysis of Core Components"
+    authors: ["Jumana Alsubhi", "Mohammad D. Alahmadi", "Ahmed Alhusayni", "Ibrahim Aldailami", "Israa Hamdine", "Ahmad Shabana", "Yazeed Iskandar", "Suhayb Khayyat"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2506.06339"
+    url: https://arxiv.org/abs/2506.06339
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Semantic chunking underperformed across its datasets (secondary summary)."
+    directions: [C5]
+
+  - key: jimenoyepes2024financial
+    title: "Financial Report Chunking for Effective Retrieval Augmented Generation"
+    authors: ["Antonio Jimeno Yepes", "Yao You", "Jan Milczek", "Sebastian Laverde", "Renyu Li"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2402.05131"
+    url: https://arxiv.org/abs/2402.05131
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Element-type (structure-based) chunking of SEC filings beats paragraph/fixed chunking on FinanceBench across 128-512-word chunk sizes (secondary summary)."
+    directions: [C5]
+
+  - key: duarte2024lumberchunker
+    title: "LumberChunker: Long-Form Narrative Document Segmentation"
+    authors: ["André V. Duarte", "João Marques", "Miguel Graça", "Miguel Freire", "Lei Li", "Arlindo L. Oliveira"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2406.17526"
+    url: https://arxiv.org/abs/2406.17526
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "LLM-guided segmentation; average 334 tokens per chunk vs 79 for paragraph-level chunking (snippet) - chunk-length imbalance relevant to our protocol question."
+    directions: [C5]
+
+  - key: gunther2024latechunking
+    title: "Late Chunking: Contextual Chunk Embeddings Using Long-Context Embedding Models"
+    authors: ["Michael Günther", "Isabelle Mohr", "Daniel James Williams", "Bo Wang", "Han Xiao"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2409.04701"
+    url: https://arxiv.org/abs/2409.04701
+    peer_reviewed: false
+    verification: L2
+    verification_note: "2026-10-19: full-text PDF obtained; abstract and experimental-setup sections read for the protocol audit (literature/protocol_audit/coding.csv). L3 requires a full read."
+    snippet_summary: "Embed full text first, then pool per chunk; v3 July 2025."
+    directions: [C5]
+
+  # ---------- Added 2026-10-19 (session 5): model papers for writing + methodology citations ----------
+  - key: dodge2019showyourwork
+    title: "Show Your Work: Improved Reporting of Experimental Results"
+    authors: ["Jesse Dodge", "Suchin Gururangan", "Dallas Card", "Roy Schwartz", "Noah A. Smith"]
+    year: 2019
+    venue: "EMNLP-IJCNLP 2019"
+    id: "arXiv:1909.03004; ACL Anthology D19-1224"
+    url: https://aclanthology.org/D19-1224/
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      Test-set scores alone are insufficient to decide which model is best; proposes expected validation performance as a
+      function of computation budget; finds recent comparisons whose conclusion would change with more or less compute.
+    directions: [C5]
+    notes: "Model paper (writing + framing): a reporting protocol changes comparison verdicts. Abstract read on arXiv; venue on ACL Anthology."
+  - key: kamalloo2023evaluating
+    title: "Evaluating Open-Domain Question Answering in the Era of Large Language Models"
+    authors: ["Ehsan Kamalloo", "Nouha Dziri", "Charles L. A. Clarke", "Davood Rafiei"]
+    year: 2023
+    venue: "ACL 2023"
+    id: "arXiv:2305.06984; ACL Anthology 2023.acl-long.307"
+    url: https://aclanthology.org/2023.acl-long.307/
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      Lexical matching (EM/F1) fails when candidate answers are not in the gold list, increasingly so for long LLM
+      answers; manual evaluation on NQ-open shows true performance of all models is underestimated.
+    directions: [C5]
+    notes: "Model paper; also relevant to our Tier 2 limitation (SQuAD-style F1 penalises verbose correct answers)."
+  - key: steegen2016multiverse
+    title: "Increasing Transparency Through a Multiverse Analysis"
+    authors: ["Sara Steegen", "Francis Tuerlinckx", "Andrew Gelman", "Wolf Vanpaemel"]
+    year: 2016
+    venue: "Perspectives on Psychological Science 11(5):702-712"
+    id: "doi:10.1177/1745691616658637"
+    url: https://doi.org/10.1177/1745691616658637
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: >-
+      Proposes multiverse analysis: run the analysis across all reasonable data-processing choices to show how fragile or
+      robust a finding is (example: fertility and religiosity/political attitudes).
+    directions: [C5]
+    notes: "Methodological origin of 'multiverse'. Journal page not reachable here (index only); read the PDF for L3."
+
+  # ---------- Background sources for the manuscript (added 2026-10-20; metadata from primary pages) ----------
+  - key: lewis2020rag
+    title: "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks"
+    authors: ["Patrick Lewis", "Ethan Perez", "Aleksandra Piktus", "Fabio Petroni", "Vladimir Karpukhin", "Naman Goyal", "Heinrich Küttler", "Mike Lewis", "Wen-tau Yih", "Tim Rocktäschel", "Sebastian Riedel", "Douwe Kiela"]
+    year: 2020
+    venue: "NeurIPS 2020"
+    id: "arXiv:2005.11401"
+    url: https://arxiv.org/abs/2005.11401
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      Combines a pre-trained seq2seq generator (parametric memory) with a dense vector index of Wikipedia accessed by a
+      neural retriever (non-parametric memory); two formulations (same passages for the whole output vs per token);
+      state of the art on three open-domain QA tasks.
+    directions: [C5]
+    notes: "Origin of the term RAG. Abstract and author list read via the arXiv API (2026-10-20); venue from the arXiv comment 'Accepted at NeurIPS 2020'."
+  - key: gao2023ragsurvey
+    title: "Retrieval-Augmented Generation for Large Language Models: A Survey"
+    authors: ["Yunfan Gao", "Yun Xiong", "Xinyu Gao", "Kangxiang Jia", "Jinliu Pan", "Yuxi Bi", "Yi Dai", "Jiawei Sun", "Meng Wang", "Haofen Wang"]
+    year: 2023
+    venue: arXiv
+    id: "arXiv:2312.10997"
+    url: https://arxiv.org/abs/2312.10997
+    peer_reviewed: false
+    verification: L2
+    snippet_summary: >-
+      Survey of RAG for LLMs (hallucination, outdated knowledge, untraceable reasoning); reviews naive, advanced and
+      modular RAG and their retrieval, generation and augmentation components, and evaluation.
+    directions: [C5]
+    notes: "Background survey. Abstract read via the arXiv API (v5, 2024-03-27; arXiv comment 'Ongoing Work'). Not peer reviewed."
+  - key: rajpurkar2018squad2
+    title: "Know What You Don't Know: Unanswerable Questions for SQuAD"
+    authors: ["Pranav Rajpurkar", "Robin Jia", "Percy Liang"]
+    year: 2018
+    venue: "ACL 2018 (Volume 2: Short Papers), pp. 784-789"
+    id: "arXiv:1806.03822; ACL Anthology P18-2124; doi:10.18653/v1/P18-2124"
+    url: https://aclanthology.org/P18-2124/
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      SQuAD 2.0: existing SQuAD data plus over 50,000 unanswerable questions written adversarially by crowdworkers to
+      look similar to answerable ones; systems must abstain when the paragraph does not support an answer.
+    directions: [C5]
+    notes: "Dataset paper (SQuAD 2.0 dev used). Abstract read on the ACL Anthology page and via the arXiv API; the ACL version calls the dataset SQuADRUn, the arXiv version SQuAD 2.0."
+  - key: moller2020covidqa
+    title: "COVID-QA: A Question Answering Dataset for COVID-19"
+    authors: ["Timo Möller", "Anthony Reina", "Raghavan Jayakumar", "Malte Pietsch"]
+    year: 2020
+    venue: "Proceedings of the 1st Workshop on NLP for COVID-19 at ACL 2020"
+    id: "ACL Anthology 2020.nlpcovid19-acl.18"
+    url: https://aclanthology.org/2020.nlpcovid19-acl.18/
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      2,019 question/answer pairs annotated by volunteer biomedical experts on scientific articles about COVID-19;
+      RoBERTa fine-tuned on SQuAD plus COVID-QA beats SQuAD only.
+    directions: [C5]
+    notes: "Dataset paper. Abstract and BibTeX read on the ACL Anthology page (2026-10-20). Not to be confused with Tang et al.'s CovidQA (arXiv:2004.11339)."
+  - key: hendrycks2021cuad
+    title: "CUAD: An Expert-Annotated NLP Dataset for Legal Contract Review"
+    authors: ["Dan Hendrycks", "Collin Burns", "Anya Chen", "Spencer Ball"]
+    year: 2021
+    venue: "NeurIPS 2021 Datasets and Benchmarks Track"
+    id: "arXiv:2103.06268"
+    url: https://arxiv.org/abs/2103.06268
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      Contract Understanding Atticus Dataset: over 13,000 annotations by legal experts; the task is to highlight
+      salient contract portions for human review; Transformer performance is nascent and depends on model design and
+      training-set size.
+    directions: [C5]
+    notes: "Dataset paper (CUAD v1 test used). Abstract read via the arXiv API; venue from the arXiv comment 'NeurIPS 2021' and the NeurIPS Datasets and Benchmarks proceedings listing in the search index."
+  - key: dasigi2021qasper
+    title: "A Dataset of Information-Seeking Questions and Answers Anchored in Research Papers"
+    authors: ["Pradeep Dasigi", "Kyle Lo", "Iz Beltagy", "Arman Cohan", "Noah A. Smith", "Matt Gardner"]
+    year: 2021
+    venue: "NAACL-HLT 2021, pp. 4599-4610"
+    id: "arXiv:2105.03011; ACL Anthology 2021.naacl-main.365; doi:10.18653/v1/2021.naacl-main.365"
+    url: https://aclanthology.org/2021.naacl-main.365/
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      QASPER: 5,049 questions over 1,585 NLP papers, written from title and abstract only and answered from the full
+      text with supporting evidence; strong QA models trail humans by at least 27 F1 points.
+    directions: [C5]
+    notes: "Dataset paper (Qasper v0.3 dev+test used). Abstract and BibTeX read on the ACL Anthology page and via the arXiv API."
+  - key: robertson2009bm25
+    title: "The Probabilistic Relevance Framework: BM25 and Beyond"
+    authors: ["Stephen Robertson", "Hugo Zaragoza"]
+    year: 2009
+    venue: "Foundations and Trends in Information Retrieval 3(4):333-389"
+    id: "doi:10.1561/1500000019"
+    url: https://www.nowpublishers.com/article/Details/INR-019
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: >-
+      Conceptual account of the probabilistic relevance framework and the ranking models derived from it: binary
+      independence model, relevance feedback, BM25 and BM25F; parameter optimisation.
+    directions: [C5]
+    notes: "Standard BM25 reference. Publisher page not reachable from the container (2026-10-20); metadata from the search index (publisher listing, Webis IR Anthology). Read the publisher page or the authors' copy for L2/L3."
+  - key: lu2024bm25s
+    title: "BM25S: Orders of magnitude faster lexical search via eager sparse scoring"
+    authors: ["Xing Han Lù"]
+    year: 2024
+    venue: arXiv
+    id: "arXiv:2407.03618"
+    url: https://arxiv.org/abs/2407.03618
+    peer_reviewed: false
+    verification: L2
+    snippet_summary: >-
+      Python BM25 implementation depending only on NumPy and SciPy; eager scoring at index time into sparse matrices;
+      up to 500x faster than the most popular Python framework; reproduces five BM25 variants of Kamphuis et al. (2020).
+    directions: [C5]
+    notes: "Software used for all BM25 retrieval (bm25s 0.2.13). Abstract read via the arXiv API; arXiv comment 'Technical Report'."
+  - key: benjamini1995fdr
+    title: "Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing"
+    authors: ["Yoav Benjamini", "Yosef Hochberg"]
+    year: 1995
+    venue: "Journal of the Royal Statistical Society: Series B (Methodological) 57(1):289-300"
+    id: "doi:10.1111/j.2517-6161.1995.tb02031.x"
+    url: https://doi.org/10.1111/j.2517-6161.1995.tb02031.x
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: >-
+      Introduces the false discovery rate as an alternative to familywise error control; a sequential Bonferroni-type
+      procedure controls FDR for independent test statistics, with substantial power gains in simulation.
+    directions: [C5]
+    notes: "Used for sensitivity analysis (a). Journal page not reachable from the container (2026-10-20); metadata and abstract text from the search index only."
+  - key: chen2024bgem3
+    title: "M3-Embedding: Multi-Linguality, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation"
+    authors: ["Jianlyu Chen", "Shitao Xiao", "Peitian Zhang", "Kun Luo", "Defu Lian", "Zheng Liu"]
+    year: 2024
+    venue: "Findings of ACL 2024, pp. 2318-2335"
+    id: "arXiv:2402.03216; ACL Anthology 2024.findings-acl.137; doi:10.18653/v1/2024.findings-acl.137"
+    url: https://aclanthology.org/2024.findings-acl.137/
+    peer_reviewed: true
+    verification: L2
+    snippet_summary: >-
+      BGE M3 embedding model: more than 100 languages; dense, multi-vector and sparse retrieval in one model; inputs
+      up to 8,192 tokens; self-knowledge distillation across retrieval modes.
+    directions: [C5]
+    notes: "Dense retriever of Study 1b (BAAI/bge-m3). Abstract read via the arXiv API; venue and BibTeX on the ACL Anthology (first author spelled 'Jianlyu' there, 'Jianlv' on arXiv). Early arXiv versions titled 'BGE M3-Embedding: Multi-Lingual, ...'."
+  - key: qwen2025qwen3
+    title: "Qwen3 Technical Report"
+    authors: ["An Yang et al. (Qwen Team; 60 authors listed on arXiv)"]
+    year: 2025
+    venue: arXiv
+    id: "arXiv:2505.09388"
+    url: https://arxiv.org/abs/2505.09388
+    peer_reviewed: false
+    verification: L2
+    snippet_summary: >-
+      Qwen3 family of dense and mixture-of-experts LLMs from 0.6B to 235B parameters; thinking and non-thinking modes
+      in one model with a thinking budget.
+    directions: [C5]
+    notes: "Reader model of the answer-quality check (Qwen3-4B). Abstract and author list read via the arXiv API (2026-10-20)."
+  - key: simonsohn2020speccurve
+    title: "Specification curve analysis"
+    authors: ["Uri Simonsohn", "Simmons", "Nelson (given names not seen)"]
+    year: 2020
+    venue: "Nature Human Behaviour 4(11):1208-1214"
+    id: "doi:10.1038/s41562-020-0912-z"
+    url: https://doi.org/10.1038/s41562-020-0912-z
+    peer_reviewed: true
+    verification: L1
+    snippet_summary: >-
+      Results depend on arbitrary analytic choices; proposes identifying all reasonable specifications, displaying all
+      results in one curve and joint inference across specifications; publisher correction in 4(11):1215.
+    directions: [C5]
+    notes: "Origin of the specification-curve figures. Journal page not reachable from the container (2026-10-20); metadata from the search index only. Given names of Simmons and Nelson not seen in the index; fill in from the journal page."

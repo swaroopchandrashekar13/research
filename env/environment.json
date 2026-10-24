@@ -1,0 +1,44 @@
+{
+  "probed_at_utc": "2026-10-18T10:15:22+00:00",
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+  "cpu_count": 4,
+  "mem_total_gib": 15.7,
+  "gpu": null,
+  "latex": {
+    "pdflatex": false,
+    "latexmk": false,
+    "bibtex": false
+  },
+  "network": {
+    "pypi": {
+      "reachable": true,
+      "status": 200
+    },
+    "github_raw": {
+      "reachable": true,
+      "status": 200
+    },
+    "huggingface": {
+      "reachable": false,
+      "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    "arxiv_api": {
+      "reachable": false,
+      "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    "semantic_scholar": {
+      "reachable": false,
+      "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    "crossref": {
+      "reachable": false,
+      "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>"
+    },
+    "openreview": {
+      "reachable": false,
+      "error": "URLError: <urlopen error Tunnel connection failed: 403 Forbidden>"
+    }
+  }
+}

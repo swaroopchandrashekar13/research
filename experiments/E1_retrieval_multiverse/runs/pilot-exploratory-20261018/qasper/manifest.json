@@ -1,0 +1,229 @@
+{
+  "status": "ok",
+  "error": null,
+  "config": {
+    "dataset": "qasper",
+    "split": "exploratory",
+    "max_queries": null,
+    "chunkings": [
+      "fixed-64",
+      "fixed-128",
+      "fixed-256",
+      "fixed-512",
+      "fixed-64-o25",
+      "fixed-128-o25",
+      "fixed-256-o25",
+      "fixed-512-o25",
+      "sentence-64",
+      "sentence-128",
+      "sentence-256",
+      "sentence-512",
+      "paragraph-64",
+      "paragraph-128",
+      "paragraph-256",
+      "paragraph-512"
+    ],
+    "retrievers": [
+      "lucene-k0.9-b0.4-stem",
+      "lucene-k0.9-b0.75-stem",
+      "lucene-k1.5-b0.4-stem",
+      "lucene-k1.5-b0.75-stem",
+      "bm25+-k0.9-b0.4-stem",
+      "bm25+-k0.9-b0.75-stem",
+      "bm25+-k1.5-b0.4-stem",
+      "bm25+-k1.5-b0.75-stem",
+      "lucene-k0.9-b0.4-plain",
+      "lucene-k0.9-b0.75-plain",
+      "lucene-k1.5-b0.4-plain",
+      "lucene-k1.5-b0.75-plain",
+      "bm25+-k0.9-b0.4-plain",
+      "bm25+-k0.9-b0.75-plain",
+      "bm25+-k1.5-b0.4-plain",
+      "bm25+-k1.5-b0.75-plain"
+    ],
+    "ops": [
+      "k1",
+      "k3",
+      "k5",
+      "k10",
+      "B128",
+      "B256",
+      "B512",
+      "B1024",
+      "B2048"
+    ],
+    "metrics": [
+      "hit_strict",
+      "hit_lenient",
+      "coverage"
+    ],
+    "split_seed": 20261018,
+    "split_frac_exploratory": 0.2
+  },
+  "config_sha256": "9ff1dce295434f08acab25279910a50d774fc53c86cfb4babc0337d900334f82",
+  "git": "acd6937c6a698a939d529a7cd157afabb9cc2060-dirty",
+  "versions": {
+    "python": "3.13.16",
+    "numpy": "2.5.3",
+    "bm25s": "0.2.13",
+    "PyStemmer": "2.2.0.3",
+    "scipy": "1.18.1",
+    "statsmodels": "0.15.0"
+  },
+  "platform": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+  "n_documents": 697,
+  "n_documents_exploratory": 139,
+  "n_queries": 460,
+  "started_utc": "2026-10-18T11:37:23+00:00",
+  "finished_utc": "2026-10-18T11:39:07+00:00",
+  "chunk_stats": [
+    {
+      "chunking": "fixed-64",
+      "n_chunks": 37886,
+      "depth": 52,
+      "chunk_words_mean": 63.421818085836456,
+      "chunk_words_median": 64.0,
+      "chunk_words_p10": 64.0,
+      "seconds": 27.1
+    },
+    {
+      "chunking": "fixed-128",
+      "n_chunks": 19124,
+      "depth": 36,
+      "chunk_words_mean": 125.64311859443632,
+      "chunk_words_median": 128.0,
+      "chunk_words_p10": 128.0,
+      "seconds": 19.9
+    },
+    {
+      "chunking": "fixed-256",
+      "n_chunks": 9721,
+      "depth": 28,
+      "chunk_words_mean": 247.1761135685629,
+      "chunk_words_median": 256.0,
+      "chunk_words_p10": 256.0,
+      "seconds": 17.9
+    },
+    {
+      "chunking": "fixed-512",
+      "n_chunks": 5041,
+      "depth": 26,
+      "chunk_words_mean": 476.65125967070026,
+      "chunk_words_median": 512.0,
+      "chunk_words_p10": 371.0,
+      "seconds": 14.7
+    },
+    {
+      "chunking": "fixed-64-o25",
+      "n_chunks": 50166,
+      "depth": 52,
+      "chunk_words_mean": 63.6746601283738,
+      "chunk_words_median": 64.0,
+      "chunk_words_p10": 64.0,
+      "seconds": 36.7
+    },
+    {
+      "chunking": "fixed-128-o25",
+      "n_chunks": 25152,
+      "depth": 36,
+      "chunk_words_mean": 126.6443622773537,
+      "chunk_words_median": 128.0,
+      "chunk_words_p10": 128.0,
+      "seconds": 28.1
+    },
+    {
+      "chunking": "fixed-256-o25",
+      "n_chunks": 12636,
+      "depth": 28,
+      "chunk_words_mean": 250.62480215257992,
+      "chunk_words_median": 256.0,
+      "chunk_words_p10": 256.0,
+      "seconds": 22.3
+    },
+    {
+      "chunking": "fixed-512-o25",
+      "n_chunks": 6369,
+      "depth": 25,
+      "chunk_words_mean": 491.2568692102371,
+      "chunk_words_median": 512.0,
+      "chunk_words_p10": 472.0,
+      "seconds": 18.5
+    },
+    {
+      "chunking": "sentence-64",
+      "n_chunks": 47668,
+      "depth": 79,
+      "chunk_words_mean": 50.4069606444575,
+      "chunk_words_median": 53.0,
+      "chunk_words_p10": 35.0,
+      "seconds": 32.7
+    },
+    {
+      "chunking": "sentence-128",
+      "n_chunks": 21337,
+      "depth": 42,
+      "chunk_words_mean": 112.61184796363125,
+      "chunk_words_median": 116.0,
+      "chunk_words_p10": 97.0,
+      "seconds": 23.4
+    },
+    {
+      "chunking": "sentence-256",
+      "n_chunks": 10233,
+      "depth": 30,
+      "chunk_words_mean": 234.80885370858985,
+      "chunk_words_median": 244.0,
+      "chunk_words_p10": 219.0,
+      "seconds": 17.5
+    },
+    {
+      "chunking": "sentence-512",
+      "n_chunks": 5152,
+      "depth": 26,
+      "chunk_words_mean": 466.3817934782609,
+      "chunk_words_median": 499.0,
+      "chunk_words_p10": 379.1,
+      "seconds": 15.6
+    },
+    {
+      "chunking": "paragraph-64",
+      "n_chunks": 57311,
+      "depth": 157,
+      "chunk_words_mean": 41.925616373820034,
+      "chunk_words_median": 46.0,
+      "chunk_words_p10": 15.0,
+      "seconds": 38.1
+    },
+    {
+      "chunking": "paragraph-128",
+      "n_chunks": 27309,
+      "depth": 79,
+      "chunk_words_mean": 87.985609139844,
+      "chunk_words_median": 97.0,
+      "chunk_words_p10": 35.0,
+      "seconds": 25.6
+    },
+    {
+      "chunking": "paragraph-256",
+      "n_chunks": 12086,
+      "depth": 36,
+      "chunk_words_mean": 198.80845606486844,
+      "chunk_words_median": 213.0,
+      "chunk_words_p10": 129.0,
+      "seconds": 18.5
+    },
+    {
+      "chunking": "paragraph-512",
+      "n_chunks": 5523,
+      "depth": 27,
+      "chunk_words_mean": 435.0532319391635,
+      "chunk_words_median": 465.0,
+      "chunk_words_p10": 334.20000000000005,
+      "seconds": 16.4
+    }
+  ],
+  "peak_rss_mib": {
+    "self": 154.6,
+    "children": 348.5
+  }
+}

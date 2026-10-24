@@ -1,0 +1,118 @@
+{
+  "status": "ok",
+  "config": {
+    "study": "1b",
+    "dataset": "squad2",
+    "split": "confirmatory",
+    "max_queries": null,
+    "chunkings": [
+      "fixed-128",
+      "fixed-256",
+      "fixed-512",
+      "semantic-bp",
+      "semantic-cl"
+    ],
+    "retrievers": [
+      "bm25",
+      "dense"
+    ],
+    "bm25": "lucene-k1.5-b0.75-stem",
+    "ops": [
+      "k1",
+      "k3",
+      "k5",
+      "k10",
+      "B128",
+      "B256",
+      "B512",
+      "B1024",
+      "B2048"
+    ],
+    "metrics": [
+      "hit_strict",
+      "hit_lenient",
+      "coverage"
+    ],
+    "split_seed": 20261018,
+    "split_frac_exploratory": 0.2
+  },
+  "config_sha256": "d710251858556dea2b88464fcfe3a8e0db7cee7e2f62d7f3c3db8c5aa701dc27",
+  "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16",
+  "git": "0232e47a1c1d1b1cf3c3df9c0a0e91e81635ccaf",
+  "git_status": [],
+  "versions": {
+    "python": "3.13.15",
+    "numpy": "2.5.3",
+    "bm25s": "0.2.13",
+    "PyStemmer": "2.2.0.3",
+    "torch": "2.14.1",
+    "transformers": "5.20.1",
+    "sentence-transformers": "6.1.0"
+  },
+  "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+  "n_documents": 35,
+  "n_queries": 4744,
+  "started_utc": "2026-10-19T18:17:10+00:00",
+  "finished_utc": "2026-10-19T18:19:20+00:00",
+  "timings": {
+    "sentence_embeddings_s": 11.6,
+    "query_embeddings_s": 4.1
+  },
+  "chunk_stats": [
+    {
+      "chunking": "fixed-128",
+      "n_chunks": 1210,
+      "depth": 36,
+      "chunk_words_mean": 125.94545454545455,
+      "chunk_words_median": 128.0,
+      "chunk_words_p10": 128.0,
+      "chunk_words_max": 128,
+      "noncontiguous_share": 0.0,
+      "seconds": 12.3
+    },
+    {
+      "chunking": "fixed-256",
+      "n_chunks": 613,
+      "depth": 28,
+      "chunk_words_mean": 248.60358890701468,
+      "chunk_words_median": 256.0,
+      "chunk_words_p10": 256.0,
+      "chunk_words_max": 256,
+      "noncontiguous_share": 0.0,
+      "seconds": 12.1
+    },
+    {
+      "chunking": "fixed-512",
+      "n_chunks": 314,
+      "depth": 25,
+      "chunk_words_mean": 485.3312101910828,
+      "chunk_words_median": 512.0,
+      "chunk_words_p10": 455.7,
+      "chunk_words_max": 512,
+      "noncontiguous_share": 0.0,
+      "seconds": 13.5
+    },
+    {
+      "chunking": "semantic-bp",
+      "n_chunks": 521,
+      "depth": 81,
+      "chunk_words_mean": 292.50287907869483,
+      "chunk_words_median": 303.0,
+      "chunk_words_p10": 34.0,
+      "chunk_words_max": 512,
+      "noncontiguous_share": 0.0,
+      "seconds": 14.2
+    },
+    {
+      "chunking": "semantic-cl",
+      "n_chunks": 334,
+      "depth": 27,
+      "chunk_words_mean": 456.2694610778443,
+      "chunk_words_median": 497.0,
+      "chunk_words_p10": 333.90000000000003,
+      "chunk_words_max": 512,
+      "noncontiguous_share": 0.9251497005988024,
+      "seconds": 15.7
+    }
+  ]
+}

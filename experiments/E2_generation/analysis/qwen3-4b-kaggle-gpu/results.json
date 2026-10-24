@@ -1,0 +1,1025 @@
+{
+  "label": "EXPLORATORY (Tier 2; pre-specified plan, not part of the frozen confirmatory hypotheses)",
+  "datasets": {
+    "squad2": {
+      "diagnostics": {
+        "rows_total": 400,
+        "jobs_ok": 400,
+        "status_counts": {
+          "ok": 400
+        },
+        "finish_reasons": {
+          "stop": 400
+        },
+        "served_model_versions": {
+          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+        },
+        "requested_models": {
+          "qwen3-4b-q4_k_m": 400
+        },
+        "unanswerable_rate": 0.0425,
+        "usage_totals": {
+          "prompt_token_count": 662099,
+          "candidates_token_count": 6753,
+          "thoughts_token_count": 0
+        }
+      },
+      "claims": {
+        "P1": {
+          "f1": {
+            "count5": {
+              "mean": -0.018160494044423103,
+              "lo": -0.13951375745236874,
+              "hi": 0.09743686169385875,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": -0.14025191962718964,
+              "lo": -0.24115163162350656,
+              "hi": -0.05159300100058318,
+              "n": 50,
+              "verdict": "supports B"
+            },
+            "did": {
+              "mean": -0.1220913976430893,
+              "lo": -0.24471984170377253,
+              "hi": 0.008747613010927848,
+              "n": 50,
+              "sd": 0.47065696524840417
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": 0.03999999910593033,
+              "lo": -0.07999999821186066,
+              "hi": 0.1599999964237213,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": -0.11999999731779099,
+              "lo": -0.2199999988079071,
+              "hi": -0.03999999910593033,
+              "n": 50,
+              "verdict": "supports B"
+            },
+            "did": {
+              "mean": -0.1599999964237213,
+              "lo": -0.30000001192092896,
+              "hi": 0.0,
+              "n": 50,
+              "sd": 0.5480950312357393
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": -0.13571427762508392,
+              "lo": -0.23571428656578064,
+              "hi": -0.03999999910593033,
+              "n": 50,
+              "verdict": "supports B"
+            },
+            "budget1024": {
+              "mean": -0.015714285895228386,
+              "lo": -0.09571428596973419,
+              "hi": 0.06428571790456772,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.11999999731779099,
+              "lo": 0.03999999910593033,
+              "hi": 0.2199999988079071,
+              "n": 50,
+              "sd": 0.32826072265931594
+            }
+          }
+        },
+        "S3-256": {
+          "f1": {
+            "count5": {
+              "mean": 0.011124487966299057,
+              "lo": -0.08159293178468943,
+              "hi": 0.10735115017741918,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": -0.015868086367845535,
+              "lo": -0.11465026717633009,
+              "hi": 0.08308246582746505,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": -0.02699258178472519,
+              "lo": -0.10440982207655906,
+              "hi": 0.04898650730028743,
+              "n": 50,
+              "sd": 0.28653302754868465
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": 0.0,
+              "lo": -0.10000000149011612,
+              "hi": 0.10000000149011612,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": -0.05999999865889549,
+              "lo": -0.1599999964237213,
+              "hi": 0.03999999910593033,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": -0.05999999865889549,
+              "lo": -0.1599999964237213,
+              "hi": 0.05999999865889549,
+              "n": 50,
+              "sd": 0.42426406871192845
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": -0.03999999910593033,
+              "lo": -0.10000000149011612,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.019999999552965164,
+              "lo": -0.05999999865889549,
+              "hi": 0.10000000149011612,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.05999999865889549,
+              "lo": 0.0,
+              "hi": 0.14000000059604645,
+              "n": 50,
+              "sd": 0.23989793748209523
+            }
+          }
+        }
+      },
+      "means": {
+        "fixed-128|count5": {
+          "f1": 0.4652268310552064,
+          "em": 0.3,
+          "hit_strict": 0.82,
+          "hit_lenient": 0.82,
+          "coverage": 0.8242857142857143
+        },
+        "fixed-128|budget1024": {
+          "f1": 0.43674253594528195,
+          "em": 0.26,
+          "hit_strict": 0.86,
+          "hit_lenient": 0.86,
+          "coverage": 0.8642857142857143
+        },
+        "fixed-512|count5": {
+          "f1": 0.4833873273175079,
+          "em": 0.26,
+          "hit_strict": 0.96,
+          "hit_lenient": 0.96,
+          "coverage": 0.96
+        },
+        "fixed-512|budget1024": {
+          "f1": 0.5769944405892742,
+          "em": 0.38,
+          "hit_strict": 0.88,
+          "hit_lenient": 0.88,
+          "coverage": 0.88
+        },
+        "paragraph-256|count5": {
+          "f1": 0.5380019589629496,
+          "em": 0.34,
+          "hit_strict": 0.92,
+          "hit_lenient": 0.92,
+          "coverage": 0.92
+        },
+        "paragraph-256|budget1024": {
+          "f1": 0.5096670934665356,
+          "em": 0.3,
+          "hit_strict": 0.92,
+          "hit_lenient": 0.92,
+          "coverage": 0.92
+        },
+        "fixed-256|count5": {
+          "f1": 0.5268774711257145,
+          "em": 0.34,
+          "hit_strict": 0.96,
+          "hit_lenient": 0.96,
+          "coverage": 0.96
+        },
+        "fixed-256|budget1024": {
+          "f1": 0.5255351817010856,
+          "em": 0.36,
+          "hit_strict": 0.9,
+          "hit_lenient": 0.9,
+          "coverage": 0.9
+        }
+      },
+      "n_complete_queries": 50,
+      "retrieval_answer_link": {
+        "pearson_coverage_f1": 0.3626263457817945,
+        "mean_f1_hit_lenient_1": 0.5559979968856668,
+        "mean_f1_hit_lenient_0": 0.061701670062874074
+      }
+    },
+    "covidqa": {
+      "diagnostics": {
+        "rows_total": 400,
+        "jobs_ok": 400,
+        "status_counts": {
+          "ok": 400
+        },
+        "finish_reasons": {
+          "stop": 400
+        },
+        "served_model_versions": {
+          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+        },
+        "requested_models": {
+          "qwen3-4b-q4_k_m": 400
+        },
+        "unanswerable_rate": 0.0575,
+        "usage_totals": {
+          "prompt_token_count": 762940,
+          "candidates_token_count": 9705,
+          "thoughts_token_count": 0
+        }
+      },
+      "claims": {
+        "P1": {
+          "f1": {
+            "count5": {
+              "mean": 0.011967647820711136,
+              "lo": -0.07629109770059586,
+              "hi": 0.10458529815077774,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.005940959323197603,
+              "lo": -0.06451275758445263,
+              "hi": 0.07362794205546379,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": -0.006026687100529671,
+              "lo": -0.10079742930829524,
+              "hi": 0.08976200260221949,
+              "n": 50,
+              "sd": 0.3630324257151236
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": 0.03999999910593033,
+              "lo": -0.03999999910593033,
+              "hi": 0.11999999731779099,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": -0.019999999552965164,
+              "lo": -0.05999999865889549,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": -0.05999999865889549,
+              "lo": -0.1599999964237213,
+              "hi": 0.019999999552965164,
+              "n": 50,
+              "sd": 0.3136356914300021
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": 0.010526313446462154,
+              "lo": -0.08968421332538126,
+              "hi": 0.11052631586790085,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.12052631378173828,
+              "lo": 0.0015657882875530057,
+              "hi": 0.24178946316242103,
+              "n": 50,
+              "verdict": "supports A"
+            },
+            "did": {
+              "mean": 0.10999999940395355,
+              "lo": 0.03999999910593033,
+              "hi": 0.20000000298023224,
+              "n": 50,
+              "sd": 0.3078894580321758
+            }
+          }
+        },
+        "S3-256": {
+          "f1": {
+            "count5": {
+              "mean": 0.03009399026632309,
+              "lo": -0.05975803649052978,
+              "hi": 0.12180805187672368,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.03474459797143936,
+              "lo": -0.04407303668558597,
+              "hi": 0.12085393369197844,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.004650610499083996,
+              "lo": -0.0497600263915956,
+              "hi": 0.06579730082303284,
+              "n": 50,
+              "sd": 0.2140990452213529
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": 0.03999999910593033,
+              "lo": 0.0,
+              "hi": 0.10000000149011612,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.019999999552965164,
+              "lo": -0.03999999910593033,
+              "hi": 0.10000000149011612,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": -0.019999999552965164,
+              "lo": -0.10000000149011612,
+              "hi": 0.03999999910593033,
+              "n": 50,
+              "sd": 0.24660966430902953
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": 0.059473685920238495,
+              "lo": -0.03999999910593033,
+              "hi": 0.15947368741035461,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.11947368830442429,
+              "lo": 0.03999999910593033,
+              "hi": 0.20947368443012238,
+              "n": 50,
+              "verdict": "supports A"
+            },
+            "did": {
+              "mean": 0.05999999865889549,
+              "lo": 0.0,
+              "hi": 0.14000000059604645,
+              "n": 50,
+              "sd": 0.2398979374820952
+            }
+          }
+        }
+      },
+      "means": {
+        "fixed-128|count5": {
+          "f1": 0.33494229548483384,
+          "em": 0.1,
+          "hit_strict": 0.68,
+          "hit_lenient": 0.74,
+          "coverage": 0.7151929824561404
+        },
+        "fixed-128|budget1024": {
+          "f1": 0.29512152315172835,
+          "em": 0.06,
+          "hit_strict": 0.68,
+          "hit_lenient": 0.74,
+          "coverage": 0.7151929824561404
+        },
+        "fixed-512|count5": {
+          "f1": 0.3229746485385652,
+          "em": 0.06,
+          "hit_strict": 0.68,
+          "hit_lenient": 0.72,
+          "coverage": 0.7046666666666667
+        },
+        "fixed-512|budget1024": {
+          "f1": 0.2891805651247421,
+          "em": 0.08,
+          "hit_strict": 0.56,
+          "hit_lenient": 0.62,
+          "coverage": 0.5946666666666667
+        },
+        "paragraph-256|count5": {
+          "f1": 0.35335227006608894,
+          "em": 0.1,
+          "hit_strict": 0.76,
+          "hit_lenient": 0.76,
+          "coverage": 0.76
+        },
+        "paragraph-256|budget1024": {
+          "f1": 0.3868624202549891,
+          "em": 0.12,
+          "hit_strict": 0.78,
+          "hit_lenient": 0.78,
+          "coverage": 0.78
+        },
+        "fixed-256|count5": {
+          "f1": 0.3232582832345101,
+          "em": 0.06,
+          "hit_strict": 0.68,
+          "hit_lenient": 0.72,
+          "coverage": 0.7005263157894737
+        },
+        "fixed-256|budget1024": {
+          "f1": 0.3521178221605149,
+          "em": 0.1,
+          "hit_strict": 0.64,
+          "hit_lenient": 0.68,
+          "coverage": 0.6605263157894737
+        }
+      },
+      "n_complete_queries": 50,
+      "retrieval_answer_link": {
+        "pearson_coverage_f1": 0.3316048606819829,
+        "mean_f1_hit_lenient_1": 0.4041421798590774,
+        "mean_f1_hit_lenient_0": 0.14729949644093174
+      }
+    },
+    "cuad": {
+      "diagnostics": {
+        "rows_total": 400,
+        "jobs_ok": 400,
+        "status_counts": {
+          "ok": 400
+        },
+        "finish_reasons": {
+          "stop": 335,
+          "length": 65
+        },
+        "served_model_versions": {
+          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+        },
+        "requested_models": {
+          "qwen3-4b-q4_k_m": 400
+        },
+        "unanswerable_rate": 0.15,
+        "usage_totals": {
+          "prompt_token_count": 708891,
+          "candidates_token_count": 44401,
+          "thoughts_token_count": 0
+        }
+      },
+      "claims": {
+        "P1": {
+          "f1": {
+            "count5": {
+              "mean": 0.021625177934765816,
+              "lo": -0.0014644260780187323,
+              "hi": 0.045812743715941906,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.02077373117208481,
+              "lo": -0.003591957542812452,
+              "hi": 0.051078915968537295,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": -0.0008514478686265647,
+              "lo": -0.030639109667390585,
+              "hi": 0.033012171275913695,
+              "n": 50,
+              "sd": 0.1176656581316487
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "sd": 0.0
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.019999999552965164,
+              "lo": 0.0,
+              "hi": 0.05999999865889549,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.019999999552965164,
+              "lo": 0.0,
+              "hi": 0.05999999865889549,
+              "n": 50,
+              "sd": 0.14142135623730948
+            }
+          }
+        },
+        "S3-256": {
+          "f1": {
+            "count5": {
+              "mean": -0.006871613208204508,
+              "lo": -0.027026455150917172,
+              "hi": 0.010836610221303992,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": -0.014713088050484657,
+              "lo": -0.03724820939823985,
+              "hi": 0.006177784572355437,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": -0.007841475307941437,
+              "lo": -0.026651756698265673,
+              "hi": 0.011533710057847181,
+              "n": 50,
+              "sd": 0.06868245648552597
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "sd": 0.0
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "sd": 0.0
+            }
+          }
+        }
+      },
+      "means": {
+        "fixed-128|count5": {
+          "f1": 0.19089884065855617,
+          "em": 0.0,
+          "hit_strict": 0.04,
+          "hit_lenient": 0.04,
+          "coverage": 0.04
+        },
+        "fixed-128|budget1024": {
+          "f1": 0.17659257924778393,
+          "em": 0.0,
+          "hit_strict": 0.04,
+          "hit_lenient": 0.04,
+          "coverage": 0.04
+        },
+        "fixed-512|count5": {
+          "f1": 0.16927366371017935,
+          "em": 0.0,
+          "hit_strict": 0.04,
+          "hit_lenient": 0.04,
+          "coverage": 0.04
+        },
+        "fixed-512|budget1024": {
+          "f1": 0.15581884971172583,
+          "em": 0.0,
+          "hit_strict": 0.02,
+          "hit_lenient": 0.02,
+          "coverage": 0.02
+        },
+        "paragraph-256|count5": {
+          "f1": 0.13837212970643864,
+          "em": 0.0,
+          "hit_strict": 0.04,
+          "hit_lenient": 0.04,
+          "coverage": 0.04
+        },
+        "paragraph-256|budget1024": {
+          "f1": 0.1580214258266973,
+          "em": 0.0,
+          "hit_strict": 0.04,
+          "hit_lenient": 0.04,
+          "coverage": 0.04
+        },
+        "fixed-256|count5": {
+          "f1": 0.14524374318056754,
+          "em": 0.0,
+          "hit_strict": 0.04,
+          "hit_lenient": 0.04,
+          "coverage": 0.04
+        },
+        "fixed-256|budget1024": {
+          "f1": 0.1727345138772624,
+          "em": 0.0,
+          "hit_strict": 0.04,
+          "hit_lenient": 0.04,
+          "coverage": 0.04
+        }
+      },
+      "n_complete_queries": 50,
+      "retrieval_answer_link": {
+        "pearson_coverage_f1": 0.6603690527760725,
+        "mean_f1_hit_lenient_1": 0.7002359035852028,
+        "mean_f1_hit_lenient_0": 0.142452594135539
+      }
+    },
+    "qasper": {
+      "diagnostics": {
+        "rows_total": 400,
+        "jobs_ok": 400,
+        "status_counts": {
+          "ok": 400
+        },
+        "finish_reasons": {
+          "stop": 398,
+          "length": 2
+        },
+        "served_model_versions": {
+          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+        },
+        "requested_models": {
+          "qwen3-4b-q4_k_m": 400
+        },
+        "unanswerable_rate": 0.1575,
+        "usage_totals": {
+          "prompt_token_count": 671031,
+          "candidates_token_count": 11897,
+          "thoughts_token_count": 0
+        }
+      },
+      "claims": {
+        "P1": {
+          "f1": {
+            "count5": {
+              "mean": -0.0368289016187191,
+              "lo": -0.11290860697627067,
+              "hi": 0.03437327910214657,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.0228860042989254,
+              "lo": -0.029124681605026126,
+              "hi": 0.07756934557110064,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.059714898467063904,
+              "lo": -0.014600419462658464,
+              "hi": 0.15766404159367078,
+              "n": 50,
+              "sd": 0.313735204911248
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": -0.019999999552965164,
+              "lo": -0.05999999865889549,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": -0.019999999552965164,
+              "lo": -0.05999999865889549,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.0,
+              "lo": -0.05999999865889549,
+              "hi": 0.05999999865889549,
+              "n": 50,
+              "sd": 0.20203050891044214
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": -0.05638130009174347,
+              "lo": -0.11592804100364447,
+              "hi": -0.010031514521688245,
+              "n": 50,
+              "verdict": "supports B"
+            },
+            "budget1024": {
+              "mean": 0.049150094389915466,
+              "lo": -3.086441793129761e-05,
+              "hi": 0.10905797053128481,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.10553140938282013,
+              "lo": 0.019999999552965164,
+              "hi": 0.21444444358348846,
+              "n": 50,
+              "sd": 0.35777266242812855
+            }
+          }
+        },
+        "S3-256": {
+          "f1": {
+            "count5": {
+              "mean": -0.015237693674862385,
+              "lo": -0.07650275193154812,
+              "hi": 0.04103757208213195,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.02995557151734829,
+              "lo": -0.018888351088389755,
+              "hi": 0.0866247734054923,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.04519325867295265,
+              "lo": -0.01663546483032405,
+              "hi": 0.11736825648695229,
+              "n": 50,
+              "sd": 0.2460967716698436
+            }
+          },
+          "em": {
+            "count5": {
+              "mean": -0.019999999552965164,
+              "lo": -0.05999999865889549,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.0,
+              "lo": 0.0,
+              "hi": 0.0,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.019999999552965164,
+              "lo": 0.0,
+              "hi": 0.05999999865889549,
+              "n": 50,
+              "sd": 0.14142135623730948
+            }
+          },
+          "coverage": {
+            "count5": {
+              "mean": 0.006611194461584091,
+              "lo": -0.06466490980237723,
+              "hi": 0.08002341501414763,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "budget1024": {
+              "mean": 0.026611194014549255,
+              "lo": -0.050108245387673375,
+              "hi": 0.10230913683772075,
+              "n": 50,
+              "verdict": "inconclusive"
+            },
+            "did": {
+              "mean": 0.019999999552965164,
+              "lo": 0.0,
+              "hi": 0.05999999865889549,
+              "n": 50,
+              "sd": 0.14142135623730948
+            }
+          }
+        }
+      },
+      "means": {
+        "fixed-128|count5": {
+          "f1": 0.12318830961053685,
+          "em": 0.02,
+          "hit_strict": 0.12,
+          "hit_lenient": 0.18,
+          "coverage": 0.18748966223551988
+        },
+        "fixed-128|budget1024": {
+          "f1": 0.14712106864666485,
+          "em": 0.02,
+          "hit_strict": 0.16,
+          "hit_lenient": 0.24,
+          "coverage": 0.23302106320170346
+        },
+        "fixed-512|count5": {
+          "f1": 0.16001721010809383,
+          "em": 0.04,
+          "hit_strict": 0.24,
+          "hit_lenient": 0.24,
+          "coverage": 0.24387096774193548
+        },
+        "fixed-512|budget1024": {
+          "f1": 0.124235063929902,
+          "em": 0.04,
+          "hit_strict": 0.18,
+          "hit_lenient": 0.18,
+          "coverage": 0.18387096774193548
+        },
+        "paragraph-256|count5": {
+          "f1": 0.12892423781013249,
+          "em": 0.0,
+          "hit_strict": 0.24,
+          "hit_lenient": 0.24,
+          "coverage": 0.24
+        },
+        "paragraph-256|budget1024": {
+          "f1": 0.17856494487471283,
+          "em": 0.02,
+          "hit_strict": 0.26,
+          "hit_lenient": 0.26,
+          "coverage": 0.26
+        },
+        "fixed-256|count5": {
+          "f1": 0.14416193154430176,
+          "em": 0.02,
+          "hit_strict": 0.2,
+          "hit_lenient": 0.24,
+          "coverage": 0.23338880706921944
+        },
+        "fixed-256|budget1024": {
+          "f1": 0.1486093754092331,
+          "em": 0.02,
+          "hit_strict": 0.2,
+          "hit_lenient": 0.24,
+          "coverage": 0.23338880706921944
+        }
+      },
+      "n_complete_queries": 50,
+      "retrieval_answer_link": {
+        "pearson_coverage_f1": 0.5297301278739133,
+        "mean_f1_hit_lenient_1": 0.36607226037845075,
+        "mean_f1_hit_lenient_0": 0.07905673592957885
+      }
+    }
+  },
+  "pooled": {
+    "P1": {
+      "f1": {
+        "did": -0.017313659874742968,
+        "lo": -0.06482820038086008,
+        "hi": 0.03258687619778402,
+        "n": 200,
+        "datasets": [
+          "covidqa",
+          "cuad",
+          "qasper",
+          "squad2"
+        ],
+        "verdict": "inconclusive",
+        "mde": 0.06833540959970544
+      },
+      "em": {
+        "did": -0.055,
+        "lo": -0.1,
+        "hi": -0.009999999999999998,
+        "n": 200,
+        "datasets": [
+          "covidqa",
+          "cuad",
+          "qasper",
+          "squad2"
+        ],
+        "verdict": "opposite",
+        "mde": 0.06645655656760144
+      },
+      "coverage": {
+        "did": 0.0888828502415459,
+        "lo": 0.05,
+        "hi": 0.13222901570048304,
+        "n": 200,
+        "datasets": [
+          "covidqa",
+          "cuad",
+          "qasper",
+          "squad2"
+        ],
+        "verdict": "carries over",
+        "mde": 0.05874451955061655
+      }
+    },
+    "S3-256": {
+      "f1": {
+        "did": 0.003752455953580751,
+        "lo": -0.024027819048436035,
+        "hi": 0.03572210309421395,
+        "n": 200,
+        "datasets": [
+          "covidqa",
+          "cuad",
+          "qasper",
+          "squad2"
+        ],
+        "verdict": "inconclusive",
+        "mde": 0.0435283190151039
+      },
+      "em": {
+        "did": -0.015,
+        "lo": -0.05,
+        "hi": 0.02,
+        "n": 200,
+        "datasets": [
+          "covidqa",
+          "cuad",
+          "qasper",
+          "squad2"
+        ],
+        "verdict": "inconclusive",
+        "mde": 0.05054532692874764
+      },
+      "coverage": {
+        "did": 0.035,
+        "lo": 0.015,
+        "hi": 0.060124999999999325,
+        "n": 200,
+        "datasets": [
+          "covidqa",
+          "cuad",
+          "qasper",
+          "squad2"
+        ],
+        "verdict": "carries over",
+        "mde": 0.03649849677001171
+      }
+    }
+  }
+}

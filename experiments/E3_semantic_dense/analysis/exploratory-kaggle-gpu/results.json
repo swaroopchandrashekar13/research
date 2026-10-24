@@ -1,0 +1,715 @@
+{
+  "datasets": [
+    "squad2",
+    "covidqa",
+    "cuad",
+    "qasper"
+  ],
+  "n_queries": {
+    "squad2": 1184,
+    "covidqa": 248,
+    "cuad": 248,
+    "qasper": 460
+  },
+  "mean_chunk_words": {
+    "squad2": {
+      "fixed-128": 125.94545454545455,
+      "fixed-256": 248.60358890701468,
+      "fixed-512": 485.3312101910828,
+      "semantic-bp": 292.50287907869483,
+      "semantic-cl": 456.2694610778443
+    },
+    "covidqa": {
+      "fixed-128": 125.9231096911608,
+      "fixed-256": 247.36778242677823,
+      "fixed-512": 482.6195918367347,
+      "semantic-bp": 286.99466019417474,
+      "semantic-cl": 455.1262509622787
+    },
+    "cuad": {
+      "fixed-128": 127.02044739601538,
+      "fixed-256": 251.753030827849,
+      "fixed-512": 494.7658270932607,
+      "semantic-bp": 319.61785400175904,
+      "semantic-cl": 457.6895465994962
+    },
+    "qasper": {
+      "fixed-128": 125.64311859443632,
+      "fixed-256": 247.1761135685629,
+      "fixed-512": 476.65125967070026,
+      "semantic-bp": 278.4885257301808,
+      "semantic-cl": 452.2490118577075
+    }
+  },
+  "shorter_arm": {
+    "S5-128": {
+      "squad2": "fixed-128",
+      "covidqa": "fixed-128",
+      "cuad": "fixed-128",
+      "qasper": "fixed-128"
+    },
+    "S5-256": {
+      "squad2": "fixed-256",
+      "covidqa": "fixed-256",
+      "cuad": "fixed-256",
+      "qasper": "fixed-256"
+    },
+    "S5-512": {
+      "squad2": "semantic-bp",
+      "covidqa": "semantic-bp",
+      "cuad": "semantic-bp",
+      "qasper": "semantic-bp"
+    },
+    "S6-128": {
+      "squad2": "fixed-128",
+      "covidqa": "fixed-128",
+      "cuad": "fixed-128",
+      "qasper": "fixed-128"
+    },
+    "S6-256": {
+      "squad2": "fixed-256",
+      "covidqa": "fixed-256",
+      "cuad": "fixed-256",
+      "qasper": "fixed-256"
+    },
+    "S6-512": {
+      "squad2": "semantic-cl",
+      "covidqa": "semantic-cl",
+      "cuad": "semantic-cl",
+      "qasper": "semantic-cl"
+    }
+  },
+  "H4": {
+    "estimate": 0.4270833333333333,
+    "ci95": [
+      0.3298611111111111,
+      0.49189814814814814
+    ],
+    "count_share": 0.059027777777777776,
+    "budget_share": 0.4861111111111111,
+    "verdict": "supported"
+  },
+  "H4b": {
+    "estimate": 0.45138888888888884,
+    "ci95": [
+      0.3506944444444444,
+      0.5162326388888889
+    ],
+    "count_share": 0.0625,
+    "budget_share": 0.5138888888888888,
+    "verdict": "supported"
+  },
+  "H5": {
+    "estimate": 0.08333333333333333,
+    "ci95": [
+      0.0625,
+      0.22916666666666666
+    ],
+    "count": {
+      "support_A": 0.3125,
+      "support_B": 0.08333333333333333,
+      "inconclusive": 0.6041666666666666,
+      "n_universes": 48,
+      "by_dataset": {
+        "squad2": {
+          "support_A": 0.75,
+          "support_B": 0.0,
+          "inconclusive": 0.25,
+          "n_universes": 12,
+          "mean_delta": 0.044963181018829346
+        },
+        "covidqa": {
+          "support_A": 0.3333333333333333,
+          "support_B": 0.0,
+          "inconclusive": 0.6666666666666666,
+          "n_universes": 12,
+          "mean_delta": 0.05516663193702698
+        },
+        "cuad": {
+          "support_A": 0.16666666666666666,
+          "support_B": 0.0,
+          "inconclusive": 0.8333333333333334,
+          "n_universes": 12,
+          "mean_delta": 0.011086287908256054
+        },
+        "qasper": {
+          "support_A": 0.0,
+          "support_B": 0.3333333333333333,
+          "inconclusive": 0.6666666666666666,
+          "n_universes": 12,
+          "mean_delta": -0.032633233815431595
+        }
+      }
+    },
+    "budget": {
+      "support_A": 0.9166666666666666,
+      "support_B": 0.0,
+      "inconclusive": 0.08333333333333333,
+      "n_universes": 36,
+      "by_dataset": {
+        "squad2": {
+          "support_A": 1.0,
+          "support_B": 0.0,
+          "inconclusive": 0.0,
+          "n_universes": 9,
+          "mean_delta": 0.21481844782829285
+        },
+        "covidqa": {
+          "support_A": 1.0,
+          "support_B": 0.0,
+          "inconclusive": 0.0,
+          "n_universes": 9,
+          "mean_delta": 0.2585657835006714
+        },
+        "cuad": {
+          "support_A": 1.0,
+          "support_B": 0.0,
+          "inconclusive": 0.0,
+          "n_universes": 9,
+          "mean_delta": 0.04275424778461456
+        },
+        "qasper": {
+          "support_A": 0.6666666666666666,
+          "support_B": 0.0,
+          "inconclusive": 0.3333333333333333,
+          "n_universes": 9,
+          "mean_delta": 0.051580414175987244
+        }
+      }
+    },
+    "verdict": "inconclusive"
+  },
+  "H5b": {
+    "estimate": 0.6041666666666666,
+    "ci95": [
+      0.35416666666666663,
+      0.6875
+    ],
+    "count_share": 0.3125,
+    "budget_share": 0.9166666666666666,
+    "verdict": "supported"
+  },
+  "H4_sensitivity": {
+    "a_bh_fdr": {
+      "estimate": 0.3935185185185185
+    },
+    "b_without_squad2": {
+      "estimate": 0.36574074074074076,
+      "ci95": [
+        0.24074074074074073,
+        0.44135802469135804
+      ],
+      "count_share": 0.023148148148148147,
+      "budget_share": 0.3888888888888889
+    },
+    "d_cluster_bootstrap": {
+      "estimate": 0.4675925925925926,
+      "ci95": [
+        0.3287037037037037,
+        0.49308449074074073
+      ],
+      "count_share": 0.041666666666666664,
+      "budget_share": 0.5092592592592593
+    },
+    "e_all_budgets": {
+      "estimate": 0.47430555555555554,
+      "ci95": [
+        0.36317708333333326,
+        0.5041840277777777
+      ],
+      "count_share": 0.059027777777777776,
+      "budget_share": 0.5333333333333333
+    },
+    "f_bm25_only": {
+      "estimate": 0.37962962962962965,
+      "ci95": [
+        0.29861111111111116,
+        0.5162037037037037
+      ],
+      "count_share": 0.0,
+      "budget_share": 0.37962962962962965
+    },
+    "f_dense_only": {
+      "estimate": 0.474537037037037,
+      "ci95": [
+        0.2986111111111111,
+        0.5393518518518519
+      ],
+      "count_share": 0.11805555555555555,
+      "budget_share": 0.5925925925925926
+    }
+  },
+  "semantic_wins": {
+    "S5-128": {
+      "count": {
+        "support_A": 0.4166666666666667,
+        "support_B": 0.0625,
+        "inconclusive": 0.5208333333333334,
+        "n_universes": 96,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.5,
+            "support_B": 0.125,
+            "inconclusive": 0.375,
+            "n_universes": 24,
+            "mean_delta": 0.010073618963360786
+          },
+          "covidqa": {
+            "support_A": 0.4166666666666667,
+            "support_B": 0.08333333333333333,
+            "inconclusive": 0.5,
+            "n_universes": 24,
+            "mean_delta": 0.02292191982269287
+          },
+          "cuad": {
+            "support_A": 0.041666666666666664,
+            "support_B": 0.041666666666666664,
+            "inconclusive": 0.9166666666666666,
+            "n_universes": 24,
+            "mean_delta": -0.004137736279517412
+          },
+          "qasper": {
+            "support_A": 0.7083333333333334,
+            "support_B": 0.0,
+            "inconclusive": 0.2916666666666667,
+            "n_universes": 24,
+            "mean_delta": 0.05840785428881645
+          }
+        }
+      },
+      "budget": {
+        "support_A": 0.08333333333333333,
+        "support_B": 0.6666666666666666,
+        "inconclusive": 0.25,
+        "n_universes": 72,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.0,
+            "support_B": 0.8333333333333334,
+            "inconclusive": 0.16666666666666666,
+            "n_universes": 18,
+            "mean_delta": -0.08824312686920166
+          },
+          "covidqa": {
+            "support_A": 0.0,
+            "support_B": 0.7777777777777778,
+            "inconclusive": 0.2222222222222222,
+            "n_universes": 18,
+            "mean_delta": -0.14324112236499786
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.7777777777777778,
+            "inconclusive": 0.2222222222222222,
+            "n_universes": 18,
+            "mean_delta": -0.04294601082801819
+          },
+          "qasper": {
+            "support_A": 0.3333333333333333,
+            "support_B": 0.2777777777777778,
+            "inconclusive": 0.3888888888888889,
+            "n_universes": 18,
+            "mean_delta": -0.0040835062973201275
+          }
+        }
+      }
+    },
+    "S5-256": {
+      "count": {
+        "support_A": 0.28125,
+        "support_B": 0.020833333333333332,
+        "inconclusive": 0.6979166666666666,
+        "n_universes": 96,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.5,
+            "support_B": 0.0,
+            "inconclusive": 0.5,
+            "n_universes": 24,
+            "mean_delta": 0.009703344665467739
+          },
+          "covidqa": {
+            "support_A": 0.125,
+            "support_B": 0.08333333333333333,
+            "inconclusive": 0.7916666666666666,
+            "n_universes": 24,
+            "mean_delta": -0.003390774130821228
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.0,
+            "inconclusive": 1.0,
+            "n_universes": 24,
+            "mean_delta": -0.005099019501358271
+          },
+          "qasper": {
+            "support_A": 0.5,
+            "support_B": 0.0,
+            "inconclusive": 0.5,
+            "n_universes": 24,
+            "mean_delta": 0.03450331836938858
+          }
+        }
+      },
+      "budget": {
+        "support_A": 0.05555555555555555,
+        "support_B": 0.3888888888888889,
+        "inconclusive": 0.5555555555555556,
+        "n_universes": 72,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.0,
+            "support_B": 0.6666666666666666,
+            "inconclusive": 0.3333333333333333,
+            "n_universes": 18,
+            "mean_delta": -0.045616816729307175
+          },
+          "covidqa": {
+            "support_A": 0.0,
+            "support_B": 0.6666666666666666,
+            "inconclusive": 0.3333333333333333,
+            "n_universes": 18,
+            "mean_delta": -0.08945325762033463
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.2222222222222222,
+            "inconclusive": 0.7777777777777778,
+            "n_universes": 18,
+            "mean_delta": -0.01832171529531479
+          },
+          "qasper": {
+            "support_A": 0.2222222222222222,
+            "support_B": 0.0,
+            "inconclusive": 0.7777777777777778,
+            "n_universes": 18,
+            "mean_delta": 0.018425188958644867
+          }
+        }
+      }
+    },
+    "S5-512": {
+      "count": {
+        "support_A": 0.09375,
+        "support_B": 0.020833333333333332,
+        "inconclusive": 0.8854166666666666,
+        "n_universes": 96,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.375,
+            "support_B": 0.0,
+            "inconclusive": 0.625,
+            "n_universes": 24,
+            "mean_delta": 0.016016194596886635
+          },
+          "covidqa": {
+            "support_A": 0.0,
+            "support_B": 0.0,
+            "inconclusive": 1.0,
+            "n_universes": 24,
+            "mean_delta": 0.003033955581486225
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.0,
+            "inconclusive": 1.0,
+            "n_universes": 24,
+            "mean_delta": -0.0016162832034751773
+          },
+          "qasper": {
+            "support_A": 0.0,
+            "support_B": 0.08333333333333333,
+            "inconclusive": 0.9166666666666666,
+            "n_universes": 24,
+            "mean_delta": -0.003871072083711624
+          }
+        }
+      },
+      "budget": {
+        "support_A": 0.4027777777777778,
+        "support_B": 0.0,
+        "inconclusive": 0.5972222222222222,
+        "n_universes": 72,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.8333333333333334,
+            "support_B": 0.0,
+            "inconclusive": 0.16666666666666666,
+            "n_universes": 18,
+            "mean_delta": 0.05066812410950661
+          },
+          "covidqa": {
+            "support_A": 0.2777777777777778,
+            "support_B": 0.0,
+            "inconclusive": 0.7222222222222222,
+            "n_universes": 18,
+            "mean_delta": 0.03685161471366882
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.0,
+            "inconclusive": 1.0,
+            "n_universes": 18,
+            "mean_delta": 0.00553433271124959
+          },
+          "qasper": {
+            "support_A": 0.5,
+            "support_B": 0.0,
+            "inconclusive": 0.5,
+            "n_universes": 18,
+            "mean_delta": 0.029061172157526016
+          }
+        }
+      }
+    },
+    "S6-128": {
+      "count": {
+        "support_A": 0.4375,
+        "support_B": 0.03125,
+        "inconclusive": 0.53125,
+        "n_universes": 96,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.5,
+            "support_B": 0.125,
+            "inconclusive": 0.375,
+            "n_universes": 24,
+            "mean_delta": 0.008806693367660046
+          },
+          "covidqa": {
+            "support_A": 0.5,
+            "support_B": 0.0,
+            "inconclusive": 0.5,
+            "n_universes": 24,
+            "mean_delta": 0.0459304116666317
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.0,
+            "inconclusive": 1.0,
+            "n_universes": 24,
+            "mean_delta": 0.0009025861509144306
+          },
+          "qasper": {
+            "support_A": 0.75,
+            "support_B": 0.0,
+            "inconclusive": 0.25,
+            "n_universes": 24,
+            "mean_delta": 0.04774460196495056
+          }
+        }
+      },
+      "budget": {
+        "support_A": 0.0,
+        "support_B": 0.7638888888888888,
+        "inconclusive": 0.2361111111111111,
+        "n_universes": 72,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.0,
+            "support_B": 0.8333333333333334,
+            "inconclusive": 0.16666666666666666,
+            "n_universes": 18,
+            "mean_delta": -0.1115211620926857
+          },
+          "covidqa": {
+            "support_A": 0.0,
+            "support_B": 0.7777777777777778,
+            "inconclusive": 0.2222222222222222,
+            "n_universes": 18,
+            "mean_delta": -0.1400173306465149
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.7777777777777778,
+            "inconclusive": 0.2222222222222222,
+            "n_universes": 18,
+            "mean_delta": -0.04293466731905937
+          },
+          "qasper": {
+            "support_A": 0.0,
+            "support_B": 0.6666666666666666,
+            "inconclusive": 0.3333333333333333,
+            "n_universes": 18,
+            "mean_delta": -0.04334733262658119
+          }
+        }
+      }
+    },
+    "S6-256": {
+      "count": {
+        "support_A": 0.19791666666666666,
+        "support_B": 0.0,
+        "inconclusive": 0.8020833333333334,
+        "n_universes": 96,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.375,
+            "support_B": 0.0,
+            "inconclusive": 0.625,
+            "n_universes": 24,
+            "mean_delta": 0.008436418138444424
+          },
+          "covidqa": {
+            "support_A": 0.16666666666666666,
+            "support_B": 0.0,
+            "inconclusive": 0.8333333333333334,
+            "n_universes": 24,
+            "mean_delta": 0.01961771585047245
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.0,
+            "inconclusive": 1.0,
+            "n_universes": 24,
+            "mean_delta": -5.8697227359516546e-05
+          },
+          "qasper": {
+            "support_A": 0.25,
+            "support_B": 0.0,
+            "inconclusive": 0.75,
+            "n_universes": 24,
+            "mean_delta": 0.02384006418287754
+          }
+        }
+      },
+      "budget": {
+        "support_A": 0.0,
+        "support_B": 0.5138888888888888,
+        "inconclusive": 0.4861111111111111,
+        "n_universes": 72,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.0,
+            "support_B": 0.8333333333333334,
+            "inconclusive": 0.16666666666666666,
+            "n_universes": 18,
+            "mean_delta": -0.06889484822750092
+          },
+          "covidqa": {
+            "support_A": 0.0,
+            "support_B": 0.6666666666666666,
+            "inconclusive": 0.3333333333333333,
+            "n_universes": 18,
+            "mean_delta": -0.08622947335243225
+          },
+          "cuad": {
+            "support_A": 0.0,
+            "support_B": 0.3333333333333333,
+            "inconclusive": 0.6666666666666666,
+            "n_universes": 18,
+            "mean_delta": -0.018310368061065674
+          },
+          "qasper": {
+            "support_A": 0.0,
+            "support_B": 0.2222222222222222,
+            "inconclusive": 0.7777777777777778,
+            "n_universes": 18,
+            "mean_delta": -0.02083863690495491
+          }
+        }
+      }
+    },
+    "S6-512": {
+      "count": {
+        "support_A": 0.15625,
+        "support_B": 0.08333333333333333,
+        "inconclusive": 0.7604166666666666,
+        "n_universes": 96,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.375,
+            "support_B": 0.0,
+            "inconclusive": 0.625,
+            "n_universes": 24,
+            "mean_delta": 0.014749269001185894
+          },
+          "covidqa": {
+            "support_A": 0.125,
+            "support_B": 0.0,
+            "inconclusive": 0.875,
+            "n_universes": 24,
+            "mean_delta": 0.026042446494102478
+          },
+          "cuad": {
+            "support_A": 0.125,
+            "support_B": 0.0,
+            "inconclusive": 0.875,
+            "n_universes": 24,
+            "mean_delta": 0.0034240393433719873
+          },
+          "qasper": {
+            "support_A": 0.0,
+            "support_B": 0.3333333333333333,
+            "inconclusive": 0.6666666666666666,
+            "n_universes": 24,
+            "mean_delta": -0.01453432347625494
+          }
+        }
+      },
+      "budget": {
+        "support_A": 0.2638888888888889,
+        "support_B": 0.05555555555555555,
+        "inconclusive": 0.6805555555555556,
+        "n_universes": 72,
+        "by_dataset": {
+          "squad2": {
+            "support_A": 0.6666666666666666,
+            "support_B": 0.0,
+            "inconclusive": 0.3333333333333333,
+            "n_universes": 18,
+            "mean_delta": 0.02739008702337742
+          },
+          "covidqa": {
+            "support_A": 0.2222222222222222,
+            "support_B": 0.0,
+            "inconclusive": 0.7777777777777778,
+            "n_universes": 18,
+            "mean_delta": 0.040075406432151794
+          },
+          "cuad": {
+            "support_A": 0.16666666666666666,
+            "support_B": 0.0,
+            "inconclusive": 0.8333333333333334,
+            "n_universes": 18,
+            "mean_delta": 0.0055456808768212795
+          },
+          "qasper": {
+            "support_A": 0.0,
+            "support_B": 0.2222222222222222,
+            "inconclusive": 0.7777777777777778,
+            "n_universes": 18,
+            "mean_delta": -0.010202656500041485
+          }
+        }
+      }
+    }
+  },
+  "label": "EXPLORATORY",
+  "source_manifests": {
+    "squad2": {
+      "git": "8ce22c78d09ff4b1d65952930219796e00ebac76",
+      "config_sha256": "e7cc2bcd39772e6d233aa1dcdd010e075956c3a43a7034a47a884fc1d8b93602",
+      "started_utc": "2026-10-19T17:08:57+00:00",
+      "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"
+    },
+    "covidqa": {
+      "git": "8ce22c78d09ff4b1d65952930219796e00ebac76",
+      "config_sha256": "c9f5ed34b5f660d2ab42f8c371afba5a8186582316e936cfb5dbe53404ff386a",
+      "started_utc": "2026-10-19T17:10:52+00:00",
+      "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"
+    },
+    "cuad": {
+      "git": "8ce22c78d09ff4b1d65952930219796e00ebac76",
+      "config_sha256": "b65f3e5e311be5b7c03fe6f7ad65e20d641bdfd26bc74eec2882607a7732cf93",
+      "started_utc": "2026-10-19T17:17:22+00:00",
+      "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"
+    },
+    "qasper": {
+      "git": "8ce22c78d09ff4b1d65952930219796e00ebac76",
+      "config_sha256": "8c25d8916833a0f1bc7d48480aa9645aff73c5179b6cfb16c8c5fd39b859a775",
+      "started_utc": "2026-10-19T17:24:25+00:00",
+      "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16"
+    }
+  }
+}

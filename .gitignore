@@ -1,0 +1,34 @@
+# Python caches and test artefacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+
+# Secrets and private keys
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+id_rsa
+id_ed25519
+
+# Local machine and editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Downloaded source datasets and local paper PDFs
+data/raw/
+literature/pdfs/
+
+# Large local experiment artefacts
+experiments/**/raw_large/
+
+# Tier 2 result archives created for separate upload
+tier2_results_*.zip

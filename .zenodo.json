@@ -1,0 +1,21 @@
+{
+  "title": "Chunking verdicts under count- and budget-matched retrieval: code, pre-registrations and results",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "creators": [
+    {
+      "name": "Chand J C, Swaroop"
+    }
+  ],
+  "description": "<p>Code, pre-registrations, deviation logs, run manifests and per-query results for a pre-registered multiverse analysis of how the retrieval-selection protocol (a fixed number of chunks vs a fixed word budget) changes chunking verdicts in retrieval-augmented generation. Includes an extension to semantic chunking and dense retrieval (bge-m3), an exploratory answer-quality check (Qwen3-4B) and a provisional protocol audit of recent chunking studies.</p><p>Code is MIT-licensed; results, documents and figures are CC BY 4.0 (see LICENSE-DATA.md). The four source datasets are not redistributed; they are downloaded and hash-checked by the included fetch script.</p>",
+  "keywords": [
+    "retrieval-augmented generation",
+    "chunking",
+    "evaluation methodology",
+    "multiverse analysis",
+    "pre-registration",
+    "information retrieval"
+  ],
+  "notes": "Results, documents and figures: CC BY 4.0. Gold answer strings from SQuAD 2.0, COVID-QA, CUAD and Qasper remain under those datasets' licences."
+}
