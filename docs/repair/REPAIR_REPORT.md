@@ -61,7 +61,7 @@ GitHub CI: the workflow file exists; whether and how it ran on GitHub is reporte
 | Alternative draft: "Do not preserve … and deleting it" | | `manuscript/main_revised.tex` deleted (SHA-256 `1ae287f240da31ddc871462d6f52436efe926e4a5789678ca295eb02ba43a0cf`; recoverable from history) |
 | Correct section errors while preserving the plan's bytes | | Erratum file; plans not edited for these |
 | "Do not report historical dates as recorded/reported" | | The manuscript no longer states freeze dates or chronology; historical summaries keep their own date headers |
-| Work on `swaroop-fix` | the session also designates another branch | All work on `swaroop-fix`; the same commits are pushed to both branches |
+| Work on `swaroop-fix` | the session also designates another branch | All work is committed on the local branch `swaroop-fix`. Pushing was refused by the session's permission system (external write), so nothing has been pushed; the owner pushes when ready |
 
 ## 4. Scientific changes (no threshold, estimand or verdict changed)
 - Metrics are word-based (MAN-001): described as such, with a dated correction; post-hoc character rescoring of the
@@ -127,7 +127,7 @@ or logs. `run_mac.sh` no longer pipes a remote installer into a shell. Owner act
   chronology, citations below L3, licence decision.
 
 ## 9. Continuation checkpoint
-- Branch `swaroop-fix` (tip pushed to `origin/swaroop-fix`); working tree clean after the final commit.
+- Branch `swaroop-fix`, **local only** (the push was refused by the session's permission system; the container is ephemeral, so push or bundle the branch before the session ends); working tree clean after the final commit.
 - Protected baseline: digests of all 365 baseline files are reproducible from the first commit of the branch's
   history (`git ls-tree`/`git show` of the parent of the first repair commit); current protected digests in
   `PROTECTED_SHA256.txt`.
@@ -149,4 +149,5 @@ Validated at **2026-10-24T19:22:26Z** (UTC), immediately before the final commit
 Recompute: `python -I -c "import sys; sys.path.insert(0,'src'); from ragmv.integrity import source_digest; print(source_digest()['sha256'])"` and
 `git ls-files | grep -v '^docs/repair/REPAIR_REPORT.md$' | sort | while read f; do printf '%s\0%s\n' "$f" "$(sha256sum "$f" | cut -d' ' -f1)"; done | sha256sum`.
 The final validation sequence (§7: pytest 136/3, validator 89/0, trace 115/115, displays 0 differences, PDF build 0,
-scans 0) ran on exactly this tree; the only later change is this section of the report.
+scans 0) ran on exactly this tree; the only later changes are to this report (this section, and the push statements
+in §3 and §9, corrected after the push was refused).
