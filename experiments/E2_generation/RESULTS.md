@@ -33,12 +33,18 @@ DiD = Δ(budget 1,024 words) − Δ(top-5), Δ = metric(A) − metric(B). E1's m
 
 ## What this says
 1. **The sample reproduces E1's retrieval reversal** (coverage DiD > 0 for both claims), so the queries are not atypical.
-2. **For this reader, the retrieval reversal does not carry over to answer quality.** Answer-F1 DiDs are near zero; the
-   CIs exclude effects larger than about +0.03 (P1) and +0.04 (S3-256). For P1, exact match moves in the *opposite*
-   direction: once text is equalised, the 512-word arm answers exactly more often.
-3. Consequence for the paper: the protocol artefact is established for **retrieval evaluation** (E1). Whether it changes
-   downstream conclusions depends on the reader; for a 4B instruction model it did not here. The paper must not claim
-   that count-matched studies reach wrong *answer-quality* conclusions.
+2. **For this reader, a carry-over of the retrieval reversal to answer F1 was not detected.** Answer-F1 DiDs are near
+   zero and their 95% intervals include zero (upper bounds about +0.03 for P1 and +0.04 for S3-256). This is an
+   inconclusive result, not evidence of no effect: the minimum detectable DiDs (0.068 and 0.044) are of the same order
+   as the intervals. For P1, exact match moves in the *opposite* direction: once text is equalised, the 512-word arm
+   answers exactly more often (interval excludes zero).
+3. Consequence for the paper: the protocol dependence is established for **retrieval evaluation** (E1). Whether it
+   changes downstream conclusions depends on the reader and was not resolved for this 4B instruction model. The paper
+   must not claim that count-matched studies reach wrong *answer-quality* conclusions, nor that they reach right ones.
+
+*(Wording qualified 2026-10-24: the earlier text said the reversal "does not carry over" and that the intervals
+"exclude effects larger than" their upper bounds, which read an inconclusive interaction as an absence of effect.
+The numbers are unchanged.)*
 
 ## Diagnostics (pre-specified) and one exploratory observation
 | Dataset | Truncated answers (256-token cap) | "Unanswerable" replies |

@@ -1,6 +1,7 @@
 """Selection protocols (count- vs budget-matched) and span-level retrieval metrics, all in word intervals.
 
-Metrics per query (preregistration §3.2), against gold word spans in the query's own document:
+Metrics per query (preregistration §2.2, where they are defined over characters; implemented over words, see
+research/ERRATA_preregistrations.md B1 and ragmv.charmetric), against gold word spans in the query's own document:
   hit_strict  = 1 if some gold span is entirely inside the union of retrieved text
   hit_lenient = 1 if some gold span has >= 50% of its words retrieved
   coverage    = max over gold spans of the fraction of its words retrieved

@@ -1,0 +1,133 @@
+{
+  "checks": [
+    [
+      "Study 1 verdict shares (21 claims x 2 protocols x 4 datasets + pooled)",
+      true,
+      "480 quantities compared, 0 mismatches"
+    ],
+    [
+      "Study 1 H1: estimate, joint-bootstrap CI and verdict rule",
+      true,
+      "independent 71.1 pp [64.8, 81.9] -> supported; stored 71.1 [64.8, 81.9] supported"
+    ],
+    [
+      "Study 1 H1b: estimate, joint-bootstrap CI and verdict rule",
+      true,
+      "independent 26.7 pp [15.4, 33.9] -> supported; stored 26.7 [15.4, 33.9] supported"
+    ],
+    [
+      "Study 1 H2 eta^2 (statsmodels OLS type II on universe means)",
+      true,
+      "dataset 0.6143 (stored 0.6143), retriever 0.0444 (stored 0.0444), budget 0.0956 (stored 0.0956), metric 0.0319 (stored 0.0319); dataset largest in 100.0% of stored replicates"
+    ],
+    [
+      "Study 1 H3 required n (formula, ddof=1) and verdict rule",
+      true,
+      "85.4% > 500, median 1256 (6528 universes)"
+    ],
+    [
+      "Study 1 sensitivity (a) BH as implemented (family = claim x protocol x dataset)",
+      true,
+      "independent 68.0 pp, stored 68.0 pp"
+    ],
+    [
+      "Study 1b shorter-arm orientation from manifest chunk statistics",
+      true,
+      "0 mismatches"
+    ],
+    [
+      "Study 1b semantic-arm shares (6 claims x 2 protocols)",
+      true,
+      "24 compared, 0 mismatches"
+    ],
+    [
+      "Study 1b H4 point estimate and verdict rule",
+      true,
+      "independent 55.4 pp (9.4% -> 64.8%); stored 55.4 supported"
+    ],
+    [
+      "Study 1b H4b point estimate and verdict rule",
+      true,
+      "independent 64.4 pp (6.9% -> 71.3%); stored 64.4 supported"
+    ],
+    [
+      "Study 1b H5 point estimate and verdict rule",
+      true,
+      "independent 19.4 pp; stored 19.4 [16.7, 41.7] inconclusive"
+    ],
+    [
+      "Study 1b H5b point estimate and verdict rule",
+      true,
+      "independent 58.3 pp; stored 58.3 [45.1, 64.6] supported"
+    ],
+    [
+      "Tier 2 pooled DiD, stratified bootstrap CI and reading rule (2 claims x 3 measures)",
+      true,
+      "0 mismatches; complete cases per dataset: squad2 50, covidqa 50, cuad 50, qasper 50"
+    ]
+  ],
+  "posthoc": {
+    "H3_document_cluster_design_effect": {
+      "label": "POST-HOC: required n with the per-query SD replaced by sqrt(n * Var_cluster(mean)), documents as clusters",
+      "share_over_500": 0.8521752450980392,
+      "median_required_n": 1243.0,
+      "median_design_effect": 1.0175150519978107
+    },
+    "BH_family_P1": {
+      "per_dataset": 0.6801215277777777,
+      "pooled_over_datasets": 0.7035590277777777
+    },
+    "universe_weighting_H1": {
+      "equal_weight_per_universe": 0.7113715277777777,
+      "query_count_weighted_datasets": 0.8419317083348343,
+      "universes_per_dataset": {
+        "squad2": 192,
+        "covidqa": 192,
+        "cuad": 192,
+        "qasper": 192
+      }
+    },
+    "seed_robustness": {
+      "H1_estimate_seeds_1_to_5": [
+        0.7100694444444444,
+        0.7087673611111112,
+        0.7100694444444444,
+        0.7048611111111112,
+        0.7061631944444444
+      ],
+      "H1_estimate_seed_7": 0.7113715277777777,
+      "universe_verdicts_changed_seed7_vs_seed1": 205,
+      "universe_verdicts_total": 24960
+    },
+    "float16_margin": {
+      "universes_with_a_CI_bound_within_2^-11_of_zero": 673,
+      "universes_total": 24960
+    },
+    "tier2_mde": {
+      "P1/f1": {
+        "stored_pooled_sd": 0.06833540959970544,
+        "equal_weight_estimand": 0.0675862842058056
+      },
+      "P1/em": {
+        "stored_pooled_sd": 0.06645655656760144,
+        "equal_weight_estimand": 0.06567251573843726
+      },
+      "P1/coverage": {
+        "stored_pooled_sd": 0.05874451955061655,
+        "equal_weight_estimand": 0.05864557560736684
+      },
+      "S3-256/f1": {
+        "stored_pooled_sd": 0.0435283190151039,
+        "equal_weight_estimand": 0.04353969874178143
+      },
+      "S3-256/em": {
+        "stored_pooled_sd": 0.05054532692874764,
+        "equal_weight_estimand": 0.05058552139315035
+      },
+      "S3-256/coverage": {
+        "stored_pooled_sd": 0.03649849677001171,
+        "equal_weight_estimand": 0.03640741116573088
+      }
+    }
+  }
+}

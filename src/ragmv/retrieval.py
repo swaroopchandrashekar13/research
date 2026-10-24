@@ -24,7 +24,7 @@ class RetrieverSpec:
 
 
 def default_retrievers() -> list[RetrieverSpec]:
-    """The 16 pre-registered retriever configurations (preregistration §3.2)."""
+    """The 16 pre-registered retriever configurations (preregistration §2.2)."""
     return [RetrieverSpec(m, k1, b, s) for s, m, k1, b in product((True, False), ("lucene", "bm25+"), (0.9, 1.5), (0.4, 0.75))]
 
 

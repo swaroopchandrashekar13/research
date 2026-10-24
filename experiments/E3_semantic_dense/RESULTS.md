@@ -29,16 +29,21 @@ bootstrap 58.7 pp [50.0, 63.3] · all budgets 53.7 pp [49.7, 60.9] · BM25 only 
 49.8 pp [39.1, 58.1]. The conclusion holds under every one, and with both retrievers.
 
 ## What it means (plain language)
-- **"Semantic chunking beats fixed-size chunking" is a protocol artefact in the same way as Study 1's chunk-size
-  verdicts.** Against 128-word fixed chunks, breakpoint chunking wins 60% of universes at equal top-k and 8% at equal
+- **The verdict on "semantic chunking beats fixed-size chunking" depends on the protocol in the same way as Study 1's
+  chunk-size verdicts.** Against 128-word fixed chunks, breakpoint chunking wins 60% of universes at equal top-k and 8% at equal
   text (fixed wins 75%); clustering chunks win 53% vs 0% (fixed 97%). Against 512-word chunks the direction flips,
-  because there the semantic chunks are the shorter arm. What decides the verdict is **which arm returns more text**,
-  not chunk "semanticity".
+  because there the semantic chunks are the shorter arm. The pattern is consistent with **which arm returns more text**
+  driving the verdict; the design does not separate text volume from every other property of the chunks, so this is
+  an interpretation, not an identified mechanism.
 - **The effect holds with a dense retriever** (H4 dense-only 49.8 pp; H5b 58.3 pp). With bge-m3 large chunks are
   weaker even at equal k, so H5's fixed-512 share has little room to fall — the pilot predicted this floor, and H5 is
   inconclusive, not falsified. Reported as pre-registered.
 
 ## Limits
 One embedding model; the clustering defaults (λ = 0.5, threshold 0.5) let clusters fill the 512-word cap with
-bge-m3 (disclosed before the run); four English extractive-QA datasets; retrieval metrics, not answers (Tier 2 found
-no carry-over to answer F1 for a 4B reader); shares describe this designed multiverse.
+bge-m3 (disclosed before the run); four English extractive-QA datasets; retrieval metrics, not answers (Tier 2 did not detect a
+carry-over to answer F1 for a 4B reader; that interaction is inconclusive, not shown to be absent); shares describe
+this designed multiverse. Metrics are computed on words, not characters as the plan states (see
+`research/ERRATA_preregistrations.md`; post-hoc BM25 check in `analysis/posthoc-charmetric-bm25-20261024/`).
+
+*(Wording qualified 2026-10-24; the numbers are unchanged.)*

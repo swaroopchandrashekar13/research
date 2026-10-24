@@ -35,8 +35,12 @@ retriever only 70.8 pp [64.6, 85.4] · document-cluster bootstrap 69.7 pp [63.8,
 - **Overlap (S2) is protocol-insensitive**: equal chunk sizes on both sides means no text imbalance (consistent with
   the mechanism).
 - **Which dataset you evaluate on matters far more than retriever tuning** (η² 0.61 vs 0.04).
-- **Typical studies are too small**: detecting a 2-point difference for overlap or structure claims needs about
-  1,150–1,500 paired queries; ~85% of universes need more than 500.
+- **Studies of a few hundred queries are under-powered for small differences in this design**: detecting a 2-point
+  difference for overlap or structure claims needs about 1,150–1,500 paired queries; ~85% of universes need more
+  than 500. (Qualified 2026-10-24: this is a statement about this multiverse's variance, not a survey of study sizes.)
+- **Metric unit.** All metrics are computed on words (gold character spans mapped to the words they overlap), not on
+  characters as the plan states; a post-hoc character-based rescoring changes no hypothesis verdict
+  (`analysis/posthoc-charmetric-20261024/`).
 
 ## Per-dataset breakdown (P1, share of universes favouring each side)
 | Dataset | Count: 128 / 512 | Budget: 128 / 512 |
@@ -55,7 +59,7 @@ retriever only 70.8 pp [64.6, 85.4] · document-cluster bootstrap 69.7 pp [63.8,
    keyword-heavy clause queries. Needs a mechanism check before any claim.
 
 ## Deviations from the pre-registration
-See `research/preregistration.md` §9: two pre-run changes (admissible budgets; cluster sensitivity), one post-pilot
+See `research/preregistration.md` §8 (this summary originally said §9; corrected 2026-10-24): two pre-run changes (admissible budgets; cluster sensitivity), one post-pilot
 wording clarification, and one **post-confirmatory bug fix** in sensitivity (d)'s CI. That fix changed one field
 (CI [64.8, 81.9] → [63.8, 82.0]) and no hypothesis estimate or verdict.
 

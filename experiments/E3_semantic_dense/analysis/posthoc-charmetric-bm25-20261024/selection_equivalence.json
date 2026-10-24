@@ -1,0 +1,182 @@
+{
+  "squad2": {
+    "fixed-128": {
+      "depth": 36,
+      "depth_matches_manifest": true,
+      "elements_scores": 128088,
+      "mismatch_scores": 0,
+      "elements_words": 42696,
+      "mismatch_words": 0
+    },
+    "fixed-256": {
+      "depth": 28,
+      "depth_matches_manifest": true,
+      "elements_scores": 128088,
+      "mismatch_scores": 0,
+      "elements_words": 42696,
+      "mismatch_words": 0
+    },
+    "fixed-512": {
+      "depth": 25,
+      "depth_matches_manifest": true,
+      "elements_scores": 128088,
+      "mismatch_scores": 0,
+      "elements_words": 42696,
+      "mismatch_words": 0
+    },
+    "semantic-bp": {
+      "depth": 81,
+      "depth_matches_manifest": true,
+      "elements_scores": 128088,
+      "mismatch_scores": 0,
+      "elements_words": 42696,
+      "mismatch_words": 0
+    },
+    "semantic-cl": {
+      "depth": 27,
+      "depth_matches_manifest": true,
+      "elements_scores": 128088,
+      "mismatch_scores": 0,
+      "elements_words": 42696,
+      "mismatch_words": 0
+    },
+    "_seconds": 6.7
+  },
+  "covidqa": {
+    "fixed-128": {
+      "depth": 36,
+      "depth_matches_manifest": true,
+      "elements_scores": 47817,
+      "mismatch_scores": 0,
+      "elements_words": 15939,
+      "mismatch_words": 0
+    },
+    "fixed-256": {
+      "depth": 28,
+      "depth_matches_manifest": true,
+      "elements_scores": 47817,
+      "mismatch_scores": 0,
+      "elements_words": 15939,
+      "mismatch_words": 0
+    },
+    "fixed-512": {
+      "depth": 25,
+      "depth_matches_manifest": true,
+      "elements_scores": 47817,
+      "mismatch_scores": 0,
+      "elements_words": 15939,
+      "mismatch_words": 0
+    },
+    "semantic-bp": {
+      "depth": 110,
+      "depth_matches_manifest": true,
+      "elements_scores": 47817,
+      "mismatch_scores": 0,
+      "elements_words": 15939,
+      "mismatch_words": 0
+    },
+    "semantic-cl": {
+      "depth": 27,
+      "depth_matches_manifest": true,
+      "elements_scores": 47817,
+      "mismatch_scores": 0,
+      "elements_words": 15939,
+      "mismatch_words": 0
+    },
+    "_seconds": 4.6
+  },
+  "cuad": {
+    "fixed-128": {
+      "depth": 36,
+      "depth_matches_manifest": true,
+      "elements_scores": 26892,
+      "mismatch_scores": 0,
+      "elements_words": 8964,
+      "mismatch_words": 0
+    },
+    "fixed-256": {
+      "depth": 28,
+      "depth_matches_manifest": true,
+      "elements_scores": 26892,
+      "mismatch_scores": 0,
+      "elements_words": 8964,
+      "mismatch_words": 0
+    },
+    "fixed-512": {
+      "depth": 24,
+      "depth_matches_manifest": true,
+      "elements_scores": 26892,
+      "mismatch_scores": 0,
+      "elements_words": 8964,
+      "mismatch_words": 0
+    },
+    "semantic-bp": {
+      "depth": 87,
+      "depth_matches_manifest": true,
+      "elements_scores": 26892,
+      "mismatch_scores": 0,
+      "elements_words": 8964,
+      "mismatch_words": 0
+    },
+    "semantic-cl": {
+      "depth": 26,
+      "depth_matches_manifest": true,
+      "elements_scores": 26892,
+      "mismatch_scores": 0,
+      "elements_words": 8964,
+      "mismatch_words": 0
+    },
+    "_seconds": 3.8
+  },
+  "qasper": {
+    "fixed-128": {
+      "depth": 36,
+      "depth_matches_manifest": true,
+      "elements_scores": 47034,
+      "mismatch_scores": 0,
+      "elements_words": 15678,
+      "mismatch_words": 0
+    },
+    "fixed-256": {
+      "depth": 28,
+      "depth_matches_manifest": true,
+      "elements_scores": 47034,
+      "mismatch_scores": 0,
+      "elements_words": 15678,
+      "mismatch_words": 0
+    },
+    "fixed-512": {
+      "depth": 26,
+      "depth_matches_manifest": true,
+      "elements_scores": 47034,
+      "mismatch_scores": 0,
+      "elements_words": 15678,
+      "mismatch_words": 0
+    },
+    "semantic-bp": {
+      "depth": 81,
+      "depth_matches_manifest": true,
+      "elements_scores": 47034,
+      "mismatch_scores": 0,
+      "elements_words": 15678,
+      "mismatch_words": 0
+    },
+    "semantic-cl": {
+      "depth": 27,
+      "depth_matches_manifest": true,
+      "elements_scores": 47034,
+      "mismatch_scores": 0,
+      "elements_words": 15678,
+      "mismatch_words": 0
+    },
+    "_seconds": 10.7
+  },
+  "_meta": {
+    "study": "study1b",
+    "stored_run": "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu",
+    "seconds": 25.9,
+    "code_sha256": "cb36c89ac95e2ff71c4a42da45b5e6e4f6cddfce7e76dee503d92dbd476a1d8a",
+    "finished_utc": "2026-10-24T18:38:11+00:00",
+    "label": "POST-HOC SENSITIVITY (not pre-registered); new BM25 execution"
+  }
+}

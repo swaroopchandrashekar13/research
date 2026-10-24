@@ -69,13 +69,13 @@ def check_runs(rep: Report) -> dict:
         try:
             run = A.Run(path, study=study)
             if study == "1":
-                v = run.validate(label, sorted({x for c in A.preregistered_claims() for x in (c.a, c.b)}),
+                run.validate(label, sorted({x for c in A.preregistered_claims() for x in (c.a, c.b)}),
                                  A.full_design_study1())
                 for d in run.datasets:  # every stored chunking, not only those the claims use
                     for c in run.meta[d]["manifest"]["config"]["chunkings"]:
                         run.scores(d, c)
             else:
-                v = run.validate(label, list(A1b.CHUNKINGS), {"chunkings": list(A1b.CHUNKINGS),
+                run.validate(label, list(A1b.CHUNKINGS), {"chunkings": list(A1b.CHUNKINGS),
                                                               "retrievers": list(A1b.RETRIEVERS)})
             n_npz = sum(1 for _ in path.glob("*/*.npz"))
             rep.check(f"{name}: run validation ({label})", True,

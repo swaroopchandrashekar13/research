@@ -27,6 +27,10 @@ lesson to take with you: **check novelty before building.**
 
 ## 2. Scoring method (transparent and reproducible)
 
+> **Note (2026-10-24).** `research/scoring.py` and `research/opportunity_matrix.yaml`, referred to below, are not in
+> this repository, so the opportunity matrix in §3 cannot be regenerated. The tests that exercised them were retired
+> (`docs/repair/retired_tests/`). This historical report is otherwise unchanged.
+
 - 13 criteria (your list, merged where they overlapped), each scored 1-5 with a one-line rationale in
   `research/opportunity_matrix.yaml`. Cost, difficulty and "risk already solved" are inverted (6 − x).
 - Weights favour gap evidence (12), novelty (12), not-already-solved (10), fallback value (10) and

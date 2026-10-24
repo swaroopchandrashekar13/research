@@ -1,0 +1,502 @@
+{
+ "stored (word, float16)": {
+  "H4_bm25": {
+   "estimate": 0.6111111111111112,
+   "ci95": [
+    0.5717013888888888,
+    0.7245949074074074
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6111111111111112,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "H4b_bm25": {
+   "estimate": 0.6388888888888888,
+   "ci95": [
+    0.5532407407407407,
+    0.7107060185185184
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6388888888888888,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_shorter_bm25": {
+   "estimate": 0.9166666666666666,
+   "ci95": [
+    0.8055555555555556,
+    0.9166666666666666
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.9166666666666666,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_fixed512_drop_bm25": {
+   "estimate": 0.7083333333333333,
+   "ci95": [
+    0.6458333333333333,
+    0.8541666666666666
+   ]
+  },
+  "semantic_wins_bm25": {
+   "S5-128": {
+    "count": {
+     "support_A": 0.7708333333333334,
+     "support_B": 0.0,
+     "inconclusive": 0.22916666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.08333333333333333,
+     "support_B": 0.8333333333333334,
+     "inconclusive": 0.08333333333333333,
+     "n_universes": 36
+    }
+   },
+   "S5-256": {
+    "count": {
+     "support_A": 0.5833333333333334,
+     "support_B": 0.0,
+     "inconclusive": 0.4166666666666667,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.027777777777777776,
+     "support_B": 0.5277777777777778,
+     "inconclusive": 0.4444444444444444,
+     "n_universes": 36
+    }
+   },
+   "S5-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.3958333333333333,
+     "inconclusive": 0.6041666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.4722222222222222,
+     "support_B": 0.0,
+     "inconclusive": 0.5277777777777778,
+     "n_universes": 36
+    }
+   },
+   "S6-128": {
+    "count": {
+     "support_A": 0.7916666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.20833333333333334,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.0,
+     "support_B": 0.9444444444444444,
+     "inconclusive": 0.05555555555555555,
+     "n_universes": 36
+    }
+   },
+   "S6-256": {
+    "count": {
+     "support_A": 0.6041666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.3958333333333333,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.0,
+     "support_B": 0.8055555555555556,
+     "inconclusive": 0.19444444444444445,
+     "n_universes": 36
+    }
+   },
+   "S6-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.2708333333333333,
+     "inconclusive": 0.7291666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.16666666666666666,
+     "support_B": 0.1388888888888889,
+     "inconclusive": 0.6944444444444444,
+     "n_universes": 36
+    }
+   }
+  }
+ },
+ "word64": {
+  "H4_bm25": {
+   "estimate": 0.6111111111111112,
+   "ci95": [
+    0.5717013888888888,
+    0.7245949074074074
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6111111111111112,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "H4b_bm25": {
+   "estimate": 0.6388888888888888,
+   "ci95": [
+    0.5532407407407407,
+    0.7107060185185184
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6388888888888888,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_shorter_bm25": {
+   "estimate": 0.9166666666666666,
+   "ci95": [
+    0.8055555555555556,
+    0.9166666666666666
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.9166666666666666,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_fixed512_drop_bm25": {
+   "estimate": 0.7083333333333333,
+   "ci95": [
+    0.6458333333333333,
+    0.8541666666666666
+   ]
+  },
+  "semantic_wins_bm25": {
+   "S5-128": {
+    "count": {
+     "support_A": 0.7708333333333334,
+     "support_B": 0.0,
+     "inconclusive": 0.22916666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.08333333333333333,
+     "support_B": 0.8333333333333334,
+     "inconclusive": 0.08333333333333333,
+     "n_universes": 36
+    }
+   },
+   "S5-256": {
+    "count": {
+     "support_A": 0.5833333333333334,
+     "support_B": 0.0,
+     "inconclusive": 0.4166666666666667,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.027777777777777776,
+     "support_B": 0.5277777777777778,
+     "inconclusive": 0.4444444444444444,
+     "n_universes": 36
+    }
+   },
+   "S5-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.3958333333333333,
+     "inconclusive": 0.6041666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.4722222222222222,
+     "support_B": 0.0,
+     "inconclusive": 0.5277777777777778,
+     "n_universes": 36
+    }
+   },
+   "S6-128": {
+    "count": {
+     "support_A": 0.7916666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.20833333333333334,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.0,
+     "support_B": 0.9444444444444444,
+     "inconclusive": 0.05555555555555555,
+     "n_universes": 36
+    }
+   },
+   "S6-256": {
+    "count": {
+     "support_A": 0.6041666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.3958333333333333,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.0,
+     "support_B": 0.8055555555555556,
+     "inconclusive": 0.19444444444444445,
+     "n_universes": 36
+    }
+   },
+   "S6-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.2708333333333333,
+     "inconclusive": 0.7291666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.16666666666666666,
+     "support_B": 0.1388888888888889,
+     "inconclusive": 0.6944444444444444,
+     "n_universes": 36
+    }
+   }
+  }
+ },
+ "char": {
+  "H4_bm25": {
+   "estimate": 0.6018518518518519,
+   "ci95": [
+    0.5485532407407407,
+    0.7037037037037037
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6018518518518519,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "H4b_bm25": {
+   "estimate": 0.6018518518518519,
+   "ci95": [
+    0.5277777777777778,
+    0.6782407407407407
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6018518518518519,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_shorter_bm25": {
+   "estimate": 0.8888888888888888,
+   "ci95": [
+    0.8055555555555556,
+    0.9166666666666666
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.8888888888888888,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_fixed512_drop_bm25": {
+   "estimate": 0.7083333333333333,
+   "ci95": [
+    0.6458333333333333,
+    0.8333333333333333
+   ]
+  },
+  "semantic_wins_bm25": {
+   "S5-128": {
+    "count": {
+     "support_A": 0.7708333333333334,
+     "support_B": 0.0,
+     "inconclusive": 0.22916666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.08333333333333333,
+     "support_B": 0.8055555555555556,
+     "inconclusive": 0.1111111111111111,
+     "n_universes": 36
+    }
+   },
+   "S5-256": {
+    "count": {
+     "support_A": 0.6041666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.3958333333333333,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.08333333333333333,
+     "support_B": 0.5,
+     "inconclusive": 0.4166666666666667,
+     "n_universes": 36
+    }
+   },
+   "S5-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.375,
+     "inconclusive": 0.625,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.5,
+     "support_B": 0.0,
+     "inconclusive": 0.5,
+     "n_universes": 36
+    }
+   },
+   "S6-128": {
+    "count": {
+     "support_A": 0.7916666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.20833333333333334,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.027777777777777776,
+     "support_B": 0.8333333333333334,
+     "inconclusive": 0.1388888888888889,
+     "n_universes": 36
+    }
+   },
+   "S6-256": {
+    "count": {
+     "support_A": 0.5625,
+     "support_B": 0.0,
+     "inconclusive": 0.4375,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.0,
+     "support_B": 0.8055555555555556,
+     "inconclusive": 0.19444444444444445,
+     "n_universes": 36
+    }
+   },
+   "S6-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.22916666666666666,
+     "inconclusive": 0.7708333333333334,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.16666666666666666,
+     "support_B": 0.1388888888888889,
+     "inconclusive": 0.6944444444444444,
+     "n_universes": 36
+    }
+   }
+  }
+ },
+ "char_nows": {
+  "H4_bm25": {
+   "estimate": 0.6203703703703703,
+   "ci95": [
+    0.5717592592592592,
+    0.7246527777777777
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6203703703703703,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "H4b_bm25": {
+   "estimate": 0.6388888888888888,
+   "ci95": [
+    0.5532407407407407,
+    0.7106481481481481
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.6388888888888888,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_shorter_bm25": {
+   "estimate": 0.9166666666666666,
+   "ci95": [
+    0.8055555555555556,
+    0.9166666666666666
+   ],
+   "count_share": 0.0,
+   "budget_share": 0.9166666666666666,
+   "verdict_rule_at_threshold": "supported"
+  },
+  "P1_fixed512_drop_bm25": {
+   "estimate": 0.7083333333333333,
+   "ci95": [
+    0.6458333333333333,
+    0.8543402777777775
+   ]
+  },
+  "semantic_wins_bm25": {
+   "S5-128": {
+    "count": {
+     "support_A": 0.7708333333333334,
+     "support_B": 0.0,
+     "inconclusive": 0.22916666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.08333333333333333,
+     "support_B": 0.8333333333333334,
+     "inconclusive": 0.08333333333333333,
+     "n_universes": 36
+    }
+   },
+   "S5-256": {
+    "count": {
+     "support_A": 0.5833333333333334,
+     "support_B": 0.0,
+     "inconclusive": 0.4166666666666667,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.027777777777777776,
+     "support_B": 0.5277777777777778,
+     "inconclusive": 0.4444444444444444,
+     "n_universes": 36
+    }
+   },
+   "S5-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.3958333333333333,
+     "inconclusive": 0.6041666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.5,
+     "support_B": 0.0,
+     "inconclusive": 0.5,
+     "n_universes": 36
+    }
+   },
+   "S6-128": {
+    "count": {
+     "support_A": 0.7916666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.20833333333333334,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.0,
+     "support_B": 0.9444444444444444,
+     "inconclusive": 0.05555555555555555,
+     "n_universes": 36
+    }
+   },
+   "S6-256": {
+    "count": {
+     "support_A": 0.6041666666666666,
+     "support_B": 0.0,
+     "inconclusive": 0.3958333333333333,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.0,
+     "support_B": 0.8055555555555556,
+     "inconclusive": 0.19444444444444445,
+     "n_universes": 36
+    }
+   },
+   "S6-512": {
+    "count": {
+     "support_A": 0.0,
+     "support_B": 0.2708333333333333,
+     "inconclusive": 0.7291666666666666,
+     "n_universes": 48
+    },
+    "budget": {
+     "support_A": 0.16666666666666666,
+     "support_B": 0.1388888888888889,
+     "inconclusive": 0.6944444444444444,
+     "n_universes": 36
+    }
+   }
+  }
+ }
+}

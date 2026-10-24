@@ -1,0 +1,111 @@
+{
+ "rows": [
+  {
+   "variant": "stored (word, float16)",
+   "H1": "71.1 [64.8, 81.9] supported",
+   "H1b": "26.7 [15.4, 33.9] supported",
+   "H2": "eta2 dataset 0.614; largest 100.0% supported",
+   "H3": "85.4% (median 1256) supported",
+   "P1 count 512/128": "78.8/0.0",
+   "P1 budget 512/128": "7.6/81.2",
+   "sens": "a 68.0, b 61.5, c 70.8, d 69.7, e 74.2"
+  },
+  {
+   "variant": "word64",
+   "H1": "71.1 [64.8, 81.9] supported",
+   "H1b": "26.7 [15.4, 33.9] supported",
+   "H2": "eta2 dataset 0.614; largest 100.0% supported",
+   "H3": "85.4% (median 1256) supported",
+   "P1 count 512/128": "78.8/0.0",
+   "P1 budget 512/128": "7.6/81.2",
+   "sens": "a 68.0, b 61.5, c 70.8, d 69.7, e 74.2"
+  },
+  {
+   "variant": "char",
+   "H1": "70.4 [63.9, 80.3] supported",
+   "H1b": "24.2 [13.5, 30.7] supported",
+   "H2": "eta2 dataset 0.590; largest 100.0% supported",
+   "H3": "85.5% (median 1275) supported",
+   "P1 count 512/128": "78.9/0.0",
+   "P1 budget 512/128": "8.5/79.0",
+   "sens": "a 67.1, b 60.8, c 70.8, d 68.9, e 73.8"
+  },
+  {
+   "variant": "char_nows",
+   "H1": "71.1 [64.9, 81.9] supported",
+   "H1b": "26.2 [15.0, 33.2] supported",
+   "H2": "eta2 dataset 0.620; largest 100.0% supported",
+   "H3": "85.4% (median 1263) supported",
+   "P1 count 512/128": "78.8/0.0",
+   "P1 budget 512/128": "7.6/81.2",
+   "sens": "a 68.3, b 61.5, c 70.8, d 69.8, e 74.2"
+  }
+ ],
+ "universe_verdict_changes_vs_stored": {
+  "word64": {
+   "total": 24960,
+   "changed": 0,
+   "to_inconclusive": 0,
+   "from_inconclusive": 0,
+   "sign_reversal": 0
+  },
+  "char": {
+   "total": 24960,
+   "changed": 965,
+   "to_inconclusive": 118,
+   "from_inconclusive": 847,
+   "sign_reversal": 0
+  },
+  "char_nows": {
+   "total": 24960,
+   "changed": 197,
+   "to_inconclusive": 81,
+   "from_inconclusive": 116,
+   "sign_reversal": 0
+  }
+ },
+ "changes_by_metric": {
+  "word64": {
+   "hit_strict": [
+    0,
+    8320
+   ],
+   "hit_lenient": [
+    0,
+    8320
+   ],
+   "coverage": [
+    0,
+    8320
+   ]
+  },
+  "char": {
+   "hit_strict": [
+    779,
+    8320
+   ],
+   "hit_lenient": [
+    149,
+    8320
+   ],
+   "coverage": [
+    37,
+    8320
+   ]
+  },
+  "char_nows": {
+   "hit_strict": [
+    0,
+    8320
+   ],
+   "hit_lenient": [
+    151,
+    8320
+   ],
+   "coverage": [
+    46,
+    8320
+   ]
+  }
+ }
+}

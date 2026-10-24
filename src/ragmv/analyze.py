@@ -32,7 +32,7 @@ from .run import BUDGETS, KS, OPS
 
 DATASETS = ("squad2", "covidqa", "cuad", "qasper")
 DEFAULT_RETRIEVER = "lucene-k1.5-b0.75-stem"
-LABELS = ("EXPLORATORY", "CONFIRMATORY", "SMOKE")
+LABELS = ("EXPLORATORY", "CONFIRMATORY", "SMOKE", "POSTHOC")
 SEEDS = {"verdict_bootstrap": 7, "joint_bootstrap": 11, "h2_joint_bootstrap": 13}
 REQUIRED_NPZ = ("scores", "words", "rr10")
 
@@ -171,7 +171,12 @@ class Run:
             problems.append(f"label CONFIRMATORY but the run's split is {split!r}")
         if label == "EXPLORATORY" and split != "exploratory":
             problems.append(f"label EXPLORATORY but the run's split is {split!r}")
-        if label in ("CONFIRMATORY", "EXPLORATORY"):
+        posthoc = [d for d, c in cfgs.items() if c.get("posthoc")]
+        if label == "POSTHOC" and len(posthoc) != len(cfgs):
+            problems.append("label POSTHOC is only for runs whose manifests are marked posthoc (ragmv.posthoc)")
+        if label != "POSTHOC" and posthoc:
+            problems.append(f"{posthoc}: post-hoc sensitivity runs can only be analysed with --label POSTHOC")
+        if label in ("CONFIRMATORY", "EXPLORATORY", "POSTHOC"):
             if self.missing_datasets:
                 problems.append(f"datasets missing for a {label} analysis: {self.missing_datasets}")
             for key, want in (full_design or {}).items():
@@ -412,6 +417,10 @@ def _settings_line(res: dict) -> str:
 
 
 def label_banner(label: str) -> list[str]:
+    if label == "POSTHOC":
+        return ["> **POST-HOC SENSITIVITY ANALYSIS (2026-10-24) — not pre-registered.** Same pre-registered analysis "
+                "code and thresholds applied to an alternative metric definition on re-executed retrieval selections; "
+                "it does not replace or change any pre-registered result.", ""]
     if label == "SMOKE":
         return ["> **SMOKE / PARTIAL ANALYSIS — not a confirmatory or exploratory result.** It may cover a subset of "
                 "datasets, chunkings, retrievers or queries.", ""]
