@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +10,7 @@ from ragmv.evaluate import evaluate_rankings, merge, rr_at, select_budget, selec
 from ragmv.retrieval import RetrieverSpec, default_retrievers, rank, tokenize
 from ragmv import stats as S
 
-RAW = Path(__file__).resolve().parents[1] / "data" / "raw"
+RAW = Path(os.environ.get("RAGMV_DATA_ROOT") or Path(__file__).resolve().parents[1] / "data" / "raw")
 
 
 # ----------------------------------------------------------------------------- documents and spans

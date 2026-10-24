@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -7,7 +8,7 @@ import pytest
 from ragmv import data as D
 from ragmv import generate as G
 
-RAW = Path(__file__).resolve().parents[1] / "data" / "raw"
+RAW = Path(os.environ.get("RAGMV_DATA_ROOT") or Path(__file__).resolve().parents[1] / "data" / "raw")
 RUN = Path(__file__).resolve().parents[1] / "experiments" / "E1_retrieval_multiverse" / "runs" / "confirmatory-20261018"
 
 
@@ -33,7 +34,7 @@ def test_prompt_is_deterministic_and_ordered():
 
 
 def test_resume_skips_only_successful_rows(tmp_path):
-    path = tmp_path / "g.jsonl"
+    path = tmp_path / "generations.jsonl"
     path.write_text(json.dumps({"job_id": "a", "status": "ok"}) + "\n" + json.dumps({"job_id": "b", "status": "error"}) + "\n")
     assert G.done_ids(path) == {"a"}
 
@@ -43,7 +44,8 @@ def test_dry_run_writes_no_key(tmp_path, monkeypatch):
         pytest.skip("raw data not downloaded")
     sentinel = "SENTINEL-KEY-should-never-appear"
     monkeypatch.setenv(G.KEY_ENV, sentinel)
-    assert G.main(["--dataset", "covidqa", "--out", str(tmp_path), "--per-dataset", "3", "--dry-run"]) == 0
+    assert G.main(["--dataset", "covidqa", "--out", str(tmp_path), "--per-dataset", "3", "--dry-run",
+                   "--data-root", str(RAW)]) == 0
     for f in tmp_path.rglob("*"):
         if f.is_file():
             assert sentinel not in f.read_text()
@@ -111,7 +113,8 @@ def _synthetic_run(root: Path, effect: float, n: int = 40, seed: int = 0):
                         lines.append(json.dumps(row))
         (root / ds).mkdir(parents=True)
         # one incomplete query: only a single job present
-        lines.append(json.dumps({**json.loads(lines[-1]), "qid": f"{ds}:extra", "job_id": f"{ds}:extra|x|count5"}))
+        lines.append(json.dumps({**json.loads(lines[-1]), "qid": f"{ds}:extra", "chunking": "x", "op": "count5",
+                                 "job_id": f"{ds}:extra|x|count5"}))
         (root / ds / "generations.jsonl").write_text("\n".join(lines) + "\n")
 
 
@@ -172,7 +175,18 @@ def test_hardware_tag_records_cpu_build():
     assert tag.startswith("cpu|") and "llama_cpp_python" in tag and tag.endswith("n_gpu_layers 0")
 
 
-def test_half_written_last_line_is_skipped(tmp_path):
-    path = tmp_path / "g.jsonl"
+def test_half_written_last_line_needs_explicit_recovery(tmp_path):
+    path = tmp_path / "generations.jsonl"
     path.write_text(json.dumps({"job_id": "a", "status": "ok"}) + "\n" + '{"job_id": "b", "sta')
-    assert G.done_ids(path) == {"a"} and len(G.read_rows(path)) == 1
+    with pytest.raises(G.JsonlIntegrityError, match="incomplete final record"):
+        G.read_rows(path)
+    assert len(G.read_rows(path, recover_tail=True)) == 1
+    assert G.done_ids(path) == {"a"}  # progress counters tolerate the tail explicitly
+    assert G.append_segment(tmp_path).name == "generations.seg-002.jsonl"  # never appended onto the fragment
+
+
+def test_malformed_interior_line_is_rejected_with_its_line_number(tmp_path):
+    path = tmp_path / "generations.jsonl"
+    path.write_text(json.dumps({"job_id": "a", "status": "ok"}) + "\n{oops\n" + json.dumps({"job_id": "c"}) + "\n")
+    with pytest.raises(G.JsonlIntegrityError, match=r"generations.jsonl:2: malformed"):
+        G.read_rows(path, recover_tail=True)

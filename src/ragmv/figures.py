@@ -1,12 +1,20 @@
-"""Paper figures generated from run arrays only (never from hand-typed numbers).
+"""Paper figures generated from logged results only (never from hand-typed numbers).
 
-Usage: python -I -m ragmv.figures --run <run_dir> --out <dir> --label EXPLORATORY
-Encoding (validated palette, dataviz skill): count-matched = blue filled circle, budget-matched = orange open
-square, so the two protocols stay distinguishable in grayscale print.
+Usage:
+  python -I -m ragmv.figures --run <Study 1 run dir> --results <its results.json> --out <new dir> --label CONFIRMATORY
+  python -I -m ragmv.figures --study 1b --results <Study 1b results.json> --out <new dir> --label CONFIRMATORY
+
+The verdict dumbbells plot the shares stored in the validated `results.json` (the analysis' own 2,000-resample
+verdicts), not a fresh recomputation. Specification curves recompute per-universe intervals from the run arrays with
+the resample count and seed recorded in `results.json` (`analysis_settings`, default 2,000 / seed 7). Every figure
+writes `<stem>.coords.json` with the exact plotted coordinates, so each point can be checked against its source.
+Encoding (validated palette): count-matched = blue filled circle, budget-matched = orange open square, so the two
+protocols stay distinguishable in grayscale print.
 """
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import matplotlib
@@ -16,7 +24,14 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
 from . import stats as S  # noqa: E402
-from .analyze import Run, claim_diffs, preregistered_claims, verdict_summary  # noqa: E402
+from .analyze import SEEDS, Run, claim_diffs, preregistered_claims  # noqa: E402
+from .integrity import atomic_write_text  # noqa: E402
+
+DUMBBELL_CLAIMS = ["P1", "S1-64", "S1-128", "S1-256", "S2-128", "S2-256", "S3-128", "S3-256", "S3-512", "S4-256"]
+
+
+def _write_coords(out: Path, stem: str, payload: dict) -> None:
+    atomic_write_text(out / f"{stem}.coords.json", json.dumps(payload, indent=1))
 
 INK, INK2, MUTED, GRID, SURFACE = "#0b0b0b", "#52514e", "#898781", "#e1e0d9", "#ffffff"
 PROTOCOL_STYLE = {
@@ -39,8 +54,10 @@ def _style(ax):
     ax.set_axisbelow(True)
 
 
-def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, reps: int = 2000):
+def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, reps: int = 2000,
+                        seed: int = SEEDS["verdict_bootstrap"]):
     claim = next(c for c in preregistered_claims() if c.cid == cid)
+    coords = {"claim": cid, "metric": metric, "reps": reps, "seed": seed, "panels": {}}
     fig, axes = plt.subplots(1, len(run.datasets), figsize=(3.0 * len(run.datasets), 2.8), sharey=True)
     axes = np.atleast_1d(axes)
     for ax, d in zip(axes, run.datasets):
@@ -49,9 +66,11 @@ def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, 
         for prot in ("count", "budget"):
             diff, labels = claim_diffs(run, claim, prot, datasets=[d])[d]
             keep = [i for i, lab in enumerate(labels) if lab[2] == metric]
-            mean, lo, hi, _ = S.paired_bootstrap_ci(diff[:, keep], reps=reps)
-            pts += [(m, l, h, prot) for m, l, h in zip(mean, lo, hi)]
+            mean, lo, hi, _ = S.paired_bootstrap_ci(diff[:, keep], reps=reps, seed=seed)
+            pts += [(float(m), float(l), float(h), prot, labels[k]) for m, l, h, k in zip(mean, lo, hi, keep)]
         pts.sort(key=lambda t: t[0])
+        coords["panels"][d] = [{"x": i, "mean": p[0], "lo": p[1], "hi": p[2], "protocol": p[3],
+                                "universe": list(p[4])} for i, p in enumerate(pts)]
         x = np.arange(len(pts))
         ax.axhline(0, color=MUTED, linewidth=0.8, zorder=1)
         for prot, st in PROTOCOL_STYLE.items():
@@ -70,18 +89,18 @@ def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, 
     for ext in ("png", "pdf"):
         fig.savefig(out / f"speccurve_{cid}_{metric}.{ext}", dpi=200, facecolor=SURFACE)
     plt.close(fig)
+    _write_coords(out, f"speccurve_{cid}_{metric}", coords)
 
 
-def verdict_dumbbell(run: Run, cids: list[str], out: Path, label: str, reps: int = 1000):
-    """Net verdict = share(A significantly better) - share(B significantly better), per protocol."""
-    claims = [c for c in preregistered_claims() if c.cid in cids]
-    rows = []
-    for c in claims:
-        net = {}
-        for p in PROTOCOL_STYLE:
-            s = verdict_summary(claim_diffs(run, c, p), reps)
-            net[p] = s["support_A"] - s["support_B"]
-        rows.append((f"{c.cid}: {c.a} vs {c.b}", net))
+def verdict_dumbbell(results: dict, cids: list[str], out: Path, label: str):
+    """Net verdict = share(A significantly better) - share(B significantly better), per protocol, read from the
+    validated Study 1 results.json (FIG-001: no independent recomputation with a different resample count)."""
+    shares = results["verdict_shares"]
+    missing = [c for c in cids if c not in shares]
+    if missing:
+        raise KeyError(f"claims {missing} not in results.json")
+    rows = [(f"{c}: {shares[c]['A']} vs {shares[c]['B']}",
+             {p: shares[c][p]["support_A"] - shares[c][p]["support_B"] for p in PROTOCOL_STYLE}) for c in cids]
     _dumbbell(rows, out, "verdict_dumbbell", f"Chunking verdicts by selection protocol  [{label}]")
 
 
@@ -122,19 +141,33 @@ def _dumbbell(rows: list[tuple[str, dict]], out: Path, stem: str, title: str):
     for ext in ("png", "pdf"):
         fig.savefig(out / f"{stem}.{ext}", dpi=200, facecolor=SURFACE)
     plt.close(fig)
+    _write_coords(out, stem, {"rows": [{"label": name, "count": net["count"], "budget": net["budget"]}
+                                       for name, net in rows]})
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--run", required=True)
+    ap.add_argument("--study", choices=("1", "1b"), default="1")
+    ap.add_argument("--run", help="Study 1 run directory (specification curves)")
+    ap.add_argument("--results", required=True, help="validated results.json of the same run")
     ap.add_argument("--out", required=True)
     ap.add_argument("--label", required=True)
     args = ap.parse_args(argv)
-    run, out = Run(Path(args.run)), Path(args.out)
+    results = json.loads(Path(args.results).read_text())
+    out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    for cid in ("P1", "S3-256"):
-        specification_curve(run, cid, "coverage", out, args.label)
-    verdict_dumbbell(run, ["P1", "S1-64", "S1-128", "S1-256", "S2-128", "S2-256", "S3-128", "S3-256", "S3-512", "S4-256"], out, args.label)
+    if args.study == "1b":
+        study1b_dumbbell(results, out, args.label)
+    else:
+        if not args.run:
+            ap.error("--run is required for Study 1 figures")
+        settings = results.get("analysis_settings") or {}
+        reps = settings.get("verdict_bootstrap_resamples", 2000)
+        seed = (settings.get("seeds") or {}).get("verdict_bootstrap", SEEDS["verdict_bootstrap"])
+        run = Run(Path(args.run))
+        for cid in ("P1", "S3-256"):
+            specification_curve(run, cid, "coverage", out, args.label, reps=reps, seed=seed)
+        verdict_dumbbell(results, DUMBBELL_CLAIMS, out, args.label)
     print(f"figures written to {out}")
     return 0
 

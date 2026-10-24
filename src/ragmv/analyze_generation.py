@@ -12,13 +12,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 
 import numpy as np
 
 from . import stats as S
-from .generate import read_rows
+from .analyze import positive_int, prepare_out
+from .generate import JsonlIntegrityError, scan_run, segment_paths, summarize_rows
+from .integrity import atomic_write_text, source_digest
 
 DATASETS = ("squad2", "covidqa", "cuad", "qasper")
 CLAIMS = {"P1": ("fixed-128", "fixed-512"), "S3-256": ("paragraph-256", "fixed-256")}
@@ -27,13 +30,11 @@ METRICS = ("f1", "em")
 RETRIEVAL_METRICS = ("hit_strict", "hit_lenient", "coverage")
 
 
-def load_rows(path: Path) -> list[dict]:
-    """Last successful row per job_id (earlier error rows of a resumed run are superseded)."""
-    rows = {}
-    for row in read_rows(path):
-        if row.get("status") == "ok":
-            rows[row["job_id"]] = row
-    return list(rows.values())
+def load_rows(path: Path, recover_tail: bool = False) -> list[dict]:
+    """Last successful row per job_id (earlier error rows of a resumed run are superseded). `path` is a dataset run
+    directory (all segments) or its generations.jsonl."""
+    d = Path(path) if Path(path).is_dir() else Path(path).parent
+    return summarize_rows(scan_run(d, recover_tail).rows, str(d))["accepted_rows"]
 
 
 def table(rows: list[dict], field: str) -> tuple[list[str], dict[tuple[str, str], np.ndarray]]:
@@ -79,6 +80,17 @@ def summarise(x: np.ndarray, reps: int, seed: int = 7) -> dict:
     return {"mean": float(m[0]), "lo": float(lo[0]), "hi": float(hi[0]), "n": int(len(x))}
 
 
+def stratified_mde(per_dataset: dict[str, np.ndarray]) -> tuple[float | None, float | None]:
+    """SE and minimum detectable effect (alpha 0.05 two-sided, power 0.8) of the *equal-weight mean of per-dataset
+    means*, the pre-specified estimand: SE = sqrt(sum_k s_k^2 / n_k) / K. (Post-hoc, 2026-10-24: the originally
+    reported `mde` uses the SD of all queries pooled across datasets, which includes between-dataset variation.)"""
+    if not per_dataset or any(len(v) < 2 for v in per_dataset.values()):
+        return None, None
+    k = len(per_dataset)
+    se = float(np.sqrt(sum(np.var(v, ddof=1) / len(v) for v in per_dataset.values())) / k)
+    return se, float((S.Z_975 + S.Z_80) * se)
+
+
 def diagnostics(raw_lines: list[dict], rows: list[dict]) -> dict:
     usage = Counter()
     for r in rows:
@@ -96,17 +108,21 @@ def diagnostics(raw_lines: list[dict], rows: list[dict]) -> dict:
     }
 
 
-def analyse(run: Path, reps: int = 2000) -> dict:
+def analyse(run: Path, reps: int = 2000, recover_tail: bool = False) -> dict:
     out = {"label": "EXPLORATORY (Tier 2; pre-specified plan, not part of the frozen confirmatory hypotheses)",
-           "datasets": {}, "pooled": {}}
+           "datasets": {}, "pooled": {}, "analysis_settings": {"bootstrap_resamples": reps, "seed": 7,
+                                                              "recover_incomplete_tail": recover_tail}}
     did = {c: {m: {} for m in METRICS + ("coverage",)} for c in CLAIMS}
     for ds in DATASETS:
-        path = run / ds / "generations.jsonl"
-        if not path.exists():
+        if not segment_paths(run / ds):
             continue
-        raw = read_rows(path)
-        rows = load_rows(path)
+        scan = scan_run(run / ds, recover_tail)
+        summary = summarize_rows(scan.rows, str(run / ds))
+        raw, rows = scan.rows, summary["accepted_rows"]
         dsout = {"diagnostics": diagnostics(raw, rows), "claims": {}, "means": {}}
+        dsout["diagnostics"]["integrity"] = {"segments": [p.name for p in segment_paths(run / ds)],
+                                             "raw_lines": scan.raw_lines, "rejected": scan.rejected,
+                                             **{k: v for k, v in summary["counts"].items() if k != "status_counts"}}
         tabs = {}
         for field in METRICS + RETRIEVAL_METRICS:
             qids, tabs[field] = table(rows, field)
@@ -144,26 +160,35 @@ def analyse(run: Path, reps: int = 2000) -> dict:
             point, lo, hi = stratified_ci(per_ds, reps=reps)
             n = sum(len(v) for v in per_ds.values())
             sd = float(np.std(np.concatenate(list(per_ds.values())), ddof=1)) if n > 1 else None
+            se_strat, mde_strat = stratified_mde(per_ds)
             out["pooled"][claim][field] = {
                 "did": point, "lo": lo, "hi": hi, "n": n, "datasets": sorted(per_ds),
                 "verdict": verdict(lo, hi),
-                # minimum detectable DiD at alpha 0.05, power 0.8 (normal approximation, observed SD)
+                # minimum detectable DiD at alpha 0.05, power 0.8 (normal approximation, observed SD of all queries
+                # pooled across datasets; as originally implemented and reported)
                 "mde": float((S.Z_975 + S.Z_80) * sd / np.sqrt(n)) if sd else None,
+                # post-hoc (2026-10-24): MDE for the equal-weight estimand, from the per-dataset variances
+                "mde_stratified": mde_strat, "se_stratified": se_strat,
             }
     return out
 
 
 def to_markdown(res: dict) -> str:
+    reps = (res.get("analysis_settings") or {}).get("bootstrap_resamples")
+    rep_text = f"{reps:,} resamples" if reps else "resample count not recorded"
     lines = [f"# E2 Tier 2 generation — {res['label']}", "",
              "DiD = Δ(budget 1,024 words) − Δ(top-5), Δ = metric(A) − metric(B). E1 predicts DiD > 0 for both claims.",
-             "", "## Pooled (equal weight per dataset, stratified bootstrap, 2,000 resamples)", "",
-             "| Claim | Measure | DiD | 95% CI | n | MDE | Verdict |", "|---|---|---:|---|---:|---:|---|"]
+             "An inconclusive interval does not establish the absence of an effect.",
+             "", f"## Pooled (equal weight per dataset, stratified bootstrap, {rep_text})", "",
+             "| Claim | Measure | DiD | 95% CI | n | MDE (pooled SD) | MDE (equal-weight, post-hoc) | Verdict |",
+             "|---|---|---:|---|---:|---:|---:|---|"]
     for claim, fields in res["pooled"].items():
         for field, r in fields.items():
             mde = f"{r['mde']:.3f}" if r["mde"] is not None else "—"
+            mde_s = f"{r['mde_stratified']:.3f}" if r.get("mde_stratified") is not None else "—"
             lines.append(f"| {claim} | {field} | {r['did']:+.3f} | [{r['lo']:+.3f}, {r['hi']:+.3f}] | {r['n']} | {mde} "
-                         f"| {r['verdict']} |")
-    lines += ["", "## Per dataset (answer F1)", "",
+                         f"| {mde_s} | {r['verdict']} |")
+    lines += ["", f"## Per dataset (answer F1; paired bootstrap, {rep_text})", "",
               "| Dataset | Claim | Δ top-5 [CI] | Δ budget-1,024 [CI] | DiD [CI] | n |", "|---|---|---|---|---|---:|"]
     for ds, d in res["datasets"].items():
         for claim, cl in d.get("claims", {}).items():
@@ -185,13 +210,24 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--reps", type=int, default=2000)
+    ap.add_argument("--reps", type=positive_int, default=2000)
+    ap.add_argument("--recover-incomplete-tail", action="store_true",
+                    help="ignore (and report) an interrupted final record instead of failing")
+    ap.add_argument("--overwrite", action="store_true", help="allow writing into a non-empty output directory")
     args = ap.parse_args(argv)
-    res = analyse(Path(args.run), args.reps)
+    try:
+        res = analyse(Path(args.run), args.reps, args.recover_incomplete_tail)
+    except JsonlIntegrityError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+    if not res["datasets"]:
+        print(f"ERROR: no generations found under {args.run}", file=sys.stderr)
+        return 2
+    res["code_sha256"] = source_digest()["sha256"]
     out = Path(args.out)
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "results.json").write_text(json.dumps(res, indent=2))
-    (out / "results.md").write_text(to_markdown(res))
+    prepare_out(out, args.overwrite)
+    atomic_write_text(out / "results.json", json.dumps(res, indent=2))
+    atomic_write_text(out / "results.md", to_markdown(res))
     print(to_markdown(res))
     return 0
 

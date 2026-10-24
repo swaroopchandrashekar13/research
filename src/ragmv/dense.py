@@ -23,6 +23,27 @@ class Encoder:
         self.batch_size = batch_size
         self.name = f"{MODEL}@{REVISION[:12]}|{self.device}|{'fp16' if self.device == 'cuda' else 'fp32'}"
 
+    def identity(self) -> dict:
+        """Everything that can change an embedding: the cache key is a fingerprint of this (ragmv.run1b)."""
+        from importlib import metadata
+
+        import torch
+
+        def ver(pkg):
+            try:
+                return metadata.version(pkg)
+            except metadata.PackageNotFoundError:
+                return None
+
+        tok = getattr(self.model, "tokenizer", None)
+        return {"model": MODEL, "revision": REVISION, "tokenizer_revision": REVISION,
+                "tokenizer_class": type(tok).__name__ if tok is not None else None,
+                "max_seq_length": int(self.model.max_seq_length), "normalize_embeddings": True,
+                "compute_dtype": "float16" if self.device == "cuda" else "float32",
+                "device_type": self.device, "device_name": torch.cuda.get_device_name(0) if self.device == "cuda" else "cpu",
+                "batch_size": self.batch_size,
+                "versions": {p: ver(p) for p in ("torch", "transformers", "sentence-transformers", "numpy")}}
+
     def encode(self, texts: list[str]) -> np.ndarray:
         if not texts:
             return np.zeros((0, 1024), dtype=np.float32)

@@ -1,7 +1,11 @@
 """Dataset loaders producing documents with word offsets and queries with gold spans in word indices.
 
 All gold evidence is converted from character intervals to half-open word intervals [ws, we) over the
-document's `\\S+` words: every word that overlaps the character interval is included.
+document's `\\S+` words: every word that overlaps the character interval is included (a gold boundary inside a word
+extends the span to the whole word; a span touching only whitespace is dropped). Study 1, Study 1b and the Tier 2
+retrieval metrics are computed on these **word** intervals. The original character intervals are kept in
+`Query.gold_chars` (same documents, same filtering) for the post-hoc character-based sensitivity analysis
+(`ragmv.charmetric`); they are not used by the pre-registered analyses.
 """
 from __future__ import annotations
 
@@ -42,6 +46,7 @@ class Query:
     question: str
     gold: list[tuple[int, int]]  # word intervals in documents[doc_idx]
     answers: list[str]
+    gold_chars: list[tuple[int, int]] = field(default_factory=list)  # source character intervals (same spans)
 
 
 def make_document(doc_id: str, text: str) -> Document:
@@ -84,14 +89,18 @@ def _squad_like(contexts_by_doc: list[tuple[str, list[tuple[str, list[dict]]]]],
             for qa in qas:
                 if qa.get("is_impossible") or not qa.get("answers"):
                     continue
-                gold, answers = [], []
+                gold, answers, chars = [], [], []
                 for a in qa["answers"]:
                     cs = off + a["answer_start"]
-                    gold.append(char_to_word_span(doc, cs, cs + len(a["text"])))
+                    span = char_to_word_span(doc, cs, cs + len(a["text"]))
+                    gold.append(span)
+                    if span is not None:
+                        chars.append((cs, cs + len(a["text"])))
                     answers.append(a["text"])
                 gold = _dedupe(gold)
                 if gold:
-                    queries.append(Query(f"{qid_prefix}{qa['id']}", d_idx, qa["question"], gold, sorted(set(answers))))
+                    queries.append(Query(f"{qid_prefix}{qa['id']}", d_idx, qa["question"], gold, sorted(set(answers)),
+                                         _dedupe(chars)))
     return docs, queries
 
 
@@ -138,7 +147,7 @@ def load_qasper(root: Path, files=("qasper-dev-v0.3.json", "qasper-test-v0.3.jso
                 para_index.setdefault(_norm_ws(part), (pos, pos + len(part)))
                 pos += len(part) + 2
             for qa in paper["qas"]:
-                gold, answers = [], []
+                gold, answers, chars = [], [], []
                 for ann in qa["answers"]:
                     a = ann["answer"]
                     if a.get("unanswerable"):
@@ -148,7 +157,10 @@ def load_qasper(root: Path, files=("qasper-dev-v0.3.json", "qasper-test-v0.3.jso
                             continue
                         hit = para_index.get(_norm_ws(ev))
                         if hit:
-                            gold.append(char_to_word_span(doc, *hit))
+                            span = char_to_word_span(doc, *hit)
+                            gold.append(span)
+                            if span is not None:
+                                chars.append(hit)
                     answers.extend(a.get("extractive_spans") or [])
                     if a.get("free_form_answer"):
                         answers.append(a["free_form_answer"])
@@ -156,7 +168,8 @@ def load_qasper(root: Path, files=("qasper-dev-v0.3.json", "qasper-test-v0.3.jso
                         answers.append("yes" if a["yes_no"] else "no")
                 gold = _dedupe(gold)
                 if gold:
-                    queries.append(Query(f"qasper:{qa['question_id']}", d_idx, qa["question"], gold, sorted(set(answers))))
+                    queries.append(Query(f"qasper:{qa['question_id']}", d_idx, qa["question"], gold, sorted(set(answers)),
+                                         _dedupe(chars)))
     return docs, queries
 
 

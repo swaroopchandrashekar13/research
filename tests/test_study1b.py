@@ -1,18 +1,18 @@
 import json
+import os
 import zlib
 from pathlib import Path
 
 import numpy as np
 import pytest
 
-from ragmv import data as D
 from ragmv import evaluate as E
 from ragmv import evaluate_multi as EM
 from ragmv import run1b
 from ragmv.dense import dense_rank
 from ragmv.semantic import breakpoint_chunks, chunk_words, clustering_chunks
 
-RAW = Path(__file__).resolve().parents[1] / "data" / "raw"
+RAW = Path(os.environ.get("RAGMV_DATA_ROOT") or Path(__file__).resolve().parents[1] / "data" / "raw")
 E1 = Path(__file__).resolve().parents[1] / "experiments" / "E1_retrieval_multiverse" / "runs" / "confirmatory-20261018"
 
 

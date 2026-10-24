@@ -1,14 +1,19 @@
+"""Bibliography validator tests.
+
+The opportunity-scoring tests that used to live here imported `research/scoring.py` and read
+`research/opportunity_matrix.yaml`; neither file is in this repository, and the Phase-0 direction-scoring workflow they
+tested is obsolete (the study direction was chosen; see docs/reports/R3). They were retired on 2026-10-24 rather than
+satisfied by an unrelated `scoring` package or by invented scores. Their source is preserved verbatim in
+docs/repair/retired_tests/test_research_tools.baseline.py.txt; the baseline collection error is recorded in
+docs/repair/REPAIR_REPORT.md.
+"""
 import sys
 from pathlib import Path
 
-import numpy as np
-import pytest
-
 ROOT = Path(__file__).resolve().parents[1]
-sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "research")]
+sys.path.insert(0, str(ROOT / "tools"))
 
 import check_bibliography as bib  # noqa: E402
-import scoring  # noqa: E402
 
 
 def test_bibliography_file_is_valid():
@@ -30,33 +35,3 @@ def test_citation_gate_blocks_under_verified_sources():
     assert bib.citable(entries, ["y"], "L2") == []
     assert "verified only to L1" in bib.citable(entries, ["x"], "L2")[0]
     assert "not in bibliography" in bib.citable(entries, ["z"], "L2")[0]
-
-
-def _toy():
-    criteria = {"good": {"weight": 1}, "cost": {"weight": 1, "invert": True}}
-    candidates = {
-        "A": {"title": "a", "scores": {"good": 5, "cost": 1}},
-        "B": {"title": "b", "scores": {"good": 1, "cost": 5}},
-    }
-    return criteria, candidates
-
-
-def test_inverted_criteria_and_normalisation():
-    criteria, candidates = _toy()
-    ids, raw = scoring.score_matrix(criteria, candidates)
-    assert raw.tolist() == [[5, 5], [1, 1]]
-    s = scoring.weighted(raw, np.array([1.0, 1.0]))
-    assert s.tolist() == pytest.approx([100.0, 20.0])
-
-
-def test_out_of_range_scores_rejected():
-    criteria, candidates = _toy()
-    candidates["A"]["scores"]["good"] = 6
-    with pytest.raises(ValueError):
-        scoring.score_matrix(criteria, candidates)
-
-
-def test_real_matrix_ranks_deterministically():
-    criteria, candidates = scoring.load(ROOT / "research" / "opportunity_matrix.yaml")
-    assert scoring.rank_table(criteria, candidates) == scoring.rank_table(criteria, candidates)
-    assert all(set(c["scores"]) == set(criteria) for c in candidates.values())

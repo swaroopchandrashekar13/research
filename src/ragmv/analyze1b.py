@@ -1,4 +1,3 @@
-
 """Pre-registered analysis of a Study 1b run (research/preregistration_study1b.md §4-§5).
 
 Usage:
@@ -11,12 +10,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import numpy as np
 
 from . import stats as S
-from .analyze import Claim, Run, claim_diffs, hypothesis_verdict, protocol_contrast, verdict_summary
+from .analyze import (LABELS, SEEDS, Claim, Run, RunValidationError, _settings_line, analysis_settings, claim_diffs,
+                      hypothesis_verdict, label_banner, positive_int, prepare_out, protocol_contrast, verdict_summary)
+from .integrity import atomic_write_text, source_digest
 
 WIDTHS = (128, 256, 512)
 
@@ -30,8 +32,20 @@ def study1b_claims() -> dict[str, list[Claim]]:
     }
 
 
+CHUNKINGS = ("fixed-128", "fixed-256", "fixed-512", "semantic-bp", "semantic-cl")
+RETRIEVERS = ("bm25", "dense")
+
+
 def mean_lengths(run: Run) -> dict[str, dict[str, float]]:
-    return {d: {s["chunking"]: s["chunk_words_mean"] for s in run.meta[d]["manifest"]["chunk_stats"]} for d in run.datasets}
+    """Mean chunk length (words, full retrieval corpus) per dataset and chunking, from the run manifests' chunk
+    statistics, which the runner computes before any retrieval metric (pre-registration §3.5 item 5)."""
+    out = {}
+    for d in run.datasets:
+        stats = run.meta[d]["manifest"].get("chunk_stats")
+        if not stats:
+            raise RunValidationError(f"{d}: manifest has no chunk_stats; the shorter arm cannot be determined")
+        out[d] = {s["chunking"]: s["chunk_words_mean"] for s in stats}
+    return out
 
 
 def oriented(run, claims, protocol, lengths, admissible=True, retrievers=None, datasets=None):
@@ -63,7 +77,7 @@ def shorter_contrast(run, claims, lengths, reps, joint_reps, admissible=True, re
         vb = np.concatenate([v[d][split[d]:] for d in v])
         return float((vb == 1).mean() - (vc == 1).mean())
 
-    boot = S.joint_bootstrap_shares(combined, stat, reps=joint_reps, clusters=clusters)
+    boot = S.joint_bootstrap_shares(combined, stat, reps=joint_reps, seed=SEEDS["joint_bootstrap"], clusters=clusters)
     lo, hi = np.quantile(boot, [0.025, 0.975])
     return {"estimate": est, "ci95": [float(lo), float(hi)], "count_share": sc["support_A"], "budget_share": sb["support_A"]}
 
@@ -82,7 +96,7 @@ def analyze(run: Run, reps=2000, joint_reps=1000) -> dict:
     h4b["verdict"] = hypothesis_verdict(h4b["estimate"], *h4b["ci95"], 0.10)
     h5 = protocol_contrast(run, claims["P1"][0], -1, reps, joint_reps, retrievers=["dense"])
     h5["verdict"] = hypothesis_verdict(h5["estimate"], *h5["ci95"], 0.20)
-    # H5b (post-pilot amendment, v1.0 §9): the same protocol contrast as H4, for P1 with the dense retriever
+    # H5b (post-pilot amendment, logged in the pre-registration's deviation log, §8): H4's contrast for P1, dense only
     h5b = shorter_contrast(run, claims["P1"], lengths, reps, joint_reps, retrievers=["dense"])
     h5b["verdict"] = hypothesis_verdict(h5b["estimate"], *h5b["ci95"], 0.20)
     res.update(H4=h4, H4b=h4b, H5=h5, H5b=h5b)
@@ -110,9 +124,11 @@ def _pct(x):
 
 
 def to_markdown(res: dict, label: str) -> str:
-    lines = [f"# Study 1b results — {label}", "",
-             "Queries: " + ", ".join(f"{k} {v}" for k, v in res["n_queries"].items()), "",
-             "## Hypotheses", "", "| ID | Estimate | 95% CI | Threshold | Verdict |", "|---|---:|---|---:|---|"]
+    lines = [f"# Study 1b results — {label}", ""] + label_banner(label) + [
+             "Queries: " + ", ".join(f"{k} {v}" for k, v in res["n_queries"].items()), ""]
+    if _settings_line(res):
+        lines += [_settings_line(res), ""]
+    lines += ["## Hypotheses", "", "| ID | Estimate | 95% CI | Threshold | Verdict |", "|---|---:|---|---:|---|"]
     for h, thr in (("H4", 0.20), ("H4b", 0.10), ("H5", 0.20), ("H5b", 0.20)):
         r = res[h]
         lines.append(f"| {h} | {_pct(r['estimate'])} | [{_pct(r['ci95'][0])}, {_pct(r['ci95'][1])}] | {_pct(thr)} | {r['verdict']} |")
@@ -132,6 +148,9 @@ def to_markdown(res: dict, label: str) -> str:
         for prot in ("count", "budget"):
             s = v[prot]
             lines.append(f"| {cid} | {prot} | {s['n_universes']} | {_pct(s['support_A'])} | {_pct(s['support_B'])} | {_pct(s['inconclusive'])} |")
+    if res.get("validation", {}).get("legacy_limitations"):
+        lines += ["", "## Legacy limitations of the input manifests (reported, not filled in)", ""]
+        lines += [f"- {x}" for x in res["validation"]["legacy_limitations"]]
     return "\n".join(lines) + "\n"
 
 
@@ -139,19 +158,30 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run", required=True)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--label", required=True, choices=["EXPLORATORY", "CONFIRMATORY", "SMOKE"])
-    ap.add_argument("--reps", type=int, default=2000)
-    ap.add_argument("--joint-reps", type=int, default=1000)
+    ap.add_argument("--label", required=True, choices=LABELS)
+    ap.add_argument("--reps", type=positive_int, default=2000)
+    ap.add_argument("--joint-reps", type=positive_int, default=1000)
+    ap.add_argument("--overwrite", action="store_true", help="allow writing into a non-empty output directory")
     args = ap.parse_args(argv)
-    run = Run(Path(args.run))
+    try:
+        run = Run(Path(args.run), study="1b")
+        validation = run.validate(args.label, list(CHUNKINGS),
+                                  {"chunkings": list(CHUNKINGS), "retrievers": list(RETRIEVERS)})
+        mean_lengths(run)
+    except (RunValidationError, FileNotFoundError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
+    out = Path(args.out)
+    prepare_out(out, args.overwrite)
     res = analyze(run, args.reps, args.joint_reps)
     res["label"] = args.label
-    res["source_manifests"] = {d: {k: run.meta[d]["manifest"][k] for k in ("git", "config_sha256", "started_utc", "encoder")}
+    res["analysis_settings"] = analysis_settings(args.reps, args.joint_reps)
+    res["validation"] = {**validation, "legacy_limitations": run.legacy}
+    res["code_sha256"] = source_digest()["sha256"]
+    res["source_manifests"] = {d: {k: run.meta[d]["manifest"].get(k) for k in ("config_sha256", "started_utc", "encoder")}
                                for d in run.datasets}
-    out = Path(args.out)
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "results.json").write_text(json.dumps(res, indent=2))
-    (out / "results.md").write_text(to_markdown(res, args.label))
+    atomic_write_text(out / "results.json", json.dumps(res, indent=2))
+    atomic_write_text(out / "results.md", to_markdown(res, args.label))
     print((out / "results.md").read_text())
     return 0
 
