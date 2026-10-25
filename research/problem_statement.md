@@ -57,7 +57,7 @@ A **chunking claim** is an ordered pair $(c_A, c_B)$. In a **universe** $u = (\m
 $$\Delta_u = \frac{1}{|Q|}\sum_{q \in Q} \big[m(R_{c_A,r,\pi}(q), G_q) - m(R_{c_B,r,\pi}(q), G_q)\big],$$
 with a paired-bootstrap confidence interval. Each universe *supports A*, *supports B*, or is *inconclusive*.
 
-**We study the distribution of these verdicts over a pre-specified multiverse $\mathcal{U}$ of defensible evaluation
+**We study the distribution of these verdicts over a planned multiverse $\mathcal{U}$ of defensible evaluation
 choices, for a fixed set of claims.**
 
 ### B.3 Research questions
@@ -88,6 +88,6 @@ Exact operationalisations and thresholds are fixed in.
 4. An open, tested multiverse harness (`src/ragmv`) and per-query results for reuse.
 
 ### B.7 Criteria for success and failure
-The study **succeeds** if it delivers a pre-registered, reproducible estimate for H1–H4 with uncertainty, whatever the
+The study **succeeds** if it delivers a planned, reproducible estimate for H1–H4 with uncertainty, whatever the
 direction. It **fails** if the pipeline cannot be shown to compute metrics correctly (unit tests), or if deviations
-from the pre-registration are undocumented.
+from the analysis plan are undocumented.

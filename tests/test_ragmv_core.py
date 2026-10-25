@@ -133,7 +133,7 @@ def test_bm25_ranks_matching_chunk_first_and_handles_empty_query():
         assert ranked.shape == (2, 3) and ranked[0, 0] == 0
 
 
-def test_sixteen_retrievers_and_chunkings_preregistered():
+def test_sixteen_planned_retrievers_and_chunkings():
     assert len(default_retrievers()) == 16 and len({r.name for r in default_retrievers()}) == 16
     assert len(default_specs()) == 16 and len({s.name for s in default_specs()}) == 16
 

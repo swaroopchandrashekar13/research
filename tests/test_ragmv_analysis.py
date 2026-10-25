@@ -37,7 +37,7 @@ def test_admissible_budget_indices():
 
 def test_claim_diff_sign_and_labels(tmp_path):
     run = _write_run(tmp_path, lambda c, o: 0.8 if c == "fixed-128" else 0.5)
-    claim = next(c for c in A.preregistered_claims() if c.cid == "P1")
+    claim = next(c for c in A.planned_claims() if c.cid == "P1")
     diffs = A.claim_diffs(run, claim, "count")
     diff, labels = diffs["squad2"]
     assert diff.shape == (N_Q, N_R * len(KS) * N_M) and len(labels) == diff.shape[1]
@@ -56,7 +56,7 @@ def test_protocol_contrast_detects_constructed_artefact(tmp_path):
         return 0.5
 
     run = _write_run(tmp_path, effect)
-    claim = next(c for c in A.preregistered_claims() if c.cid == "P1")
+    claim = next(c for c in A.planned_claims() if c.cid == "P1")
     res = A.protocol_contrast(run, claim, side=-1, reps=200, joint_reps=50)
     assert res["count"]["support_B"] == 1.0 and res["budget"]["support_B"] == 0.0
     assert res["estimate"] == pytest.approx(1.0)
@@ -65,7 +65,7 @@ def test_protocol_contrast_detects_constructed_artefact(tmp_path):
 
 def test_null_world_gives_falsified_or_inconclusive(tmp_path):
     run = _write_run(tmp_path, lambda c, o: 0.5)
-    claim = next(c for c in A.preregistered_claims() if c.cid == "P1")
+    claim = next(c for c in A.planned_claims() if c.cid == "P1")
     res = A.protocol_contrast(run, claim, side=-1, reps=200, joint_reps=50)
     assert abs(res["estimate"]) < 0.2
     assert A.hypothesis_verdict(res["estimate"], *res["ci95"], 0.20) in {"falsified", "inconclusive"}

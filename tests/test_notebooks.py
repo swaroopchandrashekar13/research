@@ -1,4 +1,4 @@
-"""MIG-001: notebook bootstrap uses one explicitly selected revision, pushing is opt-in, tokens never persist.
+"""Notebook bootstrap uses one explicitly selected revision, pushing is opt-in, tokens never persist.
 
 Runs against a local bare repository (RAGMV_TEST_REPO); no network, no upload, no push to any remote."""
 import importlib.util

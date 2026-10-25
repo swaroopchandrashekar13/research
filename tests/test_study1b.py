@@ -95,8 +95,8 @@ def test_bm25_fixed_reproduces_study1_confirmatory_scores(tmp_path):
     cfg = json.loads((E1 / "covidqa" / "manifest.json").read_text())["config"]
     r = cfg["retrievers"].index(run1b.BM25.name)
     for name in ("fixed-128", "fixed-512"):
-        new = np.load(tmp_path / "covidqa" / f"{name}.npz")
-        old = np.load(E1 / "covidqa" / f"{name}.npz")
+        new = np.load(tmp_path / "covidqa" / f"{name}.npz", allow_pickle=False)
+        old = np.load(E1 / "covidqa" / f"{name}.npz", allow_pickle=False)
         assert np.array_equal(new["scores"][0], old["scores"][r][:40])
         assert np.array_equal(new["words"][0], old["words"][r][:40])
 
@@ -123,7 +123,7 @@ def test_run1b_end_to_end_with_fake_encoder(tmp_path, monkeypatch):
     m = json.loads((tmp_path / "run" / "covidqa" / "manifest.json").read_text())
     assert [s["chunking"] for s in m["chunk_stats"]] == list(run1b.CHUNKINGS) and m["encoder"] == "hash-encoder"
     for name in run1b.CHUNKINGS:
-        z = np.load(tmp_path / "run" / "covidqa" / f"{name}.npz")
+        z = np.load(tmp_path / "run" / "covidqa" / f"{name}.npz", allow_pickle=False)
         assert z["scores"].shape == (2, 15, 9, 3)
     stats = {s["chunking"]: s for s in m["chunk_stats"]}
     assert stats["semantic-cl"]["chunk_words_max"] <= 512 and stats["semantic-bp"]["chunk_words_max"] <= 512

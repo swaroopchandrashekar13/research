@@ -1,10 +1,12 @@
 # Tier 2 (E2) generation on Kaggle or Google Colab — run this file from ONE notebook cell (see the lines below).
 #
-# Choose ONE code revision and use it for everything: a release tag or a full 40-character commit id of
-# https://github.com/swaroopchandrashekar13/research (never a branch name: a branch can move while the run is going).
+# Choose ONE code revision and use it for everything: a release tag or a full 40-character commit id of the
+# repository that holds this code (never a branch name: a branch can move while the run is going).
 #
-#   import os; os.environ["RAGMV_CODE_REF"] = "<tag or full commit id>"
-#   !wget -q -O /tmp/notebook_tier2.py https://raw.githubusercontent.com/swaroopchandrashekar13/research/<same ref>/experiments/E2_generation/notebook_tier2.py
+#   import os
+#   os.environ["RAGMV_REPO_URL"] = "<clone URL of that repository>"
+#   os.environ["RAGMV_CODE_REF"] = "<tag or full commit id>"
+#   # save this file, at the same revision, as /tmp/notebook_tier2.py (the hosting service's raw-file link), then
 #   %run /tmp/notebook_tier2.py
 #
 # The script checks out exactly RAGMV_CODE_REF, refuses branch names, and stops if the file you are running differs
@@ -32,7 +34,6 @@ import threading
 import time
 from pathlib import Path
 
-REPO_SLUG = "swaroopchandrashekar13/research"
 CODE_REF = os.environ.get("RAGMV_CODE_REF", "")  # tag or full commit id; required (see the header)
 RESULTS_BRANCH = "tier2-results"
 DATASETS = ("squad2", "covidqa", "cuad", "qasper")
@@ -91,7 +92,12 @@ def repo_url(token=None):
     """Token-free repository URL (the token, if any, reaches git only through `git_env`)."""
     if os.environ.get("RAGMV_TEST_REPO"):  # tests point this at a local bare repository
         return os.environ["RAGMV_TEST_REPO"]
-    return f"https://github.com/{REPO_SLUG}.git"
+    url = os.environ.get("RAGMV_REPO_URL", "")
+    if not url:
+        raise SystemExit("Set RAGMV_REPO_URL to the clone URL of the repository that holds this code.")
+    if "@" in url.split("//", 1)[-1].split("/", 1)[0]:
+        raise SystemExit("RAGMV_REPO_URL must not contain credentials (a token is passed to git separately).")
+    return url
 
 
 def git_env(token):

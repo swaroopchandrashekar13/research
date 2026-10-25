@@ -1,8 +1,8 @@
-# Validation environment (2026-10-24 repair)
+# Validation environment
 
-**This is not the historical environment.** It is a separately created environment used to validate the repaired
-project. The historical environment cannot be recreated exactly: only the direct pins and the versions printed into
-the run manifests were recorded, not a full lock.
+**This is not the historical environment.** It is a separately created environment used to validate the project
+(2026-10-24 and 2026-10-25). The historical environment cannot be recreated exactly: only the direct pins and the
+versions printed into the run manifests were recorded, not a full lock.
 
 | | Historical (Study 1, `env/environment.json` and manifests) | Historical (Study 1b, Kaggle manifests) | Validation |
 |---|---|---|---|
@@ -16,7 +16,7 @@ The two validation locks differ only in `wrapt` (2.5.2rc1 on 3.13, 2.5.1 on 3.12
 `statsmodels` uses for formulas). **Measured effect of the environment difference on outputs:** every stored E1, E3
 and E2 analysis was recomputed in this environment and matched the stored `results.json` field by field with zero
 differences; BM25 retrieval re-executed here reproduced the stored Study 1 scores and word counts exactly (see
-`docs/repair/VERIFICATION.md`). Dense retrieval and model generation were not re-executed, so for them the
+`docs/remediation/VERIFICATION.md`). Dense retrieval and model generation were not re-executed, so for them the
 environment difference is unquantified.
 
 Recreate: `python3.13 -m venv .venv && .venv/bin/python -m pip install -r env/validation/lock-py3.13.txt &&

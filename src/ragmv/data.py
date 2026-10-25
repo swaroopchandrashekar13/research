@@ -5,7 +5,7 @@ document's `\\S+` words: every word that overlaps the character interval is incl
 extends the span to the whole word; a span touching only whitespace is dropped). Study 1, Study 1b and the Tier 2
 retrieval metrics are computed on these **word** intervals. The original character intervals are kept in
 `Query.gold_chars` (same documents, same filtering) for the post-hoc character-based sensitivity analysis
-(`ragmv.charmetric`); they are not used by the pre-registered analyses.
+(`ragmv.charmetric`); they are not used by the planned analyses.
 """
 from __future__ import annotations
 

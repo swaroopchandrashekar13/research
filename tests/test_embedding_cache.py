@@ -1,4 +1,4 @@
-"""PY-002: embedding caches are bound to their full identity and validated on every read."""
+"""Embedding caches are bound to their full identity and validated on every read."""
 import json
 
 import numpy as np

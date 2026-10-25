@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
 from . import stats as S  # noqa: E402
-from .analyze import SEEDS, Run, claim_diffs, preregistered_claims  # noqa: E402
+from .analyze import SEEDS, Run, claim_diffs, planned_claims  # noqa: E402
 from .integrity import atomic_write_text  # noqa: E402
 
 DUMBBELL_CLAIMS = ["P1", "S1-64", "S1-128", "S1-256", "S2-128", "S2-256", "S3-128", "S3-256", "S3-512", "S4-256"]
@@ -56,7 +56,7 @@ def _style(ax):
 
 def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, reps: int = 2000,
                         seed: int = SEEDS["verdict_bootstrap"]):
-    claim = next(c for c in preregistered_claims() if c.cid == cid)
+    claim = next(c for c in planned_claims() if c.cid == cid)
     coords = {"claim": cid, "metric": metric, "reps": reps, "seed": seed, "panels": {}}
     fig, axes = plt.subplots(1, len(run.datasets), figsize=(3.0 * len(run.datasets), 2.8), sharey=True)
     axes = np.atleast_1d(axes)
@@ -94,7 +94,7 @@ def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, 
 
 def verdict_dumbbell(results: dict, cids: list[str], out: Path, label: str):
     """Net verdict = share(A significantly better) - share(B significantly better), per protocol, read from the
-    validated Study 1 results.json (FIG-001: no independent recomputation with a different resample count)."""
+    validated Study 1 results.json (no independent recomputation with a different resample count)."""
     shares = results["verdict_shares"]
     missing = [c for c in cids if c not in shares]
     if missing:

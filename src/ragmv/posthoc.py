@@ -1,4 +1,4 @@
-"""POST-HOC SENSITIVITY (2026-10-24, not pre-registered): character-based metrics on re-executed BM25 selections.
+"""POST-HOC SENSITIVITY (2026-10-24, not part of the analysis plans): character-based metrics on re-executed BM25 selections.
 
 The stored runs keep per-query scores, word counts and RR@10 but not the rankings or selected intervals, so the
 selections cannot be reconstructed from storage. This module therefore **re-executes** BM25 retrieval (deterministic
@@ -211,7 +211,7 @@ def main(argv=None) -> int:
         rep = study1b_bm25(Path(args.stored), Path(args.data_root), out, args.datasets)
     rep["_meta"] = {"study": args.study, "stored_run": str(args.stored), "seconds": round(time.time() - t0, 1),
                     "code_sha256": source_digest()["sha256"], "finished_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                    "label": "POST-HOC SENSITIVITY (not pre-registered); new BM25 execution"}
+                    "label": "POST-HOC SENSITIVITY (not part of the analysis plans); new BM25 execution"}
     atomic_write_text(out / "equivalence.json", json.dumps(rep, indent=2))
     bad = sum(v["mismatch_scores"] + v["mismatch_words"] for d, cs in rep.items() if not d.startswith("_")
               for c, v in cs.items() if not c.startswith("_"))

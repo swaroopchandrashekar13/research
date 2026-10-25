@@ -1,6 +1,6 @@
 """POST-HOC SENSITIVITY (2026-10-24): character-based span metrics on the *same* selections as the word metrics.
 
-The pre-registrations define the metrics over characters ("fraction of its characters retrieved"), but the stored
+The analysis plans define the metrics over characters ("fraction of its characters retrieved"), but the stored
 Study 1 / Study 1b / Tier 2 scores were computed over `\\S+` word intervals (`ragmv.evaluate`). This module scores
 the selections produced by exactly the same selection functions in both ways, so any difference is attributable to
 the metric definition alone:
@@ -11,7 +11,7 @@ the metric definition alone:
 - ``char_nows``: characters excluding whitespace (so whitespace between two separately retrieved chunks, which no
   chunk text contains, does not count against a gold span).
 
-Nothing here is used by the pre-registered analyses.
+Nothing here is used by the planned analyses.
 """
 from __future__ import annotations
 

@@ -1,6 +1,6 @@
-"""STAT-001 / MAN-001 regression tests: the stored metrics are WORD-based; character-based variants differ.
+"""Regression tests: the stored metrics are WORD-based; character-based variants differ.
 
-The pre-registrations define coverage over characters; the code converts gold character spans to word intervals
+The analysis plans define coverage over characters; the code converts gold character spans to word intervals
 (`data.char_to_word_span`) and scores word overlap (`evaluate.span_metrics`). These tests pin both definitions so the
 difference is explicit and cannot drift silently.
 """

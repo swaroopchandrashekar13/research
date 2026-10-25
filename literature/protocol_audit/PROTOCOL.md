@@ -1,6 +1,6 @@
-# Protocol audit of chunking comparisons — pre-specified protocol
+# Protocol audit of chunking comparisons — protocol
 
-*Version 1.0 · 2026-10-18 · written before any full text was read*
+*Version 1.0 · 2026-10-18*
 
 ## Why
 Study 1 shows that chunking verdicts reverse between count-matched (fixed top-k) and budget-matched (equal text)

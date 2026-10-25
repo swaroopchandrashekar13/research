@@ -63,7 +63,7 @@ def test_tier2_retrieval_matches_confirmatory_run():
     r_idx = run_cfg["retrievers"].index(G.RETRIEVER)
     op_idx = {"count5": run_cfg["ops"].index("k5"), "budget1024": run_cfg["ops"].index("B1024")}
     for j in jobs:
-        stored = np.load(RUN / "squad2" / f"{j['chunking']}.npz")["scores"][r_idx, qids.index(j["qid"]), op_idx[j["op"]]]
+        stored = np.load(RUN / "squad2" / f"{j['chunking']}.npz", allow_pickle=False)["scores"][r_idx, qids.index(j["qid"]), op_idx[j["op"]]]
         assert [float(x) for x in stored] == pytest.approx(list(j["retrieval"].values()), abs=1e-3)
 
 
