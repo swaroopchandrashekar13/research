@@ -56,6 +56,10 @@ def entry(e: dict) -> str:
         fields["booktitle" if kind == "inproceedings" else "journal"] = esc(venue)
         if e.get("id"):
             fields["note"] = esc(str(e["id"]))
+    if e.get("pages") and kind != "misc":
+        fields["pages"] = str(e["pages"]).replace("-", "--")
+    if e.get("doi"):
+        fields["doi"] = e["doi"]
     if e.get("url"):
         fields["url"] = e["url"]
     if level != "L3":

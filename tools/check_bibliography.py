@@ -12,6 +12,7 @@ from pathlib import Path
 
 import yaml
 
+ROOT = Path(__file__).resolve().parents[1]
 LEVELS = ("L0", "L1", "L2", "L3")
 REQUIRED = ("key", "title", "year", "venue", "verification", "directions")
 
@@ -25,6 +26,9 @@ def validate(entries: list[dict]) -> list[str]:
     errors: list[str] = []
     seen: set[str] = set()
     for i, e in enumerate(entries):
+        if not isinstance(e, dict):
+            errors.append(f"entry #{i}: not a mapping")
+            continue
         where = e.get("key", f"entry #{i}")
         for field in REQUIRED:
             if e.get(field) in (None, "", []):
@@ -56,7 +60,7 @@ def citable(entries: list[dict], keys: list[str], min_level: str) -> list[str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--bib", default="literature/bibliography.yaml")
+    ap.add_argument("--bib", default=str(ROOT / "literature" / "bibliography.yaml"))
     ap.add_argument("--cite", nargs="*", default=[])
     ap.add_argument("--min-level", default="L2", choices=LEVELS)
     args = ap.parse_args()

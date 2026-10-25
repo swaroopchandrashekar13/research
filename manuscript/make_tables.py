@@ -143,11 +143,11 @@ def e1_sensitivity_table(e1: dict) -> None:
              "d_cluster_bootstrap": "(d) document-cluster bootstrap",
              "e_all_budgets": "(e) all budgets, including $B <$ chunk size"}
     h1 = e1["H1"]
-    rows = [["Main analysis (pre-registered)", pct(h1["estimate"]), ci(*h1["ci95"])]]
+    rows = [["Main analysis (as planned)", pct(h1["estimate"]), ci(*h1["ci95"])]]
     for k, label in names.items():
         r = e1["H1_sensitivity"][k]
         rows.append([label, pct(r["estimate"]), ci(*r["ci95"]) if "ci95" in r else "---"])
-    write("e1_sensitivity", "Study~1, H1 under the pre-specified sensitivity analyses: drop in the share of universes "
+    write("e1_sensitivity", "Study~1, H1 under the planned sensitivity analyses: drop in the share of universes "
           "supporting fixed-512 from count- to budget-matched selection, in percentage points (threshold 20). (a) "
           "changes the verdict rule and has no joint-bootstrap CI.", "tab:e1sens", "@{}lrl@{}",
           ["Analysis", "Estimate (pp)", "95\\% CI"], rows, midrules={1})
@@ -181,10 +181,10 @@ def e3_tables(e3: dict) -> None:
     write("e3_claims", "Study~1b: share of universes (\\%) supporting arm A or B per claim and protocol (confirmatory). "
           "S5/S6 pool BM25 and dense retrieval; P1-dense uses the dense retriever only. Admissible budgets "
           "$B \\in \\{512, 1024, 2048\\}$. The S5/S6 rows are the quantity reported by semantic-chunking studies "
-          "(pre-specified descriptive analysis g).", "tab:e3claims", "@{}llrrrrrr@{}",
+          "(planned descriptive analysis g).", "tab:e3claims", "@{}llrrrrrr@{}",
           ["Claim", "A vs B", "A (count)", "B (count)", "$n$", "A (budget)", "B (budget)", "$n$"], rows,
           size="\\footnotesize", midrules={3, 6})
-    names = {"main": "Main analysis (pre-registered H4)", "a_bh_fdr": "(a) Benjamini--Hochberg FDR 5\\% within claim, protocol and dataset",
+    names = {"main": "Main analysis (H4 as planned)", "a_bh_fdr": "(a) Benjamini--Hochberg FDR 5\\% within claim, protocol and dataset",
              "b_without_squad2": "(b) without SQuAD 2.0", "d_cluster_bootstrap": "(d) document-cluster bootstrap",
              "e_all_budgets": "(e) all budgets", "f_bm25_only": "(f) BM25 only", "f_dense_only": "(f) dense only"}
     rows = []
@@ -193,7 +193,7 @@ def e3_tables(e3: dict) -> None:
         rows.append([label, pct(r["count_share"]) if "count_share" in r else "---",
                      pct(r["budget_share"]) if "budget_share" in r else "---", pct(r["estimate"]),
                      ci(*r["ci95"]) if "ci95" in r else "---"])
-    write("e3_sensitivity", "Study~1b, H4 under the pre-specified sensitivity analyses: share of S5 universes (\\%) "
+    write("e3_sensitivity", "Study~1b, H4 under the planned sensitivity analyses: share of S5 universes (\\%) "
           "supporting the shorter arm under count- and budget-matched selection, and the difference (pp; threshold 20).",
           "tab:e3sens", "@{}lrrrl@{}", ["Analysis", "Count", "Budget", "Difference", "95\\% CI"], rows, midrules={1})
 
@@ -236,7 +236,7 @@ def e2_tables(e2: dict) -> None:
         rows.append([DS_NAME[d], f"{g['jobs_ok']}/{g['rows_total']}", f"{trunc}", pct(g["unanswerable_rate"]),
                      f"{link['pearson_coverage_f1']:.2f}", f"{link['mean_f1_hit_lenient_1']:.2f}",
                      f"{link['mean_f1_hit_lenient_0']:.2f}"])
-    write("e2_diagnostics", "Answer-quality check, pre-specified diagnostics per dataset (400 generations each): "
+    write("e2_diagnostics", "Answer-quality check, planned diagnostics per dataset (400 generations each): "
           "completed jobs, answers truncated at the 256-token cap, share of ``unanswerable'' replies, and the link "
           "between retrieval and answers (Pearson correlation of coverage and F1; mean F1 when the gold evidence was "
           "/ was not at least half retrieved).", "tab:e2diag", "@{}lrrrrrr@{}",
@@ -260,13 +260,13 @@ def audit_table() -> None:
     write("audit", "Protocol audit: coding of each included study (provisional, single coder; see Section~\\ref{sec:audit}). "
           "Protocol: how arms are compared; Length differs: whether the compared arms produce chunks of different "
           "length; Text reported: whether the amount of retrieved text is reported; Uncertainty: for chunking "
-          "contrasts; Exposure: derived by the pre-specified rules in \\texttt{analyze\\_audit.py}.", "tab:audit",
+          "contrasts; Exposure: derived by the coding rules in \\texttt{analyze\\_audit.py}.", "tab:audit",
           "@{}lllllll@{}", ["Study", "Protocol", "Length differs", "Text reported", "Uncertainty", "Metric", "Exposure"],
           rows, size="\\footnotesize", star=True)
 
 
 def posthoc_table(e1: dict, ph1: Path, ph3: Path) -> None:
-    """POST-HOC character-metric sensitivity (2026-10-24): stored word results vs re-executed selections rescored."""
+    """POST-HOC character-metric sensitivity: stored word results vs re-executed selections rescored."""
     flips = json.loads((ph1 / "summary.json").read_text())["universe_verdict_changes_vs_stored"]
     variants = [("Stored (words, float16)", e1, None)] + [
         (label, json.loads((ph1 / v / "results.json").read_text()), v)
@@ -282,8 +282,8 @@ def posthoc_table(e1: dict, ph1: Path, ph3: Path) -> None:
              "char_nows": "Non-space characters"}
     rows3 = [[f"Study 1b BM25: {names[k]}", f"{pct(q['H4_bm25']['estimate'])} {ci(*q['H4_bm25']['ci95'])}",
               f"{pct(q['H4b_bm25']['estimate'])} {ci(*q['H4b_bm25']['ci95'])}", "", "", ""] for k, q in e3.items()]
-    write("posthoc_charmetric", "Post-hoc sensitivity (not pre-registered): hypothesis estimates (pp, 95\\% CI) when the "
-          "identical, re-executed BM25 selections are scored on words (as reported), on words without float16 storage, "
+    write("posthoc_charmetric", "Post-hoc sensitivity (not in the analysis plans): hypothesis estimates (pp, 95\\% CI) when the "
+          "re-executed BM25 selections, which reproduce every stored score and word count, are scored on words (as reported), on words without float16 storage, "
           "on characters, and on non-whitespace characters. Study 1 columns: H1, H1b, H2 dataset $\\eta^2$, H3 share "
           "of universes needing $n>500$, and universe verdicts that change relative to the stored scores (of 24{,}960). "
           "Study 1b rows give the H4 and H4b forms restricted to BM25 universes (the dense arm was not re-executed).",
