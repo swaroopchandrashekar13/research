@@ -99,7 +99,7 @@ def test_clean_package_passes(tmp_path):
 @pytest.mark.parametrize("extra, expect", [
     ({"README.md": f"quoting: {ANSWER.upper()}\n".encode()}, "answer or response string"),
     ({"experiments/E1/runs/x/q.json": json.dumps({"response": "x"}).encode()}, "text-carrying key"),
-    ({"tools/x.py": b"p = '/home/someone/data'\n"}, "private absolute paths"),
+    ({"tools/x.py": b"p = '/ho" + b"me/someone/data'\n"}, "private absolute paths"),
     ({"tools/y.py": b"k = 'AIza" + b"A" * 35 + b"'\n"}, "credential"),
     ({"notes/unreviewed.txt": b"x\n"}, "allowed by a release rule"),
     ({"experiments/E2_generation/runs/r/squad2/generations.jsonl": b"{}\n"}, "generation log with text"),
