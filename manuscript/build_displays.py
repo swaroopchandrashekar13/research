@@ -5,8 +5,9 @@ Usage:
   python -I manuscript/build_displays.py --out DIR [--compare manuscript] [--promote]
 
 Figures are drawn by `ragmv.figures` from the validated results (dumbbells: stored shares; specification curves:
-per-universe intervals with the analysis' recorded resample count and seed). SOURCE_DATE_EPOCH is fixed so PDF bytes
-are reproducible. --compare reports, per file, identical / different (text files exactly; figures by their coordinate
+per-universe intervals with the analysis' recorded resample count and seed). SOURCE_DATE_EPOCH is fixed and the
+matplotlib settings come from manuscript/matplotlibrc (not from the machine), so PDF bytes are reproducible; the build
+stops if the Inter font named there is not installed (Debian/Ubuntu: fonts-inter). --compare reports, per file, identical / different (text files exactly; figures by their coordinate
 sidecars and PDF bytes) and exits 1 on any difference. --promote copies the regenerated files into manuscript/ only
 after the comparison has been printed (use it deliberately, after reviewing the differences).
 """
@@ -25,15 +26,28 @@ E1RUN = ROOT / "experiments/E1_retrieval_multiverse/runs/confirmatory-20261018"
 E1RES = ROOT / "experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json"
 E3RES = ROOT / "experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json"
 EPOCH = "1792800000"  # fixed timestamp written into regenerated PDFs (2026-10-24)
+RC = ROOT / "manuscript" / "matplotlibrc"
+ENV = {**os.environ, "SOURCE_DATE_EPOCH": EPOCH, "PYTHONPATH": str(ROOT / "src"), "MATPLOTLIBRC": str(RC)}
 
 
 def run(cmd: list[str]) -> None:
-    env = {**os.environ, "SOURCE_DATE_EPOCH": EPOCH, "PYTHONPATH": str(ROOT / "src")}
     print("$", " ".join(cmd), flush=True)
-    subprocess.run(cmd, check=True, cwd=ROOT, env=env)
+    subprocess.run(cmd, check=True, cwd=ROOT, env=ENV)
+
+
+def check_font() -> None:
+    probe = ("import matplotlib as mpl, matplotlib.font_manager as fm; "
+             "print(mpl.matplotlib_fname()); print(fm.findfont('Inter', fallback_to_default=False))")
+    r = subprocess.run([sys.executable, "-I", "-c", probe], cwd=ROOT, env=ENV, capture_output=True, text=True)
+    lines = r.stdout.split()
+    if r.returncode or not lines or Path(lines[0]) != RC:
+        raise SystemExit("the Inter font (Debian/Ubuntu package fonts-inter) is required for the manuscript figures, "
+                         f"and {RC} must be the matplotlib settings in use\n{r.stderr.strip()[-400:]}")
+    print(f"matplotlib settings: {lines[0]}; Inter: {lines[1]}", flush=True)
 
 
 def build(out: Path) -> None:
+    check_font()
     py = sys.executable
     raw = out / "figures_raw"
     run([py, "-I", "-c", "import sys; sys.path.insert(0, 'src'); from ragmv.figures import main; "

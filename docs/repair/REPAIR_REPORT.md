@@ -48,8 +48,9 @@ timing of the analysis plans cannot be verified because the original history is 
 | Licences | BLOCKED | descriptions reconciled and checked against publisher/author cards; owner decision needed for third-party strings |
 | Full clean-checkout reproduction | PARTIAL | fresh clones reproduce tests, validation, analyses and displays; GPU stages not reproducible here |
 
-GitHub CI: the workflow file exists; whether and how it ran on GitHub is reported in the hand-off message, not here
-(a workflow file is not evidence that CI ran).
+GitHub CI: the first run on GitHub (2026-10-25, the hash-removal commit) passed the test and artefact jobs on Python
+3.12 and 3.13 and failed the manuscript job at the display comparison: the figures depended on a font setting of the
+validation machine (NEW-011). Fixed in the following commit; its CI result is reported in the hand-off message, not here.
 
 ## 3. How contradictory instructions were resolved
 | Instruction(s) | Conflict | Resolution |
@@ -145,13 +146,14 @@ or logs. `run_mac.sh` no longer pipes a remote installer into a shell. Owner act
   `RAGMV_CODE_REF=<tag>`.
 
 ## 10. Identity of the validated tree
-Validated at **2026-10-25T04:07:25Z** (UTC), after the hash-removal pass and immediately before its commit (the
-2026-10-24 identity is superseded because `src/ragmv/analyze.py` and the historical files changed).
+Validated at **2026-10-25T04:35:46Z** (UTC), after the hash-removal pass and the display-font fix (NEW-011),
+immediately before the fix was committed (the 2026-10-24 identity is superseded because `src/ragmv/analyze.py` and
+the historical files changed).
 
 | Identity | SHA-256 |
 |---|---|
 | Code content of `src/ragmv/*.py` (`ragmv.integrity.source_digest`) | `52720b8f37b7c1cfaf39340add0d08ba6d1fbff05fba1110c4c600ed046f30a1` |
-| All tracked files except this report (sorted path, NUL, file SHA-256 per line) | `afaa59b5317bf8bfa70b437cdd78f88271fd21871c4aa49316cfe6ae511accaa` |
+| All tracked files except this report (sorted path, NUL, file SHA-256 per line) | `905e485c1aa53bfa4b10b8cd69dfe812446c313c41550b63c5324565381b159d` |
 
 Recompute: `python -I -c "import sys; sys.path.insert(0,'src'); from ragmv.integrity import source_digest; print(source_digest()['sha256'])"` and
 `git ls-files | grep -v '^docs/repair/REPAIR_REPORT.md$' | sort | while read f; do printf '%s\0%s\n' "$f" "$(sha256sum "$f" | cut -d' ' -f1)"; done | sha256sum`.

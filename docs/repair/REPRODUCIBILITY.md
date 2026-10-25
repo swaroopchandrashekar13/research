@@ -51,8 +51,9 @@ Both `ragmv.posthoc` commands exit 0 only if every stored score and word count i
 .venv/bin/python -I manuscript/build_pdf.py --workdir /tmp/build --render-pages            # needs TeX Live + latexmk + poppler
 .venv/bin/python -I tools/trace_claims.py --out /tmp/trace.md                               # 115/115 macros recomputed
 ```
-`build_displays.py` sets `SOURCE_DATE_EPOCH`, so regenerated PDFs are byte-identical across runs with the same
-library versions. Promote regenerated displays only deliberately (`--promote`).
+`build_displays.py` sets `SOURCE_DATE_EPOCH` and uses `manuscript/matplotlibrc`, so regenerated PDFs are
+byte-identical across runs with the same library and font versions. It needs the Inter font (Ubuntu/Debian:
+`sudo apt-get install fonts-inter`; the committed figures used 4.0+ds-1 on Ubuntu 24.04) and stops if it is missing. Promote regenerated displays only deliberately (`--promote`).
 
 ## 5. What cannot be reproduced here
 | Step | Why | What exists instead |
