@@ -55,13 +55,16 @@ def test_historical_binding_uses_run_name_and_record_time(tmp_path):
 
 def test_generation_identity_never_passes_removed_values():
     rows = [{"prompt_sha256": PV.DIGEST_REMOVED, "model_version": f"Qwen/Qwen3-4B-GGUF{PV.REVISION_REMOVED}/f.gguf"}]
-    meta = {"local_model": ["Qwen/Qwen3-4B-GGUF", PV.MODEL_REVISION_REMOVED, "f.gguf", PV.MODEL_FILE_DIGEST_REMOVED, True]}
+    meta = {"local_model": ["Qwen/Qwen3-4B-GGUF", PV.MODEL_REVISION_REMOVED, "f.gguf", PV.MODEL_FILE_DIGEST_REMOVED, True],
+            "git": PV.GIT_REMOVED}
     bad, gaps = VA.generation_identity(rows, meta, historical=True)
-    assert not bad and len(gaps) == 4  # structurally allowed, provenance incomplete
+    assert not bad and len(gaps) == 5  # structurally allowed, provenance incomplete (incl. no code identity)
     bad, _ = VA.generation_identity(rows, meta, historical=False)
-    assert len(bad) == 4  # the same markers outside a historical record are failures
+    assert len(bad) == 5  # the same markers outside a historical record are failures
     ok_rows = [{"prompt_sha256": "c3" * 32, "model_version": "repo@" + "d4" * 6 + "/f.gguf"}]
-    assert VA.generation_identity(ok_rows, {"local_model": None}, historical=False) == ([], [])
+    assert VA.generation_identity(ok_rows, {"local_model": None, "code_sha256": "e5" * 32}, historical=False) == ([], [])
+    assert VA.generation_identity([], {}, historical=True)[1]  # an empty log is not complete provenance
+    assert VA.generation_identity(ok_rows, {"code_sha256": "x"}, historical=False)[0]
     bad, _ = VA.generation_identity([{"prompt_sha256": "redacted: other", "model_version": None}], {}, False)
     assert bad
 

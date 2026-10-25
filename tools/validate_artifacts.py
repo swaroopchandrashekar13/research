@@ -198,6 +198,14 @@ def generation_identity(rows: list[dict], meta: dict, historical: bool) -> tuple
         bad.append(f"{revs} model_version value(s) carry the removed-revision marker outside a historical record")
     if revs:
         gaps.append(f"{revs} served-model revision(s) removed by the owner; the revision the run used is not recorded")
+    code, git = meta.get("code_sha256"), str(meta.get("git") or "")
+    if code is None:
+        gaps.append("no code content digest (code_sha256) recorded by the run"
+                    + ("; the commit it recorded was removed by the owner" if git.startswith(PV.GIT_REMOVED) else ""))
+    elif not PV.is_hex_digest(code):
+        bad.append("jobs_meta code_sha256 is not a SHA-256 digest")
+    if git.startswith(PV.GIT_REMOVED) and not historical:
+        bad.append("jobs_meta git carries the removed-commit marker outside a historical record")
     local = meta.get("local_model") or []
     for value, marker, what in ((local[1] if len(local) > 1 else None, PV.MODEL_REVISION_REMOVED, "model revision"),
                                 (local[3] if len(local) > 3 else None, PV.MODEL_FILE_DIGEST_REMOVED, "model-file digest")):
