@@ -129,6 +129,9 @@ class Run:
                 problems.append(f"{d}: manifest says dataset {c.get('dataset')!r}")
             if "config_sha256" not in m:
                 legacy.append(f"{d}: manifest has no config_sha256")
+            elif str(m["config_sha256"]).startswith("redacted:"):
+                legacy.append(f"{d}: config_sha256 was removed from the historical manifest (2026-10-25); the "
+                              "configuration fingerprint cannot be checked")
             elif _config_fingerprint(c) != m["config_sha256"]:
                 problems.append(f"{d}: config fingerprint does not match config_sha256 (config edited after the run?)")
             for key, ref in (("retrievers", self.retrievers), ("ops", self.ops), ("metrics", self.metrics)):

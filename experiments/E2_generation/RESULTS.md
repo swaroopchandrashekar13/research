@@ -18,6 +18,10 @@ the "first complete run" rule in `research/preregistration.md` §8.*
   (0 mismatches); the analysis rerun locally reproduces `results.json` exactly.
 - The researcher uploaded the files (zip SHA-256 in `runs/qwen3-4b-kaggle-gpu/UPLOAD_SHA256`); the GPU build log is kept
   as `build_gpu.log.gz`.
+- *[Note added 2026-10-25: at the researcher's request, the prompt digests, model revisions and model-file digests in the
+  run files, the upload-archive digest and the hex identifiers in the build log were removed
+  (`docs/repair/HASH_REDACTIONS.md` §6). The prompt-digest comparison above was repeated on 2026-10-24, before removal,
+  with 0 mismatches; it can no longer be repeated from the repository.]*
 
 ## Pre-specified result (pooled over 4 datasets, 200 queries; stratified bootstrap, 2,000 resamples)
 DiD = Δ(budget 1,024 words) − Δ(top-5), Δ = metric(A) − metric(B). E1's mechanism predicts DiD > 0.

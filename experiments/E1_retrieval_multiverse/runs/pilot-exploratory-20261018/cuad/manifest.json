@@ -60,7 +60,7 @@
     "split_seed": 20261018,
     "split_frac_exploratory": 0.2
   },
-  "config_sha256": "eadb0385cd6927399a9e04cf1e86df30b45c8cc448aef3145eb8c675cea8bba1",
+  "config_sha256": "redacted: historical digest removed",
   "git": "redacted: unresolvable historical Git commit (working tree was dirty)",
   "versions": {
     "python": "3.13.16",

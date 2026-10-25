@@ -1,23 +1,31 @@
-# Stored-artefact validation
-
-Generated 2026-10-24T19:13:45Z by `python -I tools/validate_artifacts.py --data-root <verified datasets>` (exit 0). Without `--data-root` the data-dependent rows are not run.
-
 | Status | Check | Detail |
 |---|---|---|
-| PASS | E1 pilot: run validation (EXPLORATORY) | 4 datasets, 64 NPZ files; legacy: 4 note(s) |
+| PASS | E1 pilot: run validation (EXPLORATORY) | 4 datasets, 64 NPZ files; legacy: 8 note(s) |
+| NOTE | E1 pilot: legacy limitation | covidqa: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 pilot: legacy limitation | covidqa: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
+| NOTE | E1 pilot: legacy limitation | cuad: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 pilot: legacy limitation | cuad: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
+| NOTE | E1 pilot: legacy limitation | qasper: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 pilot: legacy limitation | qasper: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
+| NOTE | E1 pilot: legacy limitation | squad2: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 pilot: legacy limitation | squad2: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
-| PASS | E1 confirmatory: run validation (CONFIRMATORY) | 4 datasets, 64 NPZ files; legacy: 4 note(s) |
+| PASS | E1 confirmatory: run validation (CONFIRMATORY) | 4 datasets, 64 NPZ files; legacy: 8 note(s) |
+| NOTE | E1 confirmatory: legacy limitation | covidqa: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 confirmatory: legacy limitation | covidqa: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
+| NOTE | E1 confirmatory: legacy limitation | cuad: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 confirmatory: legacy limitation | cuad: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
+| NOTE | E1 confirmatory: legacy limitation | qasper: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 confirmatory: legacy limitation | qasper: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
+| NOTE | E1 confirmatory: legacy limitation | squad2: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E1 confirmatory: legacy limitation | squad2: manifest config has no 'study' field (historical Study 1 format); treated as '1' |
-| PASS | E3 pilot: run validation (EXPLORATORY) | 4 datasets, 20 NPZ files; legacy: 4 note(s) |
+| PASS | E3 pilot: run validation (EXPLORATORY) | 4 datasets, 20 NPZ files; legacy: 8 note(s) |
+| NOTE | E3 pilot: legacy limitation | covidqa: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 pilot: legacy limitation | covidqa: manifest has no 'error' field |
+| NOTE | E3 pilot: legacy limitation | cuad: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 pilot: legacy limitation | cuad: manifest has no 'error' field |
+| NOTE | E3 pilot: legacy limitation | qasper: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 pilot: legacy limitation | qasper: manifest has no 'error' field |
+| NOTE | E3 pilot: legacy limitation | squad2: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 pilot: legacy limitation | squad2: manifest has no 'error' field |
 | PASS | E3 pilot: squad2/chunks_semantic-bp.json.gz | 521 chunks (manifest 521); 0 invalid chunks; 0 gaps/overlaps in the per-document word partition |
 | PASS | E3 pilot: squad2/chunks_semantic-cl.json.gz | 334 chunks (manifest 334); 0 invalid chunks; 0 gaps/overlaps in the per-document word partition |
@@ -27,10 +35,14 @@ Generated 2026-10-24T19:13:45Z by `python -I tools/validate_artifacts.py --data-
 | PASS | E3 pilot: cuad/chunks_semantic-cl.json.gz | 1588 chunks (manifest 1588); 0 invalid chunks; 0 gaps/overlaps in the per-document word partition |
 | PASS | E3 pilot: qasper/chunks_semantic-bp.json.gz | 8628 chunks (manifest 8628); 0 invalid chunks; 0 gaps/overlaps in the per-document word partition |
 | PASS | E3 pilot: qasper/chunks_semantic-cl.json.gz | 5313 chunks (manifest 5313); 0 invalid chunks; 0 gaps/overlaps in the per-document word partition |
-| PASS | E3 confirmatory: run validation (CONFIRMATORY) | 4 datasets, 20 NPZ files; legacy: 4 note(s) |
+| PASS | E3 confirmatory: run validation (CONFIRMATORY) | 4 datasets, 20 NPZ files; legacy: 8 note(s) |
+| NOTE | E3 confirmatory: legacy limitation | covidqa: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 confirmatory: legacy limitation | covidqa: manifest has no 'error' field |
+| NOTE | E3 confirmatory: legacy limitation | cuad: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 confirmatory: legacy limitation | cuad: manifest has no 'error' field |
+| NOTE | E3 confirmatory: legacy limitation | qasper: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 confirmatory: legacy limitation | qasper: manifest has no 'error' field |
+| NOTE | E3 confirmatory: legacy limitation | squad2: config_sha256 was removed from the historical manifest (2026-10-25); the configuration fingerprint cannot be checked |
 | NOTE | E3 confirmatory: legacy limitation | squad2: manifest has no 'error' field |
 | PASS | E3 confirmatory: squad2/chunks_semantic-bp.json.gz | 521 chunks (manifest 521); 0 invalid chunks; 0 gaps/overlaps in the per-document word partition |
 | PASS | E3 confirmatory: squad2/chunks_semantic-cl.json.gz | 334 chunks (manifest 334); 0 invalid chunks; 0 gaps/overlaps in the per-document word partition |
@@ -55,9 +67,9 @@ Generated 2026-10-24T19:13:45Z by `python -I tools/validate_artifacts.py --data-
 | PASS | E2 qwen3-4b-kaggle-gpu/covidqa: generations log | 400 lines, 400 ok, 400 accepted, 0 superseded, 0 duplicate ok; sample of 50 confirmatory queries: yes |
 | PASS | E2 qwen3-4b-kaggle-gpu/cuad: generations log | 400 lines, 400 ok, 400 accepted, 0 superseded, 0 duplicate ok; sample of 50 confirmatory queries: yes |
 | PASS | E2 qwen3-4b-kaggle-gpu/qasper: generations log | 400 lines, 400 ok, 400 accepted, 0 superseded, 0 duplicate ok; sample of 50 confirmatory queries: yes |
-| PASS | experiments/E2_generation/runs/qwen3-4b-kaggle-gpu/UPLOAD_SHA256 | one SHA-256 of an upload archive that is not in the repository (cannot be re-verified here) |
-| PASS | experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu/UPLOAD_SHA256 | one SHA-256 of an upload archive that is not in the repository (cannot be re-verified here) |
-| PASS | experiments/E3_semantic_dense/runs/exploratory-kaggle-gpu/UPLOAD_SHA256 | one SHA-256 of an upload archive that is not in the repository (cannot be re-verified here) |
+| NOTE | experiments/E2_generation/runs/qwen3-4b-kaggle-gpu/UPLOAD_SHA256 | upload-archive digest removed from historical evidence on 2026-10-25 |
+| NOTE | experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu/UPLOAD_SHA256 | upload-archive digest removed from historical evidence on 2026-10-25 |
+| NOTE | experiments/E3_semantic_dense/runs/exploratory-kaggle-gpu/UPLOAD_SHA256 | upload-archive digest removed from historical evidence on 2026-10-25 |
 | PASS | experiments/E2_generation/runs/qwen3-4b-kaggle-gpu/build_gpu.log.gz: gzip | 995 lines |
 | PASS | experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json: parses | label: CONFIRMATORY |
 | PASS | experiments/E1_retrieval_multiverse/analysis/pilot-exploratory-20261018/results.json: parses | label: EXPLORATORY |
@@ -118,9 +130,9 @@ Generated 2026-10-24T19:13:45Z by `python -I tools/validate_artifacts.py --data-
 | PASS | data: E3 pilot qasper semantic-cl covers every word of every document | 697 documents |
 | PASS | data: E3 confirmatory qasper semantic-bp covers every word of every document | 697 documents |
 | PASS | data: E3 confirmatory qasper semantic-cl covers every word of every document | 697 documents |
-| PASS | data: E2 qwen3-4b-kaggle-gpu/squad2 rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0} |
-| PASS | data: E2 qwen3-4b-kaggle-gpu/covidqa rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0} |
-| PASS | data: E2 qwen3-4b-kaggle-gpu/cuad rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0} |
-| PASS | data: E2 qwen3-4b-kaggle-gpu/qasper rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0} |
+| PASS | data: E2 qwen3-4b-kaggle-gpu/squad2 rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'context_words': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0}; prompt digests not checkable (removed from the log): 400 |
+| PASS | data: E2 qwen3-4b-kaggle-gpu/covidqa rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'context_words': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0}; prompt digests not checkable (removed from the log): 400 |
+| PASS | data: E2 qwen3-4b-kaggle-gpu/cuad rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'context_words': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0}; prompt digests not checkable (removed from the log): 400 |
+| PASS | data: E2 qwen3-4b-kaggle-gpu/qasper rebuilt from data | 400 rows; sample equals jobs_meta: True; mismatches {'prompt': 0, 'context_words': 0, 'retrieval_vs_E1': 0, 'retrieval_vs_rebuilt': 0, 'em': 0, 'f1': 0, 'answers': 0}; prompt digests not checkable (removed from the log): 400 |
 
-89 passed, 0 failed, 29 notes.
+86 passed, 0 failed, 48 notes.

@@ -52,6 +52,7 @@ jobs:
         run: |
           .venv/bin/python -I tools/check_bibliography.py
           .venv/bin/python -I tools/redact_git_refs.py --check
+          .venv/bin/python -I tools/redact_historical_hashes.py --check
           .venv/bin/python -I tools/scan_hex_refs.py
 
   manuscript:

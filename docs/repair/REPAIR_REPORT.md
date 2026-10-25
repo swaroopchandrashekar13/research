@@ -1,4 +1,4 @@
-# Repair report — research repository (branch `swaroop-fix`, 2026-10-24)
+# Repair report — research repository (branch `swaroop-fix`, 2026-10-24; hash-removal pass 2026-10-25)
 
 Scope: repair of the defects listed in the repair request (24 audit IDs) and of newly found issues, with validation of
 the repaired tree. The audit ZIP/reports were not supplied; the register (`REPAIR_REGISTER.md`) states how each ID
@@ -35,7 +35,7 @@ timing of the analysis plans cannot be verified because the original history is 
 | Area | Status | Evidence |
 |---|---|---|
 | Source/import integrity | PASS | `compileall` + import of every module; ruff F/E9 clean; clean-clone installs on Python 3.12 and 3.13 |
-| Unit and integration tests | PASS | 136 passed, 3 skipped (optional Gemini/llama.cpp SDKs) with verified data; 128 passed, 11 skipped without data; 0 errors |
+| Unit and integration tests | PASS | 140 passed, 3 skipped (optional Gemini/llama.cpp SDKs) with verified data; 132 passed, 11 skipped without data; 0 errors (2026-10-25) |
 | Data checksums | PASS | 5 archives re-downloaded and matched; 3 extracted members digest-checked; loaders' inputs verified |
 | Statistics | PASS | same-code recomputation exact (2,063 fields); independent implementation 13/13; post-hoc checks change no verdict; **H5 Monte-Carlo sensitivity disclosed** |
 | Experiment reruns | PARTIAL | BM25 re-executed exactly (86,941,188 stored values); Tier 2 prompts/EM/F1 rebuilt exactly; dense retrieval and generation BLOCKED (GPU) |
@@ -43,6 +43,7 @@ timing of the analysis plans cannot be verified because the original history is 
 | Manuscript build | PASS | both variants, clean directory: exit 0, 23 pages, 0 errors, 0 undefined references/citations, 0 duplicate labels, 0 overfull boxes; pages inspected |
 | Claim traceability | PARTIAL | 115/115 macros recomputed; assertion matrix supported; related-work characterisations not verified against full texts |
 | Historical Git provenance | BLOCKED | original history unavailable; all unresolvable references removed (scan 0); chronology now stated as unverifiable |
+| Historical machine-readable hashes | PASS | 5,577 values removed from 39 historical files at the researcher's request (`HASH_REDACTIONS.md` §6); check exit 0; statistics unaffected; three checks lost (listed there) |
 | Bibliography | PARTIAL | schema valid; 38/39 identities confirmed; 0 entries at L3 |
 | Licences | BLOCKED | descriptions reconciled and checked against publisher/author cards; owner decision needed for third-party strings |
 | Full clean-checkout reproduction | PARTIAL | fresh clones reproduce tests, validation, analyses and displays; GPU stages not reproducible here |
@@ -61,6 +62,7 @@ GitHub CI: the workflow file exists; whether and how it ran on GitHub is reporte
 | Alternative draft: "Do not preserve … and deleting it" | | `manuscript/main_revised.tex` deleted (SHA-256 `1ae287f240da31ddc871462d6f52436efe926e4a5789678ca295eb02ba43a0cf`; recoverable from history) |
 | Correct section errors while preserving the plan's bytes | | Erratum file; plans not edited for these |
 | "Do not report historical dates as recorded/reported" | | The manuscript no longer states freeze dates or chronology; historical summaries keep their own date headers |
+| "Also remove all machine readable hash" **vs** "Preserve valid dataset, archive, model, prompt, configuration, blob, and content checksums" and "Keep datasets, run manifests, original analysis outputs" | the later instruction overrides the earlier one; the scope was put to the researcher | Researcher chose *historical evidence only*: hash values in original runs and analyses replaced in place by markers (files kept, every other byte unchanged); checksums that code and tools use to verify data and models kept; dataset question IDs kept (data) |
 | Work on `swaroop-fix` | the session also designates another branch | All work is committed on the local branch `swaroop-fix`. Pushing was refused by the session's permission system (external write), so nothing has been pushed; the owner pushes when ready |
 
 ## 4. Scientific changes (no threshold, estimand or verdict changed)
@@ -81,13 +83,15 @@ search log — 284 files.
 
 | Result | Files |
 |---|---|
-| byte-identical to baseline | 254 |
-| changed only in redacted `git` lines (verified line by line against the baseline) | 29 |
+| byte-identical to baseline | 240 |
+| changed only in redacted `git` lines (pass 1; verified line by line against the baseline) | 4 |
+| changed only in redacted hash values (pass 2, 2026-10-25; verified line by line) | 14 |
+| changed in both passes (redacted `git` lines and hash values only) | 25 |
 | changed only at the two redacted references (`research/preregistration_study1b.md`) | 1 |
 | deleted | 0 |
 
 Non-protected changes: 53 files edited (code, tests, docs, manuscript sources and generated displays, metadata), 1
-deleted (`manuscript/main_revised.tex`, as directed), 88 added (new code, tests, tools, repair documents, post-hoc
+deleted (`manuscript/main_revised.tex`, as directed), 90 added (new code, tests, tools, repair documents, post-hoc
 outputs, identity-check records, CI). `tools/validate_artifacts.py` checks the current protected digests
 (`PROTECTED_SHA256.txt`).
 
@@ -103,24 +107,26 @@ or logs. `run_mac.sh` no longer pipes a remote installer into a shell. Owner act
 | baseline: `python -m pytest -q tests` (README verbatim, no install) | 2 | 5 collection errors (`ragmv` not importable) |
 | baseline: `PYTHONPATH=src pytest --ignore tests/test_research_tools.py` | 0 | 52 passed, 11 skipped |
 | fresh clone, README commands verbatim, Python 3.13 / 3.12 | 0 / 0 | 128 passed, 11 skipped each; validator 0; bibliography 0 |
-| `RAGMV_DATA_ROOT=… pytest -q` | 0 | 136 passed, 3 skipped |
+| `RAGMV_DATA_ROOT=… pytest -q` | 0 | 140 passed, 3 skipped (2026-10-25; 136/3 before `test_hash_redaction.py`) |
+| `pytest -q` without data | 0 | 132 passed, 11 skipped (2026-10-25) |
 | `python -I -m ragmv.fetch --root <scratch>` / `--verify-only` | 0 / 0 | 5 archives, 3 members |
-| `ragmv.analyze` / `analyze1b` / `analyze_generation` on stored runs + `tools/compare_results.py` | 0 | 975 / 449 / 639 fields identical |
-| `tools/independent_stats.py` | 0 | 13/13 |
+| `ragmv.analyze` / `analyze1b` / `analyze_generation` on stored runs + `tools/compare_results.py` | 0 | 975 / 449 / 639 fields identical (2026-10-24; repeated 2026-10-25 on the redacted runs: same) |
+| `tools/independent_stats.py` | 0 | 13/13 (repeated 2026-10-25: output identical) |
 | `ragmv.posthoc study1` / `study1b` | 0 / 0 | 0 equivalence mismatches |
 | `ragmv.analyze --label POSTHOC` × 3 | 0 | no verdict changes |
-| `tools/validate_artifacts.py --data-root …` | 0 | 89 passed, 0 failed, 29 notes |
+| `tools/validate_artifacts.py --data-root …` | 0 | 86 passed, 0 failed, 48 notes (2026-10-25; 89/0/29 before pass 2: three upload-digest checks became notes and 16 configuration-fingerprint notes were added) |
 | `manuscript/build_displays.py --compare manuscript` (after promotion) | 0 | identical |
 | `manuscript/build_pdf.py` | 0 | see status grid |
 | `tools/trace_claims.py` | 0 | 115/115 |
 | `tools/redact_git_refs.py --check`, `tools/scan_hex_refs.py` | 0, 0 | 0 commit fields; 0 unclassified |
+| `tools/redact_historical_hashes.py --check` | 0 | 0 hash values left in historical evidence (dataset question IDs excepted) |
 | `tools/check_bibliography.py` | 0 | 88 entries (L1 57, L2 31) |
 | `cffconvert --validate` | 0 | valid (schema 1.2.0) |
 | `tools/verify_bib_identity.py` | 0 | 37/39 automatic + 1 manual (ACL Anthology) |
 
 ## 8. Second-pass review of this report
 - Every PASS above cites an executed command with its exit code; reruns that were not executed are PARTIAL/BLOCKED.
-- Counts reconcile: 254 + 29 + 1 = 284 protected files; 85,275,648 + 1,665,540 = 86,941,188 re-executed values;
+- Counts reconcile: 240 + 4 + 14 + 25 + 1 = 284 protected files; 29 + 1 = 30 changed in pass 1, 14 + 25 = 39 in pass 2; 85,275,648 + 1,665,540 = 86,941,188 re-executed values;
   965 = 779 + 149 + 37 changed universe verdicts (character metric); 975 + 449 + 639 = 2,063 recomputed fields.
 - No unresolved historical commit identifier remains in active material (scan exit 0); this report contains none.
 - Limitations stay visible: dense/generation reruns, H5 Monte-Carlo sensitivity, single-coded audit, unverifiable
@@ -139,15 +145,17 @@ or logs. `run_mac.sh` no longer pipes a remote installer into a shell. Owner act
   `RAGMV_CODE_REF=<tag>`.
 
 ## 10. Identity of the validated tree
-Validated at **2026-10-24T19:22:26Z** (UTC), immediately before the final commit of this report.
+Validated at **2026-10-25T04:07:25Z** (UTC), after the hash-removal pass and immediately before its commit (the
+2026-10-24 identity is superseded because `src/ragmv/analyze.py` and the historical files changed).
 
 | Identity | SHA-256 |
 |---|---|
-| Code content of `src/ragmv/*.py` (`ragmv.integrity.source_digest`) | `2c01088e43b3652b9334275a010c411f7723faed1d0a92d73bd351e4fd66bd91` |
-| All tracked files except this report (sorted path, NUL, file SHA-256 per line) | `878054038f289e7e4a630d1df94cf66b8e5ff0b32a3d830b0bfa84ad18b45b13` |
+| Code content of `src/ragmv/*.py` (`ragmv.integrity.source_digest`) | `52720b8f37b7c1cfaf39340add0d08ba6d1fbff05fba1110c4c600ed046f30a1` |
+| All tracked files except this report (sorted path, NUL, file SHA-256 per line) | `afaa59b5317bf8bfa70b437cdd78f88271fd21871c4aa49316cfe6ae511accaa` |
 
 Recompute: `python -I -c "import sys; sys.path.insert(0,'src'); from ragmv.integrity import source_digest; print(source_digest()['sha256'])"` and
 `git ls-files | grep -v '^docs/repair/REPAIR_REPORT.md$' | sort | while read f; do printf '%s\0%s\n' "$f" "$(sha256sum "$f" | cut -d' ' -f1)"; done | sha256sum`.
-The final validation sequence (§7: pytest 136/3, validator 89/0, trace 115/115, displays 0 differences, PDF build 0,
-scans 0) ran on exactly this tree; the only later changes are to this report (this section, and the push statements
-in §3 and §9, corrected after the push was refused).
+The validation sequence of 2026-10-25 (§7: pytest 140/3 with data and 132/11 without, validator 86/0, analyses
+recomputed with 0 differences, independent statistics 13/13, trace 115/115, displays 0 differences, all scans 0, ruff
+clean) ran on exactly this tree. The manuscript sources did not change in this pass, so the PDF build of 2026-10-24
+stands.

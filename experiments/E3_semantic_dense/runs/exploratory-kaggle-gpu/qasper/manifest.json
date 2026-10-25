@@ -36,8 +36,8 @@
     "split_seed": 20261018,
     "split_frac_exploratory": 0.2
   },
-  "config_sha256": "8c25d8916833a0f1bc7d48480aa9645aff73c5179b6cfb16c8c5fd39b859a775",
-  "encoder": "BAAI/bge-m3@5617a9f61b02|cuda|fp16",
+  "config_sha256": "redacted: historical digest removed",
+  "encoder": "BAAI/bge-m3@[revision removed]|cuda|fp16",
   "git": "redacted: unresolvable historical Git commit",
   "git_status": [],
   "versions": {

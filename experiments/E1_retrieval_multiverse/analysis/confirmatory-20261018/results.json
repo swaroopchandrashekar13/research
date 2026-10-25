@@ -1491,22 +1491,22 @@
   "source_manifests": {
     "squad2": {
       "git": "redacted: unresolvable historical Git commit",
-      "config_sha256": "1a98bbc61fa80c3f69b3533c2140bcc78d97513bfa5ae3661819f32d549d4259",
+      "config_sha256": "redacted: historical digest removed",
       "started_utc": "2026-10-18T11:45:11+00:00"
     },
     "covidqa": {
       "git": "redacted: unresolvable historical Git commit",
-      "config_sha256": "ae0a161faa342317654910e29c1076ebba8eb4228ebb62efb0ec90d840f49aa8",
+      "config_sha256": "redacted: historical digest removed",
       "started_utc": "2026-10-18T11:46:23+00:00"
     },
     "cuad": {
       "git": "redacted: unresolvable historical Git commit",
-      "config_sha256": "d9420e6c0e2f238f9037a506e4154c1d8cb4aaaa241eac5d37bf907d7ce769aa",
+      "config_sha256": "redacted: historical digest removed",
       "started_utc": "2026-10-18T11:47:25+00:00"
     },
     "qasper": {
       "git": "redacted: unresolvable historical Git commit",
-      "config_sha256": "d8bc6eec0ca5ad5ee9ce10bd82c2098ea183eed7e84c8112e3204a2861fdcd14",
+      "config_sha256": "redacted: historical digest removed",
       "started_utc": "2026-10-18T11:48:14+00:00"
     }
   }

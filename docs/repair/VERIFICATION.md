@@ -1,4 +1,4 @@
-# Verification matrices (2026-10-24)
+# Verification matrices (2026-10-24; repeated on 2026-10-25 after the hash-removal pass)
 
 Levels of evidence are kept separate. Tolerances were fixed before each comparison: integers, strings and verdict
 labels exact; floats |Δ| ≤ 1e-12 (`tools/compare_results.py`); stored float16 scores compared exactly.
@@ -6,10 +6,10 @@ labels exact; floats |Δ| ≤ 1e-12 (`tools/compare_results.py`); stored float16
 | Level | What was done | Result |
 |---|---|---|
 | Arithmetic check | shares, differences, Wilson interval, MDE formula, H3 formula recomputed from stored values | all match (`CLAIM_TRACE_MACROS.md`, below) |
-| Same-code recomputation | `ragmv.analyze`, `analyze1b`, `analyze_generation` rerun on the stored runs into new directories (validation environment) | E1 975, E3 449, E2 639 fields identical; 0 differences beyond tolerance; 0 verdict changes. Only the redacted `git` fields and new metadata differ |
-| Independent statistical verification | `tools/independent_stats.py` (does not import `ragmv.stats`/`ragmv.analyze`) | 13/13 checks pass (table A) |
+| Same-code recomputation | `ragmv.analyze`, `analyze1b`, `analyze_generation` rerun on the stored runs into new directories (validation environment) | E1 975, E3 449, E2 639 fields identical; 0 differences beyond tolerance; 0 verdict changes. Only the redacted `git` fields and new metadata differ. Repeated 2026-10-25 on the runs with hash values removed (`HASH_REDACTIONS.md` §6): same counts, 0 differences |
+| Independent statistical verification | `tools/independent_stats.py` (does not import `ragmv.stats`/`ragmv.analyze`) | 13/13 checks pass (table A); repeated 2026-10-25 with identical output |
 | Retrieval re-execution | BM25 re-executed for all Study 1 universes and the Study 1b BM25 arm (`ragmv.posthoc`) | 85,275,648 + 1,665,540 stored values reproduced exactly; depths equal the manifests |
-| Generation-input reconstruction | Tier 2 prompts, retrieval values and EM/F1 rebuilt from the verified data (`tools/validate_artifacts.py --data-root`) | 1,600/1,600 prompt SHA-256 equal; retrieval values equal E1 and the rebuilt jobs; EM/F1 0 mismatches |
+| Generation-input reconstruction | Tier 2 prompts, retrieval values and EM/F1 rebuilt from the verified data (`tools/validate_artifacts.py --data-root`) | 1,600/1,600 prompt SHA-256 equal (checked 2026-10-24; the stored prompt digests were removed on 2026-10-25, so this comparison can no longer be repeated from the repository); retrieval values equal E1 and the rebuilt jobs; EM/F1 0 mismatches; 2026-10-25: rebuilt prompts' context word counts, retrieval values, EM, F1 and answers again 0 mismatches |
 | Dense retrieval re-execution | not done (bge-m3 embeddings of all corpora need a GPU) | **not verified** |
 | Model-generation rerun | not done (no GPU; the generator is not deterministic across hardware) | **not verified** |
 | Full experiment reproduction | not done (needs both of the above) | **not verified** |

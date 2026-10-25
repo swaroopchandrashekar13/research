@@ -12,7 +12,7 @@
           "stop": 400
         },
         "served_model_versions": {
-          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+          "Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf": 400
         },
         "requested_models": {
           "qwen3-4b-q4_k_m": 400
@@ -244,7 +244,7 @@
           "stop": 400
         },
         "served_model_versions": {
-          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+          "Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf": 400
         },
         "requested_models": {
           "qwen3-4b-q4_k_m": 400
@@ -477,7 +477,7 @@
           "length": 65
         },
         "served_model_versions": {
-          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+          "Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf": 400
         },
         "requested_models": {
           "qwen3-4b-q4_k_m": 400
@@ -710,7 +710,7 @@
           "length": 2
         },
         "served_model_versions": {
-          "Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf": 400
+          "Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf": 400
         },
         "requested_models": {
           "qwen3-4b-q4_k_m": 400

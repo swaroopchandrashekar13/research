@@ -28,7 +28,7 @@ DiD = Δ(budget 1,024 words) − Δ(top-5), Δ = metric(A) − metric(B). E1 pre
 
 ## Diagnostics
 
-- **squad2**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 400}; served {'Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.043
-- **covidqa**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 400}; served {'Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.058
-- **cuad**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 335, 'length': 65}; served {'Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.150
-- **qasper**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 398, 'length': 2}; served {'Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.158
+- **squad2**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 400}; served {'Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.043
+- **covidqa**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 400}; served {'Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.058
+- **cuad**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 335, 'length': 65}; served {'Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.150
+- **qasper**: 400 ok jobs, complete queries 50; status {'ok': 400}; finish {'stop': 398, 'length': 2}; served {'Qwen/Qwen3-4B-GGUF@[revision removed]/Qwen3-4B-Q4_K_M.gguf': 400}; unanswerable rate 0.158

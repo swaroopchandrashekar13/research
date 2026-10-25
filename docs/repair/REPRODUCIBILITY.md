@@ -11,15 +11,15 @@ environment is not the historical one; differences are listed there).
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements/core.txt -r requirements/test.txt   # or: -r env/validation/lock-py3.13.txt
 .venv/bin/python -m pip install --no-deps -e .
-.venv/bin/python -m pytest -q          # 128 passed, 11 skipped without data (2026-10-24)
+.venv/bin/python -m pytest -q          # 132 passed, 11 skipped without data (2026-10-25)
 ```
 
 ## 1. Data (public sources, digest-checked)
 ```bash
 .venv/bin/python -I -m ragmv.fetch                     # archives and extracted members checked; mismatches never overwritten
 .venv/bin/python -I -m ragmv.fetch --verify-only       # re-check later without writing
-RAGMV_DATA_ROOT=data/raw .venv/bin/python -m pytest -q # 136 passed, 3 skipped (optional SDKs) on 2026-10-24
-.venv/bin/python -I tools/validate_artifacts.py --data-root data/raw   # 89 passed, 0 failed on 2026-10-24
+RAGMV_DATA_ROOT=data/raw .venv/bin/python -m pytest -q # 140 passed, 3 skipped (optional SDKs) on 2026-10-25
+.venv/bin/python -I tools/validate_artifacts.py --data-root data/raw   # 86 passed, 0 failed, 48 notes on 2026-10-25
 ```
 
 ## 2. Recompute the stored analyses (same code, new directories)
@@ -29,6 +29,7 @@ RAGMV_DATA_ROOT=data/raw .venv/bin/python -m pytest -q # 136 passed, 3 skipped (
 .venv/bin/python -I -m ragmv.analyze_generation --run experiments/E2_generation/runs/qwen3-4b-kaggle-gpu   --out /tmp/e2
 .venv/bin/python -I tools/compare_results.py experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json /tmp/e1/results.json
 # (likewise for e3 and e2): expect 0 differences; only redacted `git` fields and new metadata are listed as added/removed
+# (historical prompt/configuration digests and model revisions were removed; their markers compare as identical)
 .venv/bin/python -I tools/independent_stats.py --out-json /tmp/sv.json --out-md /tmp/sv.md   # 13/13 PASS, ~4 min
 ```
 
@@ -59,7 +60,8 @@ library versions. Promote regenerated displays only deliberately (`--promote`).
 | Dense retrieval (bge-m3) for Study 1b | GPU embeddings of all corpora | stored per-query scores, validated; BM25 arm re-executed |
 | Tier 2 generation (Qwen3-4B on a T4 GPU) | GPU; greedy outputs can differ across hardware | stored responses; prompts, retrieval and EM/F1 rebuilt exactly |
 | Freeze chronology of the plans | original version history unavailable | plans and deviation logs as text, with SHA-256 digests |
-| Upload archives named in `UPLOAD_SHA256` | archives not in the repository | their digests only |
+| Upload archives named in `UPLOAD_SHA256` | archives not in the repository; their digests were removed on 2026-10-25 | a dated note in each file |
+| Tier 2 prompt-digest comparison | stored prompt digests removed on 2026-10-25 | the 2026-10-24 result (1,600/1,600 equal) in `VERIFICATION.md`; prompts are still rebuilt and checked by length, retrieval and scores |
 
 New generation or dense runs: `python -I -m ragmv.generate ...` / `python -I -m ragmv.run1b ...` record a run identity
 and a code content digest and refuse to extend an incompatible or historical run directory (exit 2). Notebook runs

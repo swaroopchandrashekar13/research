@@ -33,7 +33,7 @@ checked by an independent recomputation; *L* = literature claim (identity checke
 | Study 1b | Against fixed-512 the breakpoint arm's support increases under budget matching | S5-512 semantic share 7.3% → 68.1% | R | supported |
 | Study 1b | Shorter arm determined from corpus-average lengths before metrics | manifests' `chunk_stats`; same result on confirmatory documents only (24/24) | R, V | supported |
 | Answer-quality check | All scheduled generations completed | 1,600/1,600 ok rows; 0 duplicates | R | supported |
-| Answer-quality check | Prompts and retrieval are those E1 measured | 1,600/1,600 prompt digests rebuilt; retrieval values equal E1 | V | supported |
+| Answer-quality check | Prompts and retrieval are those E1 measured | 1,600/1,600 prompt digests rebuilt (2026-10-24, before the stored digests were removed); retrieval values equal E1 | V | supported |
 | Protocol audit | Audit: 19 studies; 4 candidates from logged searches, 15 from unlogged sessions; single AI coder; no κ | `candidates.csv` `source`; `coding.csv` `coder` | R | supported (corrected, AUDIT-001/DOC-002) |
 | Discussion | Text allowance is consistent with, not identified as, the cause | design | — | appropriately hedged |
 | Limitations | Plans' timing cannot be verified | original history unavailable | — | supported (replaces earlier chronology claims) |

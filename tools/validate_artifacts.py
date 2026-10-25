@@ -156,6 +156,9 @@ def check_generations(rep: Report, qsets: dict) -> None:
 def check_misc(rep: Report) -> None:
     for f in sorted(ROOT.glob("experiments/**/UPLOAD_SHA256")):
         txt = f.read_text().strip()
+        if txt.startswith("redacted:"):
+            rep.note(f"{f.relative_to(ROOT)}", "upload-archive digest removed from historical evidence on 2026-10-25")
+            continue
         rep.check(f"{f.relative_to(ROOT)}", bool(re.fullmatch(r"[0-9a-f]{64}", txt)),
                   "one SHA-256 of an upload archive that is not in the repository (cannot be re-verified here)")
     for f in sorted(ROOT.glob("experiments/**/*.log.gz")):
@@ -244,10 +247,16 @@ def check_tier2_against_data(rep: Report, data_root: Path) -> None:
         r_idx = cfg["retrievers"].index(G.RETRIEVER)
         op_idx = {"count5": cfg["ops"].index("k5"), "budget1024": cfg["ops"].index("B1024")}
         arrays = {c: np.load(e1 / d / f"{c}.npz", allow_pickle=False)["scores"] for c in G.CHUNKINGS}
-        mism = {"prompt": 0, "retrieval_vs_E1": 0, "retrieval_vs_rebuilt": 0, "em": 0, "f1": 0, "answers": 0}
+        mism = {"prompt": 0, "context_words": 0, "retrieval_vs_E1": 0, "retrieval_vs_rebuilt": 0, "em": 0, "f1": 0,
+                "answers": 0}
+        removed = 0
         for r in rows:
             j = jobs[r["job_id"]]
-            mism["prompt"] += r["prompt_sha256"] != j["prompt_sha256"]
+            if str(r["prompt_sha256"]).startswith("redacted:"):
+                removed += 1  # historical prompt digests were removed on 2026-10-25 (verified equal on 2026-10-24)
+            else:
+                mism["prompt"] += r["prompt_sha256"] != j["prompt_sha256"]
+            mism["context_words"] += r["context_words"] != j["context_words"]
             mism["answers"] += r["answers"] != j["answers"]
             stored = arrays[r["chunking"]][r_idx, qids.index(r["qid"]), op_idx[r["op"]]]
             mism["retrieval_vs_E1"] += not np.allclose([float(x) for x in stored], list(r["retrieval"].values()), atol=1e-3)
@@ -256,7 +265,8 @@ def check_tier2_against_data(rep: Report, data_root: Path) -> None:
             mism["f1"] += abs(G.token_f1(r["response"], r["answers"]) - r["f1"]) > 1e-12
         ok = not any(mism.values()) and [q.qid for q in sample] == meta["qids"] and len(rows) == len(jobs)
         rep.check(f"data: E2 {ANALYSED_E2}/{d} rebuilt from data", ok,
-                  f"{len(rows)} rows; sample equals jobs_meta: {[q.qid for q in sample] == meta['qids']}; mismatches {mism}")
+                  f"{len(rows)} rows; sample equals jobs_meta: {[q.qid for q in sample] == meta['qids']}; mismatches {mism}; "
+                  f"prompt digests not checkable (removed from the log): {removed}")
 
 
 def main(argv=None) -> int:
