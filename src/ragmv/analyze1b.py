@@ -1,4 +1,4 @@
-"""Pre-registered analysis of a Study 1b run (research/preregistration_study1b.md §4-§5).
+"""Planned analysis of a Study 1b run (research/preregistration_study1b.md §4-§5).
 
 Usage:
   python -I -m ragmv.analyze1b --run experiments/E3_semantic_dense/runs/<id> --label EXPLORATORY --out <dir>
@@ -16,9 +16,10 @@ from pathlib import Path
 import numpy as np
 
 from . import stats as S
-from .analyze import (LABELS, SEEDS, Claim, Run, RunValidationError, _settings_line, analysis_settings, claim_diffs,
-                      hypothesis_verdict, label_banner, positive_int, prepare_out, protocol_contrast, verdict_summary)
-from .integrity import atomic_write_text, source_digest
+from .analyze import (LABELS, SEEDS, Claim, Run, RunValidationError, _settings_line, analysis_identity,
+                      analysis_settings, claim_diffs, hypothesis_verdict, label_banner, positive_int, prepare_out,
+                      protocol_contrast, validation_markdown, verdict_summary)
+from .integrity import atomic_write_text
 
 WIDTHS = (128, 256, 512)
 
@@ -38,7 +39,7 @@ RETRIEVERS = ("bm25", "dense")
 
 def mean_lengths(run: Run) -> dict[str, dict[str, float]]:
     """Mean chunk length (words, full retrieval corpus) per dataset and chunking, from the run manifests' chunk
-    statistics, which the runner computes before any retrieval metric (pre-registration §3.5 item 5)."""
+    statistics, which the runner computes before any retrieval metric (analysis plan §3.5 item 5)."""
     out = {}
     for d in run.datasets:
         stats = run.meta[d]["manifest"].get("chunk_stats")
@@ -96,7 +97,7 @@ def analyze(run: Run, reps=2000, joint_reps=1000) -> dict:
     h4b["verdict"] = hypothesis_verdict(h4b["estimate"], *h4b["ci95"], 0.10)
     h5 = protocol_contrast(run, claims["P1"][0], -1, reps, joint_reps, retrievers=["dense"])
     h5["verdict"] = hypothesis_verdict(h5["estimate"], *h5["ci95"], 0.20)
-    # H5b (post-pilot amendment, logged in the pre-registration's deviation log, §8): H4's contrast for P1, dense only
+    # H5b (post-pilot amendment, logged in the analysis plan's deviation log, §8): H4's contrast for P1, dense only
     h5b = shorter_contrast(run, claims["P1"], lengths, reps, joint_reps, retrievers=["dense"])
     h5b["verdict"] = hypothesis_verdict(h5b["estimate"], *h5b["ci95"], 0.20)
     res.update(H4=h4, H4b=h4b, H5=h5, H5b=h5b)
@@ -148,9 +149,7 @@ def to_markdown(res: dict, label: str) -> str:
         for prot in ("count", "budget"):
             s = v[prot]
             lines.append(f"| {cid} | {prot} | {s['n_universes']} | {_pct(s['support_A'])} | {_pct(s['support_B'])} | {_pct(s['inconclusive'])} |")
-    if res.get("validation", {}).get("legacy_limitations"):
-        lines += ["", "## Legacy limitations of the input manifests (reported, not filled in)", ""]
-        lines += [f"- {x}" for x in res["validation"]["legacy_limitations"]]
+    lines += validation_markdown(res)
     return "\n".join(lines) + "\n"
 
 
@@ -177,7 +176,7 @@ def main(argv=None) -> int:
     res["label"] = args.label
     res["analysis_settings"] = analysis_settings(args.reps, args.joint_reps)
     res["validation"] = {**validation, "legacy_limitations": run.legacy}
-    res["code_sha256"] = source_digest()["sha256"]
+    res.update(analysis_identity(run))
     res["source_manifests"] = {d: {k: run.meta[d]["manifest"].get(k) for k in ("config_sha256", "started_utc", "encoder")}
                                for d in run.datasets}
     atomic_write_text(out / "results.json", json.dumps(res, indent=2))

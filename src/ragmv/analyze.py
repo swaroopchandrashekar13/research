@@ -1,4 +1,4 @@
-"""Pre-registered analysis of a retrieval-multiverse run (research/preregistration.md §3-§4).
+"""Planned analysis of a retrieval-multiverse run (research/preregistration.md §3-§4).
 
 Usage:
   python -I -m ragmv.analyze --run experiments/E1_retrieval_multiverse/runs/<id> --label EXPLORATORY \
@@ -9,7 +9,7 @@ Before any statistic is computed the run is validated (`Run.validate`): every da
 and metric axes as the other datasets, unique query IDs aligned with `n_queries` and with documents of the declared
 split, and NPZ arrays with the required members, shapes, dtypes and finite values in range. Axis indices are derived
 from the manifest labels, never from global positions. A CONFIRMATORY or EXPLORATORY label additionally requires the
-full pre-registered design (all four datasets, all chunkings and retrievers, no `max_queries`); anything less can only
+full planned design (all four datasets, all chunkings and retrievers, no `max_queries`); anything less can only
 be analysed with `--label SMOKE`, and the outputs then say so. Missing fields of historical manifests are reported as
 `legacy_limitations`, never filled in.
 """
@@ -19,15 +19,17 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 
 from . import data as D
+from . import provenance as PV
 from . import stats as S
 from .evaluate import METRICS
-from .integrity import atomic_write_text, source_digest
+from .integrity import atomic_write_text, sha256_file, source_digest
 from .run import BUDGETS, KS, OPS
 
 DATASETS = ("squad2", "covidqa", "cuad", "qasper")
@@ -35,10 +37,26 @@ DEFAULT_RETRIEVER = "lucene-k1.5-b0.75-stem"
 LABELS = ("EXPLORATORY", "CONFIRMATORY", "SMOKE", "POSTHOC")
 SEEDS = {"verdict_bootstrap": 7, "joint_bootstrap": 11, "h2_joint_bootstrap": 13}
 REQUIRED_NPZ = ("scores", "words", "rr10")
+RUN_SCHEMA_V2 = PV.RUN_SCHEMA
+REQUIRED_NPZ_V2 = ("scores", "words", "rr10", "depth", "expansions", "exhausted")
 
 
 class RunValidationError(ValueError):
     """The run cannot be analysed as requested; the message lists every problem found."""
+
+
+def _read_json_object(path: Path, what: str) -> dict:
+    try:
+        obj = json.loads(Path(path).read_text())
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise RunValidationError(f"{path}: {what} is not valid JSON ({exc})") from exc
+    if not isinstance(obj, dict):
+        raise RunValidationError(f"{path}: {what} is not a JSON object")
+    return obj
+
+
+def _indices(idx: list[int]) -> str:
+    return f"{idx[:5]}{' ...' if len(idx) > 5 else ''}"
 
 
 @dataclass(frozen=True)
@@ -50,7 +68,7 @@ class Claim:
     wmax: int  # larger chunk size in the pair: budget-matched universes need B >= wmax
 
 
-def preregistered_claims() -> list[Claim]:
+def planned_claims() -> list[Claim]:
     claims = [Claim("P1", "primary", "fixed-128", "fixed-512", 512)]
     claims += [Claim(f"S1-{w}", "secondary", f"fixed-{w}", f"fixed-{2 * w}", 2 * w) for w in (64, 128, 256)]
     claims += [Claim(f"S2-{w}", "secondary", f"fixed-{w}-o25", f"fixed-{w}", w) for w in (64, 128, 256, 512)]
@@ -80,7 +98,11 @@ class Run:
     """Per-chunking arrays [R, n_q, ops, M] for each dataset of a run directory, loaded lazily and validated.
 
     `study` is "1" (ragmv.run) or "1b" (ragmv.run1b). Datasets whose manifest is absent are skipped here and reported
-    by `validate`, which decides whether the label allows a partial run."""
+    by `validate`, which decides whether the label allows a partial run.
+
+    Diagnostics have one lifecycle: manifest-level notes are recomputed by every `validate` call, and array-level notes
+    are stored with each cached array when it is first read (whether before or during `validate`). `legacy` combines
+    both, deduplicated in a fixed order, so repeated validation gives the same list and no note is lost."""
 
     def __init__(self, path: Path, datasets=DATASETS, study: str = "1"):
         self.path = Path(path)
@@ -88,20 +110,32 @@ class Run:
         self.meta, self.cache = {}, {}
         self.missing_datasets = []
         self.problems: list[str] = []
-        self.legacy: list[str] = []
+        self._manifest_notes: list[str] = []
+        self._npz_notes: dict[tuple[str, str], tuple[str, ...]] = {}
         for d in datasets:
             mpath = self.path / d / "manifest.json"
             if not mpath.exists():
                 self.missing_datasets.append(d)
                 continue
-            m = json.loads(mpath.read_text())
+            m = _read_json_object(mpath, "manifest")
             if m.get("status") != "ok":
                 raise RunValidationError(f"{d}: run status {m.get('status')!r}: {m.get('error')}")
+            cfg = m.get("config")
+            if not isinstance(cfg, dict):
+                raise RunValidationError(f"{mpath}: manifest has no 'config' object")
+            for key in ("retrievers", "ops"):
+                if not isinstance(cfg.get(key), list) or not cfg[key]:
+                    raise RunValidationError(f"{mpath}: config.{key} must be a non-empty list")
             qpath = self.path / d / "queries.json"
             if not qpath.exists():
                 raise RunValidationError(f"{d}: {qpath} is missing")
-            q = json.loads(qpath.read_text())
-            self.meta[d] = {"manifest": m, "qids": list(q.get("qids", [])), "doc_idx": np.asarray(q.get("doc_idx", []))}
+            q = _read_json_object(qpath, "query list")
+            qids, doc_idx = q.get("qids", []), q.get("doc_idx", [])
+            if not isinstance(qids, list) or not isinstance(doc_idx, list):
+                raise RunValidationError(f"{qpath}: 'qids' and 'doc_idx' must be lists")
+            arr = np.asarray(doc_idx, dtype=object if any(not isinstance(x, int) or isinstance(x, bool)
+                                                           for x in doc_idx) else np.int64)
+            self.meta[d] = {"manifest": m, "qids": qids, "raw_doc_idx": doc_idx, "doc_idx": arr}
         if not self.meta:
             raise FileNotFoundError(f"no dataset manifests under {self.path}")
         first = next(iter(self.meta.values()))["manifest"]["config"]
@@ -114,57 +148,128 @@ class Run:
     def datasets(self):
         return list(self.meta)
 
+    @property
+    def legacy(self) -> list[str]:
+        """Manifest notes of the last validation, then array notes in dataset and chunking order, deduplicated."""
+        order = {d: i for i, d in enumerate(self.meta)}
+        out = list(self._manifest_notes)
+        for key in sorted(self._npz_notes, key=lambda k: (order.get(k[0], len(order)), k[1])):
+            out.extend(self._npz_notes[key])
+        return list(dict.fromkeys(out))
+
+    def _strict(self, dataset: str) -> bool:
+        return self.meta[dataset]["manifest"].get("schema") == RUN_SCHEMA_V2
+
     # ------------------------------------------------------------------------------------------- validation
+    def _check_queries(self, d: str, m: dict, cfg: dict, split: str, problems: list[str]) -> None:
+        qids, raw = self.meta[d]["qids"], self.meta[d]["raw_doc_idx"]
+        if not qids:
+            problems.append(f"{d}: queries.json has no queries")
+        nonstr = [i for i, q in enumerate(qids) if not isinstance(q, str)]
+        empty = [i for i, q in enumerate(qids) if isinstance(q, str) and q in ("", f"{d}:")]
+        wrong = [i for i, q in enumerate(qids) if isinstance(q, str) and q not in ("", f"{d}:")
+                 and not q.startswith(f"{d}:")]
+        for idx, what in ((nonstr, "are not a string"), (empty, "are empty"), (wrong, f"are not prefixed with '{d}:'")):
+            if idx:
+                problems.append(f"{d}: {len(idx)} query ID(s) at indices {_indices(idx)} {what} "
+                                f"(first: {qids[idx[0]]!r})")
+        seen = Counter(q for q in qids if isinstance(q, str))
+        dups = [q for q, n in seen.items() if n > 1]
+        if dups:
+            problems.append(f"{d}: duplicate query IDs in queries.json: {dups[:5]} ({sum(seen[q] - 1 for q in dups)} extra)")
+        if len(raw) != len(qids):
+            problems.append(f"{d}: queries.json has {len(qids)} qids but {len(raw)} doc_idx")
+        if m.get("n_queries") is not None and m["n_queries"] != len(qids):
+            problems.append(f"{d}: manifest n_queries {m['n_queries']} != {len(qids)} qids")
+        bad = [i for i, x in enumerate(raw) if isinstance(x, bool) or not isinstance(x, int)]
+        if bad:
+            problems.append(f"{d}: doc_idx entries at indices {_indices(bad)} are not integers (first: {raw[bad[0]]!r})")
+            return
+        doc_idx = self.meta[d]["doc_idx"]
+        nd = m.get("n_documents")
+        if not len(doc_idx):
+            return
+        if doc_idx.min() < 0 or (nd is not None and doc_idx.max() >= nd):
+            out = np.flatnonzero((doc_idx < 0) | ((doc_idx >= nd) if nd is not None else False)).tolist()
+            problems.append(f"{d}: doc_idx outside [0, {nd}) at indices {_indices(out)}")
+        elif nd is not None and split in ("exploratory", "confirmatory"):
+            mask = D.split_documents(int(nd), float(cfg.get("split_frac_exploratory", 0.2)),
+                                     int(cfg.get("split_seed", 20261018)))
+            want = split == "exploratory"
+            wrong_split = int((mask[doc_idx] != want).sum())
+            if wrong_split:
+                problems.append(f"{d}: {wrong_split} queries belong to documents outside the {split} split")
+
+    def _check_identity(self, d: str, m: dict, cfg: dict, problems: list[str], notes: list[str],
+                        prov: list[str]) -> None:
+        """Configuration, code, input and encoder identity under the provenance policy (ragmv.provenance)."""
+        historical = PV.historical_record(self.path, d, m.get("started_utc"))
+        strict = self._strict(d)
+        cs = m.get("config_sha256")
+        if cs == PV.DIGEST_REMOVED:
+            if historical:
+                prov.append(f"{d}: config_sha256 was removed from this historical manifest by the owner; the "
+                            "configuration fingerprint cannot be checked")
+            else:
+                problems.append(f"{d}: config_sha256 holds the removed-value marker, but this manifest is not a "
+                                "registered historical record")
+        elif cs is None:
+            if historical:
+                prov.append(f"{d}: historical manifest has no config_sha256")
+            else:
+                problems.append(f"{d}: manifest has no config_sha256")
+        elif not PV.is_hex_digest(cs):
+            problems.append(f"{d}: config_sha256 {str(cs)[:40]!r} is not a SHA-256 digest")
+        elif _config_fingerprint(cfg) != cs:
+            problems.append(f"{d}: config fingerprint does not match config_sha256 (config edited after the run?)")
+        if not PV.is_hex_digest(m.get("code_sha256")):
+            (problems if strict else prov).append(f"{d}: no code content digest (code_sha256) recorded by the run")
+        inputs = m.get("inputs_sha256")
+        if not (isinstance(inputs, dict) and inputs and all(PV.is_hex_digest(v) for v in inputs.values())):
+            (problems if strict else prov).append(f"{d}: no input-file digests (inputs_sha256) recorded by the run")
+        enc = m.get("encoder")
+        if isinstance(enc, str) and PV.REVISION_REMOVED in enc:
+            if historical:
+                prov.append(f"{d}: the encoder revision was removed from this historical manifest by the owner; the "
+                            "revision the run used cannot be confirmed from the run record (the code pins one)")
+            else:
+                problems.append(f"{d}: encoder holds the removed-revision marker, but this manifest is not a "
+                                "registered historical record")
+        if "dense" in cfg.get("retrievers", []) and not historical:
+            ident = m.get("encoder_identity") or {}
+            if not PV.is_hex_digest(ident.get("revision"), 40):
+                (problems if strict else prov).append(f"{d}: dense retrieval without a recorded encoder revision")
+        if m.get("git") == PV.GIT_REMOVED and not historical:
+            problems.append(f"{d}: removed-commit marker in a manifest that is not a registered historical record")
+
     def validate(self, label: str, chunkings: list[str] | None = None, full_design: dict | None = None) -> dict:
         """Check the run before analysis; raises RunValidationError listing every problem."""
-        problems, legacy = [], []
+        problems, notes, prov = [], [], []
         cfgs = {d: v["manifest"]["config"] for d, v in self.meta.items()}
         splits = {d: c.get("split") for d, c in cfgs.items()}
         studies = {d: c.get("study", "1") for d, c in cfgs.items()}
         for d, c in cfgs.items():
             m = self.meta[d]["manifest"]
-            if "study" not in c:
-                legacy.append(f"{d}: manifest config has no 'study' field (historical Study 1 format); treated as '1'")
+            strict = self._strict(d)
+            missing_fields = [f for f in ("n_documents", "n_queries", "chunk_stats", "versions", "platform", "error")
+                              if f not in m] + (["config.study"] if "study" not in c else [])
+            if strict and missing_fields:
+                problems.append(f"{d}: manifest of schema {RUN_SCHEMA_V2} lacks {missing_fields}")
+            else:
+                if "study" not in c:
+                    notes.append(f"{d}: manifest config has no 'study' field (historical Study 1 format); treated as '1'")
+                for field in missing_fields:
+                    if field != "config.study":
+                        notes.append(f"{d}: manifest has no {field!r}" + (" field" if field == "error" else ""))
             if c.get("dataset", d) != d:
                 problems.append(f"{d}: manifest says dataset {c.get('dataset')!r}")
-            if "config_sha256" not in m:
-                legacy.append(f"{d}: manifest has no config_sha256")
-            elif str(m["config_sha256"]).startswith("redacted:"):
-                legacy.append(f"{d}: config_sha256 was removed from the historical manifest (2026-10-25); the "
-                              "configuration fingerprint cannot be checked")
-            elif _config_fingerprint(c) != m["config_sha256"]:
-                problems.append(f"{d}: config fingerprint does not match config_sha256 (config edited after the run?)")
+            self._check_identity(d, m, c, problems, notes, prov)
             for key, ref in (("retrievers", self.retrievers), ("ops", self.ops), ("metrics", self.metrics)):
                 if list(c.get(key, METRICS if key == "metrics" else [])) != ref:
                     problems.append(f"{d}: {key} axis differs from the first dataset's (incompatible axes)")
             if c.get("max_queries") is not None and label != "SMOKE":
                 problems.append(f"{d}: max_queries={c['max_queries']} is a smoke/partial run; use --label SMOKE")
-            for field in ("n_documents", "n_queries", "chunk_stats", "versions", "platform"):
-                if field not in m:
-                    legacy.append(f"{d}: manifest has no {field!r}")
-            if "error" not in m:
-                legacy.append(f"{d}: manifest has no 'error' field")
-            qids = self.meta[d]["qids"]
-            doc_idx = self.meta[d]["doc_idx"]
-            if len(set(qids)) != len(qids):
-                problems.append(f"{d}: duplicate query IDs in queries.json ({len(qids) - len(set(qids))})")
-            if len(doc_idx) != len(qids):
-                problems.append(f"{d}: queries.json has {len(qids)} qids but {len(doc_idx)} doc_idx")
-            if m.get("n_queries") is not None and m["n_queries"] != len(qids):
-                problems.append(f"{d}: manifest n_queries {m['n_queries']} != {len(qids)} qids")
-            if any(not str(q).startswith(f"{d}:") for q in qids[:1] + qids[-1:]):
-                problems.append(f"{d}: query IDs are not prefixed with the dataset name")
-            nd = m.get("n_documents")
-            if nd is not None and len(doc_idx):
-                if doc_idx.min() < 0 or doc_idx.max() >= nd:
-                    problems.append(f"{d}: doc_idx outside [0, {nd})")
-                elif splits[d] in ("exploratory", "confirmatory"):
-                    mask = D.split_documents(int(nd), float(c.get("split_frac_exploratory", 0.2)),
-                                             int(c.get("split_seed", 20261018)))
-                    want = splits[d] == "exploratory"
-                    wrong = int((mask[doc_idx] != want).sum())
-                    if wrong:
-                        problems.append(f"{d}: {wrong} queries belong to documents outside the {splits[d]} split")
+            self._check_queries(d, m, c, splits[d], problems)
         if len(set(splits.values())) > 1:
             problems.append(f"mixed splits across datasets: {splits}")
         if len(set(studies.values())) > 1 or next(iter(studies.values())) != self.study:
@@ -185,36 +290,47 @@ class Run:
             for key, want in (full_design or {}).items():
                 for d, c in cfgs.items():
                     if sorted(c.get(key, [])) != sorted(want):
-                        problems.append(f"{d}: {key} {c.get(key)} is not the full pre-registered design")
+                        problems.append(f"{d}: {key} {c.get(key)} is not the full design of the analysis plan")
             if parse_ops(self.ops) != [("count", k) for k in KS] + [("budget", b) for b in BUDGETS]:
-                problems.append(f"operating points {self.ops} are not the pre-registered set {OPS}")
+                problems.append(f"operating points {self.ops} are not the planned set {OPS}")
             if self.metrics != list(METRICS):
-                problems.append(f"metrics {self.metrics} are not the pre-registered set {list(METRICS)}")
-        for d, c in cfgs.items():
-            for ch in chunkings or []:
-                if ch not in c.get("chunkings", []):
-                    problems.append(f"{d}: chunking {ch!r} required by the claims is not in the run")
-                    continue
-                try:
-                    self.scores(d, ch)
-                except RunValidationError as exc:
-                    problems.append(str(exc))
-        self.problems, self.legacy = problems, legacy
+                problems.append(f"metrics {self.metrics} are not the planned set {list(METRICS)}")
+        self._manifest_notes = list(dict.fromkeys(notes))
+        if not problems:  # arrays are only read once the manifests and query lists are sound
+            for d, c in cfgs.items():
+                for ch in chunkings or []:
+                    if ch not in c.get("chunkings", []):
+                        problems.append(f"{d}: chunking {ch!r} required by the claims is not in the run")
+                        continue
+                    try:
+                        self.scores(d, ch)
+                    except RunValidationError as exc:
+                        problems.append(str(exc))
+        self.problems = problems
         if problems:
             raise RunValidationError("run validation failed:\n  - " + "\n  - ".join(problems))
+        prov = list(dict.fromkeys(prov))
         return {"label": label, "split": split, "study": self.study, "datasets": self.datasets,
-                "missing_datasets": self.missing_datasets, "legacy_limitations": legacy,
-                "checks": ["manifest status", "config fingerprint", "split/study consistency", "axis order",
-                           "query uniqueness and alignment", "split membership of query documents",
-                           "NPZ members, shapes, dtypes, finite values and ranges", "chunking availability"]}
+                "missing_datasets": self.missing_datasets, "legacy_limitations": self.legacy,
+                "provenance": {"status": "incomplete" if prov else "complete", "notes": prov},
+                "checks": ["manifest status", "configuration identity under the provenance policy",
+                           "split/study consistency", "axis order", "every query ID (type, prefix, uniqueness)",
+                           "document indices (type, range, split membership)",
+                           "NPZ members, shapes, dtypes, finite values, ranges and budget fill",
+                           "chunking availability"]}
 
-    def _check_npz(self, dataset: str, chunking: str, z) -> np.ndarray:
+    def _check_npz(self, dataset: str, chunking: str, z) -> tuple[np.ndarray, tuple[str, ...]]:
+        """Validate one array file; returns the scores and the array-level notes (errors raise)."""
         where = f"{dataset}/{chunking}.npz"
-        missing = [k for k in REQUIRED_NPZ if k not in z.files]
+        strict = self._strict(dataset)
+        required = REQUIRED_NPZ_V2 if strict else REQUIRED_NPZ
+        missing = [k for k in required if k not in z.files]
         if "scores" in missing:
             raise RunValidationError(f"{where}: required member 'scores' is missing")
-        if missing:
-            self.legacy.append(f"{where}: members {missing} absent")
+        if strict and missing:
+            raise RunValidationError(f"{where}: required member(s) {', '.join(repr(k) for k in missing)} missing "
+                                     f"(schema {RUN_SCHEMA_V2})")
+        notes = [f"{where}: members {missing} absent"] if missing else []
         n_q = len(self.meta[dataset]["qids"])
         want = (len(self.retrievers), n_q, len(self.ops), len(self.metrics))
         s = z["scores"]
@@ -227,18 +343,37 @@ class Run:
             raise RunValidationError(f"{where}: scores contain non-finite values")
         if s.min() < 0 or s.max() > 1:
             raise RunValidationError(f"{where}: scores outside [0, 1] ({s.min()}, {s.max()})")
+        exhausted = None
+        for name, kinds in (("depth", "iu"), ("expansions", "iu"), ("exhausted", "b")):
+            if name in z.files:
+                a = z[name]
+                if a.shape != want[:2] or a.dtype.kind not in kinds or (kinds == "iu" and (a < 0).any()):
+                    raise RunValidationError(f"{where}: {name} array has shape {a.shape} or dtype {a.dtype}")
+                if name == "exhausted":
+                    exhausted = a
         if "words" in z.files:
             w = z["words"]
             if w.shape != want[:3] or w.dtype.kind not in "iu" or (w < 0).any():
                 raise RunValidationError(f"{where}: words array has shape {w.shape}, dtype {w.dtype} or negatives")
+            under = 0
             for j, (kind, val) in enumerate(self.op_kinds):
-                if kind == "budget" and (w[:, :, j] > val).any():
+                if kind != "budget":
+                    continue
+                if (w[:, :, j] > val).any():
                     raise RunValidationError(f"{where}: more than {val} words retrieved at budget {val}")
+                low = w[:, :, j] < val
+                if exhausted is not None and (low & ~exhausted).any():
+                    raise RunValidationError(f"{where}: {int((low & ~exhausted).sum())} selection(s) below its budget "
+                                             f"{val} without corpus exhaustion")
+                under += int(low.sum())
+            if under and exhausted is None:
+                notes.append(f"{where}: {under} budget-matched selection(s) below the budget; this run format does "
+                             "not record whether the corpus or the ranking depth ran out")
         if "rr10" in z.files:
             r = z["rr10"]
             if r.shape != want[:2] or not np.isfinite(r).all() or r.min() < 0 or r.max() > 1:
                 raise RunValidationError(f"{where}: rr10 has shape {r.shape} or values outside [0, 1]")
-        return s
+        return s, tuple(notes)
 
     def scores(self, dataset: str, chunking: str) -> np.ndarray:
         key = (dataset, chunking)
@@ -246,9 +381,22 @@ class Run:
             path = self.path / dataset / f"{chunking}.npz"
             if not path.exists():
                 raise RunValidationError(f"{dataset}: {path.name} is missing")
-            with np.load(path, allow_pickle=False) as z:
-                self.cache[key] = self._check_npz(dataset, chunking, z).astype(np.float32)
+            try:
+                with np.load(path, allow_pickle=False) as z:
+                    s, notes = self._check_npz(dataset, chunking, z)
+            except (OSError, ValueError, EOFError) as exc:
+                if isinstance(exc, RunValidationError):
+                    raise
+                raise RunValidationError(f"{dataset}/{path.name}: unreadable array file ({exc})") from exc
+            self.cache[key] = s.astype(np.float32)
+            self._npz_notes[key] = notes
         return self.cache[key]
+
+    def consumed_inputs(self) -> dict[str, str]:
+        """SHA-256 of every file of the run that this analysis read: manifests, query lists, loaded arrays."""
+        files = [Path(d) / n for d in self.datasets for n in ("manifest.json", "queries.json")]
+        files += [Path(d) / f"{c}.npz" for d, c in sorted(self.cache)]
+        return {str(f): sha256_file(self.path / f) for f in sorted(files)}
 
 
 def op_indices(protocol: str, wmax: int, admissible: bool = True, ops: list[str] | None = None) -> list[int]:
@@ -356,7 +504,7 @@ def h3_power(run, claims):
 
 
 def analyze(run: Run, reps=2000, joint_reps=1000) -> dict:
-    claims = preregistered_claims()
+    claims = planned_claims()
     by_id = {c.cid: c for c in claims}
     clusters = {d: run.meta[d]["doc_idx"] for d in run.datasets}
     res = {"datasets": run.datasets, "n_queries": {d: int(len(run.meta[d]["doc_idx"])) for d in run.datasets}}
@@ -419,11 +567,31 @@ def _settings_line(res: dict) -> str:
             f"replicates for share CIs (seed {s['seeds']['joint_bootstrap']}; H2 seed {s['seeds']['h2_joint_bootstrap']}).")
 
 
+def analysis_identity(run: Run) -> dict:
+    """Identity of this analysis (not of the experiment): its own code digest and the exact input files it read."""
+    return {"analysis_code_sha256": source_digest()["sha256"], "analysis_run_dir": str(run.path),
+            "consumed_inputs_sha256": run.consumed_inputs()}
+
+
+def validation_markdown(res: dict) -> list[str]:
+    """Provenance status and legacy notes, exactly as stored in results.json."""
+    v = res.get("validation") or {}
+    lines = []
+    prov = v.get("provenance")
+    if prov:
+        lines += ["", f"## Provenance of the input run: {prov['status']}", ""]
+        lines += [f"- {x}" for x in prov["notes"]] or ["- every identity field the policy requires was present and checked"]
+    if v.get("legacy_limitations"):
+        lines += ["", "## Legacy limitations of the input manifests (reported, not filled in)", ""]
+        lines += [f"- {x}" for x in v["legacy_limitations"]]
+    return lines
+
+
 def label_banner(label: str) -> list[str]:
     if label == "POSTHOC":
-        return ["> **POST-HOC SENSITIVITY ANALYSIS (2026-10-24) — not pre-registered.** Same pre-registered analysis "
-                "code and thresholds applied to an alternative metric definition on re-executed retrieval selections; "
-                "it does not replace or change any pre-registered result.", ""]
+        return ["> **POST-HOC SENSITIVITY ANALYSIS — not part of the analysis plans.** The planned analysis code and "
+                "thresholds applied to an alternative metric definition on re-executed retrieval selections; it does "
+                "not replace or change any planned result.", ""]
     if label == "SMOKE":
         return ["> **SMOKE / PARTIAL ANALYSIS — not a confirmatory or exploratory result.** It may cover a subset of "
                 "datasets, chunkings, retrievers or queries.", ""]
@@ -457,9 +625,7 @@ def to_markdown(res: dict, label: str) -> str:
             s = v[prot]
             lines.append(f"| {cid} | {v['role']} | {v['A']} vs {v['B']} | {prot} | {s['n_universes']} | "
                          f"{_pct(s['support_A'])} | {_pct(s['support_B'])} | {_pct(s['inconclusive'])} |")
-    if res.get("validation", {}).get("legacy_limitations"):
-        lines += ["", "## Legacy limitations of the input manifests (reported, not filled in)", ""]
-        lines += [f"- {x}" for x in res["validation"]["legacy_limitations"]]
+    lines += validation_markdown(res)
     return "\n".join(lines) + "\n"
 
 
@@ -495,7 +661,7 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     try:
         run = Run(Path(args.run))
-        chunkings = sorted({x for c in preregistered_claims() for x in (c.a, c.b)})
+        chunkings = sorted({x for c in planned_claims() for x in (c.a, c.b)})
         validation = run.validate(args.label, chunkings, full_design_study1())
     except (RunValidationError, FileNotFoundError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
@@ -506,7 +672,7 @@ def main(argv=None) -> int:
     res["label"] = args.label
     res["analysis_settings"] = analysis_settings(args.reps, args.joint_reps)
     res["validation"] = {**validation, "legacy_limitations": run.legacy}
-    res["code_sha256"] = source_digest()["sha256"]
+    res.update(analysis_identity(run))
     res["source_manifests"] = {d: {k: run.meta[d]["manifest"].get(k) for k in ("config_sha256", "started_utc")}
                                for d in run.datasets}
     atomic_write_text(out / "results.json", json.dumps(res, indent=2))

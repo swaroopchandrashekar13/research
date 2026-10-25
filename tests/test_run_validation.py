@@ -1,4 +1,4 @@
-"""PY-001: runs are validated before analysis; partial/smoke inputs cannot pass as confirmatory analyses."""
+"""Runs are validated before analysis; partial/smoke inputs cannot pass as confirmatory analyses."""
 import hashlib
 import json
 
@@ -46,11 +46,14 @@ def write_run(root, datasets=("squad2", "covidqa", "cuad", "qasper"), split="con
         for c in chunkings:
             s = rng.uniform(0, 1, (len(retrievers), N_Q, len(OPS), 3)).astype(np.float16)
             w = np.minimum(rng.integers(0, 3000, (len(retrievers), N_Q, len(OPS))), 128).astype(np.int32)
+            for j, op in enumerate(OPS):  # budget-matched selections are filled to their budget
+                if op.startswith("B"):
+                    w[:, :, j] = int(op[1:])
             np.savez_compressed(p / f"{c}.npz", scores=s, words=w, rr10=rng.uniform(0, 1, (len(retrievers), N_Q)).astype(np.float16))
     return root
 
 
-CHUNKS1 = sorted({x for c in A.preregistered_claims() for x in (c.a, c.b)})
+CHUNKS1 = sorted({x for c in A.planned_claims() for x in (c.a, c.b)})
 
 
 def _validate(root, label="CONFIRMATORY", study="1"):
@@ -138,7 +141,7 @@ def test_incompatible_axis_order_fails(tmp_path):
 def test_bad_npz_arrays_fail(tmp_path, mutation, message):
     root = write_run(tmp_path)
     path = root / "squad2" / "fixed-128.npz"
-    with np.load(path) as z:
+    with np.load(path, allow_pickle=False) as z:
         arrays = {k: z[k] for k in z.files}
     np.savez_compressed(path, **mutation(arrays))
     with pytest.raises(A.RunValidationError, match=message):
