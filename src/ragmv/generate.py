@@ -44,7 +44,8 @@ from .chunking import chunk_document, default_specs
 from .evaluate import span_metrics
 from .integrity import (RunLock, RunLockError, canonical_json, create_exclusive, diff_fields, environment_record,
                         fingerprint, source_digest, text_list_digest)
-from .retrieval import default_retrievers, rank, tokenize
+from .budgetfill import SELECTION_RULE
+from .retrieval import default_retrievers, rank, rank_filled, tokenize
 
 KEY_ENV = "RAGMV_GEMINI_API_KEY"
 CHUNKINGS = ("fixed-128", "fixed-512", "paragraph-256", "fixed-256")  # claims P1 and S3-256
@@ -128,8 +129,11 @@ def sample_queries(queries, mask, n: int, seed: int = SAMPLE_SEED):
     return sorted(rng.sample(pool, min(n, len(pool))), key=lambda q: q.qid)
 
 
-def build_jobs(docs, queries) -> list[dict]:
-    """One job per (query, chunking, operating point), with the retrieved text and its retrieval metrics."""
+def build_jobs(docs, queries, adaptive: bool = True) -> list[dict]:
+    """One job per (query, chunking, operating point), with the retrieved text and its retrieval metrics.
+
+    New runs rank to depth 64 and extend a query's ranking until the 1,024-word budget is filled or the corpus is
+    exhausted (`ragmv.budgetfill`). `adaptive=False` reproduces the fixed depth-64 ranking of the stored runs."""
     spec_by_name = {s.name: s for s in default_specs()}
     retr = next(r for r in default_retrievers() if r.name == RETRIEVER)
     jobs = []
@@ -140,7 +144,12 @@ def build_jobs(docs, queries) -> list[dict]:
             for ws, we in chunk_document(doc, spec):
                 cd.append(d_idx), cws.append(ws), cwe.append(we), texts.append(doc.words(ws, we))
         cd, cws, cwe = (np.asarray(a) for a in (cd, cws, cwe))
-        ranked = rank(tokenize(texts, retr.stem), tokenize([q.question for q in queries], retr.stem), retr, depth=64)
+        tok_c, tok_q = tokenize(texts, retr.stem), tokenize([q.question for q in queries], retr.stem)
+        if adaptive:
+            budget = max(p for m, p in OPS if m == "budget")
+            ranked = rank_filled(tok_c, tok_q, retr, 64, cwe - cws, budget).rows
+        else:
+            ranked = rank(tok_c, tok_q, retr, depth=64)
         for qi, q in enumerate(queries):
             for mode, param in OPS:
                 sel = select_passages(ranked[qi], cd, cws, cwe, mode, param)
@@ -386,7 +395,8 @@ def run_identity(args, dataset: str, sample, jobs, inputs: dict, hardware: str) 
         "schema": "ragmv.generate/run-identity/1",
         "dataset": dataset, "inputs_sha256": inputs,
         "sample": {"seed": SAMPLE_SEED, "per_dataset": args.per_dataset, "qids_sha256": text_list_digest([q.qid for q in sample])},
-        "design": {"chunkings": list(CHUNKINGS), "ops": [f"{m}{p}" for m, p in OPS], "retriever": RETRIEVER},
+        "design": {"chunkings": list(CHUNKINGS), "ops": [f"{m}{p}" for m, p in OPS], "retriever": RETRIEVER,
+                   "selection": SELECTION_RULE},
         "jobs": {"n": len(jobs), "sha256": text_list_digest([f"{j['job_id']}\t{j['prompt_sha256']}" for j in jobs])},
         "prompt": {"system": SYSTEM, "template": template, "template_sha256": fingerprint(template)},
         "backend": args.backend, "model": model, "decoding": decoding, "context": context,

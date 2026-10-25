@@ -9,6 +9,9 @@ The exact input files are checked against the manifest's SHA-256 digests before 
 directory that already holds results is never overwritten (the command stops). A run restricted by --max-queries,
 --chunkings or --retrievers is labelled `mode: smoke` in its manifest and cannot be analysed as confirmatory or
 exploratory. The manifest records a content digest of the code (`code_sha256`), not a version-control commit.
+Each query is ranked to an initial depth from the corpus 10th-percentile chunk length and, if that prefix holds fewer
+words than the largest budget, ranked deeper until it does or the corpus is exhausted (`ragmv.budgetfill`); every
+<chunking>.npz stores the effective depth, the number of expansions and the exhaustion flag per retriever and query.
 Exit code 0 = ok, 1 = the run failed (a failed manifest is kept), 2 = the run could not start.
 """
 from __future__ import annotations
@@ -31,8 +34,10 @@ import numpy as np
 from . import data as D
 from .chunking import chunk_document, default_specs
 from .evaluate import METRICS, evaluate_rankings
+from .budgetfill import SELECTION_RULE
 from .integrity import atomic_write_text, source_digest
-from .retrieval import default_retrievers, rank, tokenize
+from .provenance import RUN_SCHEMA
+from .retrieval import default_retrievers, rank_filled, tokenize
 
 KS = (1, 3, 5, 10)
 BUDGETS = (128, 256, 512, 1024, 2048)
@@ -75,19 +80,22 @@ def _run_chunking(spec_name: str) -> dict:
     depth = min(len(texts), max(KS) + math.ceil(max(BUDGETS) / max(1.0, float(np.percentile(lengths, 10)))) + 10)
     corpus_tok = {stem: tokenize(texts, stem) for stem in {r.stem for r in retrievers}}
     query_tok = {stem: tokenize([q.question for q in queries], stem) for stem in corpus_tok}
-    scores, words, rr = [], [], []
+    scores, words, rr, depths, expansions, exhausted, fill = [], [], [], [], [], [], {}
     for r in retrievers:
-        ranked = rank(corpus_tok[r.stem], query_tok[r.stem], r, depth)
-        res = evaluate_rankings(ranked, chunk_doc, chunk_ws, chunk_we, queries, KS, BUDGETS)
+        res_fill = rank_filled(corpus_tok[r.stem], query_tok[r.stem], r, depth, lengths, max(BUDGETS))
+        res = evaluate_rankings(res_fill.rows, chunk_doc, chunk_ws, chunk_we, queries, KS, BUDGETS)
         scores.append(res["scores"])
         words.append(res["words"])
         rr.append(res["rr10"])
+        depths.append(res_fill.depth), expansions.append(res_fill.expansions), exhausted.append(res_fill.exhausted)
+        fill[r.name] = res_fill.summary()
     tmp = out_dir / f".{spec_name}.npz.part"
     with open(tmp, "wb") as f:
-        np.savez_compressed(f, scores=np.stack(scores), words=np.stack(words), rr10=np.stack(rr))
+        np.savez_compressed(f, scores=np.stack(scores), words=np.stack(words), rr10=np.stack(rr), depth=np.stack(depths),
+                            expansions=np.stack(expansions), exhausted=np.stack(exhausted))
     tmp.replace(out_dir / f"{spec_name}.npz")
     return {
-        "chunking": spec_name, "n_chunks": int(len(texts)), "depth": int(depth),
+        "chunking": spec_name, "n_chunks": int(len(texts)), "depth": int(depth), "budget_fill": fill,
         "chunk_words_mean": float(lengths.mean()), "chunk_words_median": float(np.median(lengths)),
         "chunk_words_p10": float(np.percentile(lengths, 10)), "seconds": round(time.time() - t0, 1),
     }
@@ -152,13 +160,14 @@ def main(argv=None) -> int:
     except Exception as exc:  # recorded in the manifest; failed runs are kept, not deleted
         status, error = "failed", f"{type(exc).__name__}: {exc}"
     config = {
-        "dataset": args.dataset, "split": args.split, "max_queries": args.max_queries,
+        "study": "1", "selection": SELECTION_RULE, "dataset": args.dataset, "split": args.split,
+        "max_queries": args.max_queries,
         "chunkings": specs, "retrievers": [r.name for r in retrievers], "ops": OPS, "metrics": list(METRICS),
         "split_seed": 20261018, "split_frac_exploratory": 0.2,
         "mode": "smoke" if (args.max_queries or args.chunkings or args.retrievers) else "full",
     }
     manifest = {
-        "status": status, "error": error,
+        "schema": RUN_SCHEMA, "status": status, "error": error,
         "config": config,
         "config_sha256": hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest(),
         "code_sha256": source_digest()["sha256"], "inputs_sha256": inputs,

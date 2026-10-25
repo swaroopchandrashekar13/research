@@ -1,0 +1,65 @@
+{
+  "totals": {
+    "arrays": 168,
+    "budget_cells": 15152690,
+    "underfilled_cells": 2,
+    "generation_budget_rows": 909,
+    "generation_underfilled_rows": 0
+  },
+  "underfilled": [
+    {
+      "study": "Study 1b",
+      "run": "confirmatory-kaggle-gpu",
+      "dataset": "qasper",
+      "chunking": "fixed-128",
+      "retriever": "dense",
+      "budget": 2048,
+      "query_index": 1424,
+      "qid": "qasper:f52c9744a371104eb2677c181a7004f7a77d9dd3",
+      "words": 1880,
+      "deficit": 168,
+      "recorded_depth": 36,
+      "n_chunks": 19124,
+      "cause": "ranking-depth cutoff (recorded depth < corpus size)",
+      "attribution": "manifest depth; ranking not stored"
+    },
+    {
+      "study": "Study 1b",
+      "run": "confirmatory-kaggle-gpu",
+      "dataset": "qasper",
+      "chunking": "fixed-256",
+      "retriever": "dense",
+      "budget": 2048,
+      "query_index": 724,
+      "qid": "qasper:c97306c1be5d59cf27b1054adfa8f1da47d292ce",
+      "words": 1789,
+      "deficit": 259,
+      "recorded_depth": 28,
+      "n_chunks": 9721,
+      "cause": "ranking-depth cutoff (recorded depth < corpus size)",
+      "attribution": "manifest depth; ranking not stored"
+    }
+  ],
+  "generation_underfilled": [],
+  "malformed_or_missing": [],
+  "by_group": [
+    {
+      "study": "Study 1b",
+      "run": "confirmatory-kaggle-gpu",
+      "dataset": "qasper",
+      "chunking": "fixed-128",
+      "retriever": "dense",
+      "budget": 2048,
+      "underfilled": 1
+    },
+    {
+      "study": "Study 1b",
+      "run": "confirmatory-kaggle-gpu",
+      "dataset": "qasper",
+      "chunking": "fixed-256",
+      "retriever": "dense",
+      "budget": 2048,
+      "underfilled": 1
+    }
+  ]
+}
