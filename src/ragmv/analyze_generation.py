@@ -4,9 +4,13 @@ Usage:
   python -I -m ragmv.analyze_generation --run experiments/E2_generation/runs/<id> \
       --out experiments/E2_generation/analysis/<id>
 
-Plan (fixed before any Tier 2 result was seen): `experiments/E2_generation/ANALYSIS_PLAN.md`.
+Plan: `experiments/E2_generation/ANALYSIS_PLAN.md`.
 For claim (A, B) and operating point o, d_q(o) = F1_q(A, o) - F1_q(B, o). The reversal statistic is the
 difference-in-differences DiD_q = d_q(budget1024) - d_q(count5); E1 predicts DiD > 0 for both claims.
+
+A dataset run is read from its generation log segments or, when it has none, from the metrics-only files derived from
+them one-to-one (`ragmv.metrics_form`); segments are then reported under the name of the log each file stands for,
+and the consumed-input digests name the files actually read.
 """
 from __future__ import annotations
 
@@ -18,10 +22,11 @@ from pathlib import Path
 
 import numpy as np
 
+from . import metrics_form as MF
 from . import stats as S
 from .analyze import positive_int, prepare_out
-from .generate import JsonlIntegrityError, scan_run, segment_paths, summarize_rows
-from .integrity import atomic_write_text, source_digest
+from .generate import JsonlIntegrityError, JsonlScan, scan_jsonl, segment_paths, summarize_rows
+from .integrity import atomic_write_text, sha256_file, source_digest
 
 DATASETS = ("squad2", "covidqa", "cuad", "qasper")
 CLAIMS = {"P1": ("fixed-128", "fixed-512"), "S3-256": ("paragraph-256", "fixed-256")}
@@ -30,11 +35,39 @@ METRICS = ("f1", "em")
 RETRIEVAL_METRICS = ("hit_strict", "hit_lenient", "coverage")
 
 
+def log_segments(ds_dir: Path) -> list[Path]:
+    """The generation log segments of a dataset run, or its metrics-only files when it has no logs."""
+    return segment_paths(ds_dir) or MF.metrics_paths(ds_dir)
+
+
+def segment_names(ds_dir: Path) -> list[str]:
+    return [p.name if not p.name.endswith(MF.SUFFIX) else MF.source_name(p.name) for p in log_segments(ds_dir)]
+
+
+def scan_logs(ds_dir: Path, recover_tail: bool = False) -> JsonlScan:
+    """All segments, strictly (see `generate.scan_jsonl`); metrics-only rows are also checked against their schema."""
+    scan = JsonlScan()
+    for p in log_segments(ds_dir):
+        n = len(scan.rows)
+        scan_jsonl(p, recover_tail, scan)
+        if p.name.endswith(MF.SUFFIX):
+            for i, row in enumerate(scan.rows[n:], 1):
+                try:
+                    MF.check_row(row, f"{p}:{i}")
+                except MF.MetricsFormError as exc:
+                    raise JsonlIntegrityError(str(exc)) from exc
+    return scan
+
+
 def load_rows(path: Path, recover_tail: bool = False) -> list[dict]:
     """Last successful row per job_id (earlier error rows of a resumed run are superseded). `path` is a dataset run
     directory (all segments) or its generations.jsonl."""
     d = Path(path) if Path(path).is_dir() else Path(path).parent
-    return summarize_rows(scan_run(d, recover_tail).rows, str(d))["accepted_rows"]
+    return summarize_rows(scan_logs(d, recover_tail).rows, str(d))["accepted_rows"]
+
+
+def is_unanswerable(row: dict) -> bool:
+    return bool(MF.unanswerable(row["response"]) if "response" in row else row[MF.DERIVED])
 
 
 def table(rows: list[dict], field: str) -> tuple[list[str], dict[tuple[str, str], np.ndarray]]:
@@ -82,8 +115,8 @@ def summarise(x: np.ndarray, reps: int, seed: int = 7) -> dict:
 
 def stratified_mde(per_dataset: dict[str, np.ndarray]) -> tuple[float | None, float | None]:
     """SE and minimum detectable effect (alpha 0.05 two-sided, power 0.8) of the *equal-weight mean of per-dataset
-    means*, the pre-specified estimand: SE = sqrt(sum_k s_k^2 / n_k) / K. (Post-hoc, 2026-10-24: the originally
-    reported `mde` uses the SD of all queries pooled across datasets, which includes between-dataset variation.)"""
+    means*, the planned estimand: SE = sqrt(sum_k s_k^2 / n_k) / K. (Post-hoc: the originally reported `mde` uses the
+    SD of all queries pooled across datasets, which includes between-dataset variation.)"""
     if not per_dataset or any(len(v) < 2 for v in per_dataset.values()):
         return None, None
     k = len(per_dataset)
@@ -102,25 +135,25 @@ def diagnostics(raw_lines: list[dict], rows: list[dict]) -> dict:
         "finish_reasons": dict(Counter(str(r.get("finish_reason")) for r in rows)),
         "served_model_versions": dict(Counter(str(r.get("model_version")) for r in rows)),
         "requested_models": dict(Counter(str(r.get("model")) for r in rows)),
-        "unanswerable_rate": float(np.mean([r["response"].strip().lower().startswith("unanswerable") for r in rows]))
-        if rows else None,
+        "unanswerable_rate": float(np.mean([is_unanswerable(r) for r in rows])) if rows else None,
         "usage_totals": dict(usage),
     }
 
 
 def analyse(run: Path, reps: int = 2000, recover_tail: bool = False) -> dict:
+    # the stored results carry this exact label; recomputations must reproduce it
     out = {"label": "EXPLORATORY (Tier 2; pre-specified plan, not part of the frozen confirmatory hypotheses)",
            "datasets": {}, "pooled": {}, "analysis_settings": {"bootstrap_resamples": reps, "seed": 7,
                                                               "recover_incomplete_tail": recover_tail}}
     did = {c: {m: {} for m in METRICS + ("coverage",)} for c in CLAIMS}
     for ds in DATASETS:
-        if not segment_paths(run / ds):
+        if not log_segments(run / ds):
             continue
-        scan = scan_run(run / ds, recover_tail)
+        scan = scan_logs(run / ds, recover_tail)
         summary = summarize_rows(scan.rows, str(run / ds))
         raw, rows = scan.rows, summary["accepted_rows"]
         dsout = {"diagnostics": diagnostics(raw, rows), "claims": {}, "means": {}}
-        dsout["diagnostics"]["integrity"] = {"segments": [p.name for p in segment_paths(run / ds)],
+        dsout["diagnostics"]["integrity"] = {"segments": segment_names(run / ds),
                                              "raw_lines": scan.raw_lines, "rejected": scan.rejected,
                                              **{k: v for k, v in summary["counts"].items() if k != "status_counts"}}
         tabs = {}
@@ -167,7 +200,7 @@ def analyse(run: Path, reps: int = 2000, recover_tail: bool = False) -> dict:
                 # minimum detectable DiD at alpha 0.05, power 0.8 (normal approximation, observed SD of all queries
                 # pooled across datasets; as originally implemented and reported)
                 "mde": float((S.Z_975 + S.Z_80) * sd / np.sqrt(n)) if sd else None,
-                # post-hoc (2026-10-24): MDE for the equal-weight estimand, from the per-dataset variances
+                # post-hoc: MDE for the equal-weight estimand, from the per-dataset variances
                 "mde_stratified": mde_strat, "se_stratified": se_strat,
             }
     return out
@@ -223,7 +256,11 @@ def main(argv=None) -> int:
     if not res["datasets"]:
         print(f"ERROR: no generations found under {args.run}", file=sys.stderr)
         return 2
-    res["code_sha256"] = source_digest()["sha256"]
+    run = Path(args.run)
+    consumed = sorted(p for ds in DATASETS for p in log_segments(run / ds))
+    res["analysis_code_sha256"] = source_digest()["sha256"]  # this analysis, not the generation run
+    res["analysis_run_dir"] = str(run)
+    res["consumed_inputs_sha256"] = {str(p.relative_to(run)): sha256_file(p) for p in consumed}
     out = Path(args.out)
     prepare_out(out, args.overwrite)
     atomic_write_text(out / "results.json", json.dumps(res, indent=2))

@@ -1,5 +1,15 @@
-# Least-privilege CI: read-only token, no secrets, nothing is pushed or published, no paid services.
-# A workflow file is not evidence that CI ran; see the Actions tab for actual runs.
+# Least-privilege CI: read-only token, no secrets, nothing is pushed or published, no paid services, no GPU.
+# Each job says exactly what it executes; a green job means only that. A workflow file is not evidence that CI ran.
+#   test        install, imports, unit and synthetic integration tests, offline structural validation, hash policy
+#   recompute   stored E1/E3/E2 analyses recomputed from the stored per-query results and compared field by field;
+#               independent statistics; claim tracing; provenance status (reported, never a pass)
+#   manuscript  displays regenerated and compared; named and anonymous variants built and checked
+#   package     metrics-only release package built from the checkout, verified from the zip, and its analyses
+#               rerun from the extracted package alone (nothing is uploaded)
+#   data        (opt-in) public datasets downloaded and checksum-verified; data-dependent tests and validation;
+#               BM25 retrieval reproduction (in the test suite); budget-underfill census
+#   release-gate (opt-in) fails unless every job above ran and passed; a skipped data job never satisfies it
+# Dense retrieval and model generation need a GPU and are not run here.
 name: ci
 
 on:
@@ -9,6 +19,10 @@ on:
     inputs:
       with_data:
         description: "Also download the four public datasets (~110 MB) and run the data-dependent checks"
+        type: boolean
+        default: false
+      release_gate:
+        description: "Run the release gate (requires with_data)"
         type: boolean
         default: false
 
@@ -21,7 +35,7 @@ concurrency:
 
 jobs:
   test:
-    name: install, import, unit + synthetic integration tests, artefact checks (py${{ matrix.python }})
+    name: install, imports, tests, structural validation (py${{ matrix.python }})
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
@@ -40,23 +54,83 @@ jobs:
           python -m venv .venv
           .venv/bin/python -m pip install -r requirements/core.txt -r requirements/test.txt
           .venv/bin/python -m pip install --no-deps -e .
+          mkdir -p ci-out
+          .venv/bin/python -m pip freeze > ci-out/pip-freeze.txt
+          .venv/bin/python -I tools/env_probe.py --out ci-out/environment.json --no-network
       - name: Syntax and imports
         run: |
           .venv/bin/python -m compileall -q src tests tools manuscript experiments literature
-          .venv/bin/python -I -c "import ragmv.analyze, ragmv.analyze1b, ragmv.analyze_generation, ragmv.charmetric, ragmv.chunking, ragmv.data, ragmv.evaluate, ragmv.evaluate_multi, ragmv.fetch, ragmv.figures, ragmv.generate, ragmv.integrity, ragmv.retrieval, ragmv.run, ragmv.run1b, ragmv.semantic, ragmv.stats, ragmv.dense"
+          .venv/bin/python -I -c "import ragmv.analyze, ragmv.analyze1b, ragmv.analyze_generation, ragmv.budgetfill, ragmv.charmetric, ragmv.chunking, ragmv.data, ragmv.dense, ragmv.evaluate, ragmv.evaluate_multi, ragmv.fetch, ragmv.figures, ragmv.generate, ragmv.integrity, ragmv.metrics_form, ragmv.posthoc, ragmv.provenance, ragmv.retrieval, ragmv.run, ragmv.run1b, ragmv.semantic, ragmv.stats"
       - name: Unit and synthetic integration tests (data-dependent and optional-SDK tests are reported as skipped)
-        run: .venv/bin/python -m pytest -q -rs
-      - name: Stored-artefact validation (offline)
-        run: .venv/bin/python -I tools/validate_artifacts.py
-      - name: Bibliography schema and hash-reference scan
+        run: .venv/bin/python -m pytest -q -rs --junitxml=ci-out/pytest.xml
+      - name: Stored-artefact structural validation (offline)
+        run: .venv/bin/python -I tools/validate_artifacts.py --report ci-out/validation.md
+      - name: Hash policy, bibliography schema, hex-reference scan and release metadata
         run: |
+          .venv/bin/python -I tools/check_release_metadata.py
+          .venv/bin/python -I tools/check_hash_policy.py
           .venv/bin/python -I tools/check_bibliography.py
-          .venv/bin/python -I tools/redact_git_refs.py --check
-          .venv/bin/python -I tools/redact_historical_hashes.py --check
           .venv/bin/python -I tools/scan_hex_refs.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-py${{ matrix.python }}
+          path: ci-out/
+
+  recompute:
+    name: recompute stored analyses and verify statistics independently
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements/core.txt
+          .venv/bin/python -m pip install --no-deps -e .
+          mkdir -p ci-out
+          .venv/bin/python -m pip freeze > ci-out/pip-freeze.txt
+      - name: Recompute E1, E3 and E2 into new directories
+        run: |
+          W="$RUNNER_TEMP/recompute"
+          .venv/bin/python -I -m ragmv.analyze --run experiments/E1_retrieval_multiverse/runs/confirmatory-20261018 --label CONFIRMATORY --out "$W/e1"
+          .venv/bin/python -I -m ragmv.analyze1b --run experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu --label CONFIRMATORY --out "$W/e3"
+          .venv/bin/python -I -m ragmv.analyze_generation --run experiments/E2_generation/runs/qwen3-4b-kaggle-gpu --out "$W/e2"
+      - name: Compare every field with the committed results and the consumed inputs with the protected digests
+        run: |
+          W="$RUNNER_TEMP/recompute"
+          P="--inputs-against docs/remediation/PROTECTED_SHA256.txt"
+          .venv/bin/python -I tools/compare_results.py experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json "$W/e1/results.json" $P --run-dir experiments/E1_retrieval_multiverse/runs/confirmatory-20261018 | tee ci-out/compare-e1.txt
+          .venv/bin/python -I tools/compare_results.py experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json "$W/e3/results.json" $P --run-dir experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu | tee ci-out/compare-e3.txt
+          .venv/bin/python -I tools/compare_results.py experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json "$W/e2/results.json" $P --run-dir experiments/E2_generation/runs/qwen3-4b-kaggle-gpu | tee ci-out/compare-e2.txt
+        shell: bash -o pipefail {0}
+      - name: Independent statistical verification (does not import the package under test)
+        run: .venv/bin/python -I tools/independent_stats.py --out-json ci-out/independent.json --out-md ci-out/independent.md
+      - name: Trace every result macro in the manuscript to its source
+        run: .venv/bin/python -I tools/trace_claims.py --out "$PWD/ci-out/claim-macros.md"
+      - name: Budget-underfill census and the post-hoc bound reproduce the committed records
+        run: |
+          .venv/bin/python -I tools/budget_underfill_census.py --out-json ci-out/census.json --out-md ci-out/census.md
+          .venv/bin/python -I -c "import json,sys; a=json.load(open('ci-out/census.json')); b=json.load(open('docs/remediation/budget_underfill_census.json')); sys.exit(a != b)"
+          .venv/bin/python -I tools/underfill_bound.py --census ci-out/census.json --work "$RUNNER_TEMP/bound" --out-json ci-out/underfill_bound.json
+          .venv/bin/python -I -c "import json,sys; a=json.load(open('ci-out/underfill_bound.json')); b=json.load(open('docs/remediation/underfill_bound.json')); sys.exit(a != b)"
+      - name: Provenance status (reported; incomplete provenance is never a pass)
+        run: |
+          .venv/bin/python -I tools/validate_artifacts.py --report ci-out/provenance.md || true
+          grep -E "^Structure|INCOMPLETE" ci-out/provenance.md | head -40 >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recompute
+          path: ci-out/
 
   manuscript:
-    name: build the canonical manuscript from generated displays
+    name: regenerate displays and build both manuscript variants
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -73,13 +147,48 @@ jobs:
           python -m venv .venv
           .venv/bin/python -m pip install -r requirements/core.txt
           .venv/bin/python -m pip install --no-deps -e .
+          mkdir -p ci-out
       - name: Regenerate displays into a scratch directory and compare with the committed ones
-        run: .venv/bin/python -I manuscript/build_displays.py --out "$RUNNER_TEMP/displays" --compare manuscript
-      - name: Build in a clean directory and check for undefined references
-        run: .venv/bin/python -I manuscript/build_pdf.py --workdir "$RUNNER_TEMP/build"
+        run: .venv/bin/python -I manuscript/build_displays.py --out "$RUNNER_TEMP/displays" --compare manuscript | tee ci-out/displays.txt
+        shell: bash -o pipefail {0}
+      - name: Build the named and anonymous variants in a clean directory; check references and identifiers
+        run: .venv/bin/python -I manuscript/build_pdf.py --workdir "$RUNNER_TEMP/build" --report ci-out/build.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: manuscript
+          path: ci-out/
+
+  package:
+    name: build and verify the metrics-only release package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install -r requirements/core.txt -r requirements/test.txt
+          .venv/bin/python -m pip install --no-deps -e .
+          mkdir -p ci-out
+      - name: Build the package from the clean checkout
+        run: .venv/bin/python -I tools/stage_release.py build --out "$RUNNER_TEMP/ragmv-release.zip" | tee ci-out/build.txt
+        shell: bash -o pipefail {0}
+      - name: Verify the zip and rerun validation, tests and analyses from the extracted package
+        run: .venv/bin/python -I tools/stage_release.py verify "$RUNNER_TEMP/ragmv-release.zip" --source . --recompute --report ci-out/package-verification.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: package
+          path: ci-out/
 
   data:
-    name: data-dependent checks (opt-in)
+    name: raw-data validation (opt-in)
     if: github.event_name == 'workflow_dispatch' && inputs.with_data
     runs-on: ubuntu-24.04
     timeout-minutes: 60
@@ -90,10 +199,40 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - run: |
+      - name: Install
+        run: |
           python -m venv .venv
           .venv/bin/python -m pip install -r requirements/core.txt -r requirements/test.txt
           .venv/bin/python -m pip install --no-deps -e .
+          mkdir -p ci-out
+      - name: Download the public datasets and verify archive and member checksums
+        run: |
           .venv/bin/python -I -m ragmv.fetch
-          RAGMV_DATA_ROOT=data/raw .venv/bin/python -m pytest -q -rs
-          .venv/bin/python -I tools/validate_artifacts.py --data-root data/raw
+          .venv/bin/python -I -m ragmv.fetch --verify-only
+      - name: Data-dependent tests (includes BM25 retrieval reproduction against the stored runs)
+        run: RAGMV_DATA_ROOT=data/raw .venv/bin/python -m pytest -q -rs --junitxml=ci-out/pytest-data.xml
+      - name: Splits, query lists, gold spans, chunk partitions and Tier 2 inputs rebuilt from the data
+        run: .venv/bin/python -I tools/validate_artifacts.py --data-root data/raw --report ci-out/validation-data.md
+      - name: The release package holds no run of words copied from the datasets
+        run: |
+          .venv/bin/python -I tools/stage_release.py build --out "$RUNNER_TEMP/ragmv-release.zip"
+          .venv/bin/python -I tools/stage_release.py verify "$RUNNER_TEMP/ragmv-release.zip" --source . --data-root data/raw --report ci-out/package-data.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: data
+          path: ci-out/
+
+  release-gate:
+    name: release gate (opt-in; every job must have run and passed)
+    if: always() && github.event_name == 'workflow_dispatch' && inputs.release_gate
+    needs: [test, recompute, manuscript, package, data]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require every job to have run and succeeded (skipped counts as failed)
+        run: |
+          for r in "${{ needs.test.result }}" "${{ needs.recompute.result }}" "${{ needs.manuscript.result }}" "${{ needs.package.result }}" "${{ needs.data.result }}"; do
+            echo "job result: $r"
+            [ "$r" = "success" ] || { echo "release gate: a job did not run or did not pass"; exit 1; }
+          done
+          echo "Structural, statistical, display, package and raw-data checks passed. Provenance status is reported by the recompute job; this gate does not certify it." >> "$GITHUB_STEP_SUMMARY"

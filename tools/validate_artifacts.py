@@ -1,13 +1,19 @@
 """Validate every stored research artefact without modifying it.
 
-Offline checks (always): run manifests, configuration fingerprints, query lists, NPZ arrays (no pickle), semantic
-chunk files, generation logs (strict JSONL), jobs metadata, gzip members, upload digests, analysis results, query
-consistency across studies and absence of cross-split leakage, and (if present) the protected-file digest list.
-With --data-root (datasets verified against data/MANIFEST.yaml): document/query counts, deterministic splits,
-duplicate IDs, gold spans, exact partition of every document by the stored semantic chunks, and Tier 2 prompts,
-retrieval values and EM/F1 rebuilt from the data and compared with every stored row.
+Structural checks (PASS/FAIL, always): run manifests, query lists, NPZ arrays (no pickle), semantic chunk files,
+generation logs (strict JSONL), jobs metadata, gzip members, analysis results, query consistency across studies,
+absence of cross-split leakage, and the protected-file digest list. With --data-root (datasets verified against
+data/MANIFEST.yaml): document/query counts, deterministic splits, duplicate IDs, gold spans, exact partition of every
+document by the stored semantic chunks, and Tier 2 prompts, retrieval values and EM/F1 rebuilt from the data and
+compared with every stored row.
 
-Usage: python -I tools/validate_artifacts.py [--data-root DIR] [--report FILE]   (exit 1 if any check fails)
+Provenance is reported separately (status COMPLETE or INCOMPLETE, never PASS): configuration fingerprints, code and
+input identities, model revisions, model-file, prompt and upload-archive digests. Removed-value markers are accepted
+only in the registered historical records (`ragmv.provenance`); anywhere else they are structural failures.
+
+Usage: python -I tools/validate_artifacts.py [--data-root DIR] [--report FILE] [--require-provenance]
+Exit 1 if any structural check fails, or (with --require-provenance, for a release gate) if any provenance is
+incomplete.
 """
 from __future__ import annotations
 
@@ -27,7 +33,9 @@ import numpy as np  # noqa: E402
 
 from ragmv import analyze as A  # noqa: E402
 from ragmv import analyze1b as A1b  # noqa: E402
+from ragmv import analyze_generation as AG  # noqa: E402
 from ragmv import generate as G  # noqa: E402
+from ragmv import provenance as PV  # noqa: E402
 
 DATASETS = ("squad2", "covidqa", "cuad", "qasper")
 RUNS = {
@@ -51,15 +59,28 @@ class Report:
     def note(self, name: str, detail: str) -> None:
         self.rows.append(("NOTE", name, detail))
 
+    def provenance(self, name: str, notes: list[str]) -> None:
+        """A provenance row: COMPLETE if nothing is missing, else INCOMPLETE (never PASS)."""
+        self.rows.append(("COMPLETE" if not notes else "INCOMPLETE", name,
+                          "every required identity present and checked" if not notes else f"{len(notes)} gap(s)"))
+        for x in notes:
+            self.rows.append(("NOTE", f"{name}: gap", x))
+
     @property
     def failed(self) -> int:
         return sum(r[0] == "FAIL" for r in self.rows)
 
+    @property
+    def incomplete(self) -> int:
+        return sum(r[0] == "INCOMPLETE" for r in self.rows)
+
     def markdown(self) -> str:
         lines = ["| Status | Check | Detail |", "|---|---|---|"]
         lines += [f"| {s} | {n} | {d.replace('|', '/')} |" for s, n, d in self.rows]
-        counts = {k: sum(r[0] == k for r in self.rows) for k in ("PASS", "FAIL", "NOTE")}
-        return "\n".join(lines) + f"\n\n{counts['PASS']} passed, {counts['FAIL']} failed, {counts['NOTE']} notes.\n"
+        counts = {k: sum(r[0] == k for r in self.rows) for k in ("PASS", "FAIL", "COMPLETE", "INCOMPLETE", "NOTE")}
+        return "\n".join(lines) + (f"\n\nStructure: {counts['PASS']} passed, {counts['FAIL']} failed. Provenance: "
+                                   f"{counts['COMPLETE']} complete, {counts['INCOMPLETE']} incomplete. "
+                                   f"{counts['NOTE']} notes.\n")
 
 
 def check_runs(rep: Report) -> dict:
@@ -69,21 +90,22 @@ def check_runs(rep: Report) -> dict:
         try:
             run = A.Run(path, study=study)
             if study == "1":
-                run.validate(label, sorted({x for c in A.preregistered_claims() for x in (c.a, c.b)}),
+                v = run.validate(label, sorted({x for c in A.planned_claims() for x in (c.a, c.b)}),
                                  A.full_design_study1())
-                for d in run.datasets:  # every stored chunking, not only those the claims use
-                    for c in run.meta[d]["manifest"]["config"]["chunkings"]:
-                        run.scores(d, c)
             else:
-                run.validate(label, list(A1b.CHUNKINGS), {"chunkings": list(A1b.CHUNKINGS),
+                v = run.validate(label, list(A1b.CHUNKINGS), {"chunkings": list(A1b.CHUNKINGS),
                                                               "retrievers": list(A1b.RETRIEVERS)})
+            for d in run.datasets:  # every stored chunking, not only those the claims use
+                for c in run.meta[d]["manifest"]["config"]["chunkings"]:
+                    run.scores(d, c)
             n_npz = sum(1 for _ in path.glob("*/*.npz"))
-            rep.check(f"{name}: run validation ({label})", True,
+            rep.check(f"{name}: structure ({label})", True,
                       f"{len(run.datasets)} datasets, {n_npz} NPZ files; legacy: {len(run.legacy)} note(s)")
-            for x in sorted(set(run.legacy)):
+            for x in run.legacy:
                 rep.note(f"{name}: legacy limitation", x)
+            rep.provenance(f"{name}: provenance", v["provenance"]["notes"])
         except Exception as exc:  # noqa: BLE001
-            rep.check(f"{name}: run validation ({label})", False, str(exc)[:400])
+            rep.check(f"{name}: structure ({label})", False, str(exc)[:400])
             continue
         qsets[name] = {d: (run.meta[d]["qids"], run.meta[d]["doc_idx"].tolist()) for d in run.datasets}
         if study == "1b":
@@ -137,9 +159,15 @@ def check_generations(rep: Report, qsets: dict) -> None:
             if not ds.exists():
                 continue
             try:
-                scan = G.scan_run(ds, recover_tail=False)
+                scan = AG.scan_logs(ds, recover_tail=False)
                 summ = G.summarize_rows(scan.rows, str(ds))
                 meta = json.loads((ds / "jobs_meta.json").read_text())
+                historical = PV.historical_record(run, d, meta.get("started_utc"))
+                bad_ids, gaps = generation_identity(scan.rows, meta, historical)
+                rep.check(f"E2 {run.name}/{d}: identity fields", not bad_ids,
+                          "markers only in a registered historical record; other values well-formed"
+                          + (f"; problems: {bad_ids[:3]}" if bad_ids else ""))
+                rep.provenance(f"E2 {run.name}/{d}: provenance", gaps)
                 sample_ok = set(meta["qids"]) <= conf[d] and len(meta["qids"]) == len(set(meta["qids"]))
                 c = summ["counts"]
                 detail = (f"{scan.raw_lines} lines, {c['complete']} ok, {c['accepted']} accepted, {c['superseded']} "
@@ -153,13 +181,40 @@ def check_generations(rep: Report, qsets: dict) -> None:
                 rep.check(f"E2 {run.name}/{d}: generations log", False, str(exc)[:300])
 
 
+def generation_identity(rows: list[dict], meta: dict, historical: bool) -> tuple[list[str], list[str]]:
+    """(structural problems, provenance gaps) of the identity fields of a generation log and its jobs metadata."""
+    bad, gaps = [], []
+    prompts = [r.get("prompt_sha256") for r in rows]
+    removed = sum(p == PV.DIGEST_REMOVED for p in prompts)
+    malformed = sum(p != PV.DIGEST_REMOVED and not PV.is_hex_digest(p) for p in prompts)
+    if malformed:
+        bad.append(f"{malformed} prompt_sha256 value(s) are neither a digest nor the removed-value marker")
+    if removed and not historical:
+        bad.append(f"{removed} removed prompt digest(s) in a record that is not registered as historical")
+    if removed:
+        gaps.append(f"{removed} prompt digest(s) removed by the owner; prompts can only be checked by rebuilding them")
+    revs = sum(PV.REVISION_REMOVED in str(r.get("model_version")) for r in rows)
+    if revs and not historical:
+        bad.append(f"{revs} model_version value(s) carry the removed-revision marker outside a historical record")
+    if revs:
+        gaps.append(f"{revs} served-model revision(s) removed by the owner; the revision the run used is not recorded")
+    local = meta.get("local_model") or []
+    for value, marker, what in ((local[1] if len(local) > 1 else None, PV.MODEL_REVISION_REMOVED, "model revision"),
+                                (local[3] if len(local) > 3 else None, PV.MODEL_FILE_DIGEST_REMOVED, "model-file digest")):
+        if value == marker:
+            (gaps if historical else bad).append(f"jobs_meta {what} removed" + ("" if historical else " outside a historical record"))
+    return bad, gaps
+
+
 def check_misc(rep: Report) -> None:
     for f in sorted(ROOT.glob("experiments/**/UPLOAD_SHA256")):
+        rel = str(f.relative_to(ROOT))
         txt = f.read_text().strip()
-        if txt.startswith("redacted:"):
-            rep.note(f"{f.relative_to(ROOT)}", "upload-archive digest removed from historical evidence on 2026-10-25")
+        if txt == PV.UPLOAD_REMOVED:
+            rep.check(rel, rel in PV.UPLOAD_FILES, "removed-value marker; allowed only for the registered upload files")
+            rep.provenance(f"{rel}: provenance", ["upload-archive digest removed by the owner; the archive cannot be identified"])
             continue
-        rep.check(f"{f.relative_to(ROOT)}", bool(re.fullmatch(r"[0-9a-f]{64}", txt)),
+        rep.check(rel, bool(re.fullmatch(r"[0-9a-f]{64}", txt)),
                   "one SHA-256 of an upload archive that is not in the repository (cannot be re-verified here)")
     for f in sorted(ROOT.glob("experiments/**/*.log.gz")):
         try:
@@ -175,7 +230,7 @@ def check_misc(rep: Report) -> None:
             rep.check(f"{f.relative_to(ROOT)}: parses", False, str(exc))
     for f in sorted(ROOT.glob("experiments/**/*.log")):
         rep.note(f"{f.relative_to(ROOT)}", f"{len(f.read_text().splitlines())} line(s)")
-    prot = ROOT / "docs" / "repair" / "PROTECTED_SHA256.txt"
+    prot = ROOT / "docs" / "remediation" / "PROTECTED_SHA256.txt"
     if prot.exists():
         bad = []
         n = 0
@@ -187,8 +242,10 @@ def check_misc(rep: Report) -> None:
             p = ROOT / rel.strip()
             if not p.exists() or hashlib.sha256(p.read_bytes()).hexdigest() != digest:
                 bad.append(rel.strip())
-        rep.check("protected files match docs/repair/PROTECTED_SHA256.txt", not bad,
+        rep.check("protected files match docs/remediation/PROTECTED_SHA256.txt", not bad,
                   f"{n} files; mismatches: {bad[:5]}")
+    else:
+        rep.check("protected-file digest list present", False, f"{prot.relative_to(ROOT)} is missing")
 
 
 def check_with_data(rep: Report, data_root: Path, qsets: dict) -> None:
@@ -239,8 +296,9 @@ def check_tier2_against_data(rep: Report, data_root: Path) -> None:
     for d in DATASETS:
         docs, queries = D.load(d, data_root)
         sample = G.sample_queries(queries, D.split_documents(len(docs)), 50)
-        jobs = {j["job_id"]: j for j in G.build_jobs(docs, sample)}
-        rows = G.summarize_rows(G.scan_run(run / d).rows)["accepted_rows"]
+        jobs = {j["job_id"]: j for j in G.build_jobs(docs, sample, adaptive=False)}  # the stored runs' fixed depth
+        rows = G.summarize_rows(AG.scan_logs(run / d).rows)["accepted_rows"]
+        text = all("response" in r and "answers" in r for r in rows)  # the metrics-only form has neither
         meta = json.loads((run / d / "jobs_meta.json").read_text())
         cfg = json.loads((e1 / d / "manifest.json").read_text())["config"]
         qids = json.loads((e1 / d / "queries.json").read_text())["qids"]
@@ -252,17 +310,23 @@ def check_tier2_against_data(rep: Report, data_root: Path) -> None:
         removed = 0
         for r in rows:
             j = jobs[r["job_id"]]
-            if str(r["prompt_sha256"]).startswith("redacted:"):
-                removed += 1  # historical prompt digests were removed on 2026-10-25 (verified equal on 2026-10-24)
+            if r["prompt_sha256"] == PV.DIGEST_REMOVED:
+                removed += 1  # removed by the owner from this historical record; checked through the rebuilt prompt
             else:
                 mism["prompt"] += r["prompt_sha256"] != j["prompt_sha256"]
             mism["context_words"] += r["context_words"] != j["context_words"]
-            mism["answers"] += r["answers"] != j["answers"]
             stored = arrays[r["chunking"]][r_idx, qids.index(r["qid"]), op_idx[r["op"]]]
             mism["retrieval_vs_E1"] += not np.allclose([float(x) for x in stored], list(r["retrieval"].values()), atol=1e-3)
             mism["retrieval_vs_rebuilt"] += r["retrieval"] != j["retrieval"]
-            mism["em"] += G.exact_match(r["response"], r["answers"]) != r["em"]
-            mism["f1"] += abs(G.token_f1(r["response"], r["answers"]) - r["f1"]) > 1e-12
+            if text:
+                mism["answers"] += r["answers"] != j["answers"]
+                mism["em"] += G.exact_match(r["response"], r["answers"]) != r["em"]
+                mism["f1"] += abs(G.token_f1(r["response"], r["answers"]) - r["f1"]) > 1e-12
+        if not text:
+            for k in ("answers", "em", "f1"):
+                mism.pop(k)
+            rep.note(f"data: E2 {ANALYSED_E2}/{d} EM/F1 re-scoring",
+                     "not possible: re-scoring needs the answer and response strings (metrics-only form)")
         ok = not any(mism.values()) and [q.qid for q in sample] == meta["qids"] and len(rows) == len(jobs)
         rep.check(f"data: E2 {ANALYSED_E2}/{d} rebuilt from data", ok,
                   f"{len(rows)} rows; sample equals jobs_meta: {[q.qid for q in sample] == meta['qids']}; mismatches {mism}; "
@@ -273,6 +337,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-root")
     ap.add_argument("--report")
+    ap.add_argument("--require-provenance", action="store_true",
+                    help="release gate: also fail when any provenance is incomplete")
     args = ap.parse_args(argv)
     rep = Report()
     qsets = check_runs(rep)
@@ -286,7 +352,7 @@ def main(argv=None) -> int:
     if args.report:
         Path(args.report).write_text(md)
     print(md)
-    return 1 if rep.failed else 0
+    return 1 if rep.failed or (args.require_provenance and rep.incomplete) else 0
 
 
 if __name__ == "__main__":
