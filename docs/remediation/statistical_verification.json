@@ -61,9 +61,54 @@
       "independent 58.3 pp; stored 58.3 [45.1, 64.6] supported"
     ],
     [
+      "Study 1 H1 sensitivity analyses (b)-(e): estimates and joint-bootstrap CIs",
+      true,
+      "b_without_squad2 61.5 [53.2, 74.8]; c_default_retriever 70.8 [64.6, 85.4]; d_cluster_bootstrap 69.7 [63.8, 82.0]; e_all_budgets 74.2 [68.3, 84.8]"
+    ],
+    [
+      "Study 1 H2: bootstrap fraction (seed 13) and verdict rule",
+      true,
+      "independent 100.0% -> supported; stored 100.0% supported"
+    ],
+    [
+      "Study 1b H4: estimate, shares, joint-bootstrap CI and verdict",
+      true,
+      "independent 55.4 pp [50.8, 63.1] -> supported"
+    ],
+    [
+      "Study 1b H4b: estimate, shares, joint-bootstrap CI and verdict",
+      true,
+      "independent 64.4 pp [56.5, 68.3] -> supported"
+    ],
+    [
+      "Study 1b H5b: estimate, shares, joint-bootstrap CI and verdict",
+      true,
+      "independent 58.3 pp [45.1, 64.6] -> supported"
+    ],
+    [
+      "Study 1b H5: estimate, joint-bootstrap CI and verdict (and equal to the recorded values)",
+      true,
+      "independent 0.19444444444444445 [0.16666666666666669, 0.41684027777777766] -> inconclusive"
+    ],
+    [
+      "Study 1b CUAD dense P1 subset (10 fields): stored and independent values equal the recorded ones",
+      true,
+      "0 mismatches"
+    ],
+    [
+      "Study 1b H4 sensitivity analyses (a), (b), (d), (e), (f): estimates and CIs",
+      true,
+      "a_bh_fdr 54.3; b_without_squad2 48.0 [42.7, 58.3]; d_cluster_bootstrap 58.7 [50.0, 63.3]; e_all_budgets 53.7 [49.7, 60.9]; f_bm25_only 61.1 [57.2, 72.5]; f_dense_only 49.8 [39.1, 58.1]"
+    ],
+    [
       "Tier 2 pooled DiD, stratified bootstrap CI and reading rule (2 claims x 3 measures)",
       true,
       "0 mismatches; complete cases per dataset: squad2 50, covidqa 50, cuad 50, qasper 50"
+    ],
+    [
+      "Tier 2 per-dataset contrasts, cell means and complete-case counts",
+      true,
+      "236 quantities compared, 0 mismatches"
     ]
   ],
   "posthoc": {
@@ -104,7 +149,7 @@
       "universes_total": 24960
     },
     "H5_seed_sensitivity": {
-      "label": "POST-HOC: per-universe verdict bootstrap seed varied; seed 7 is pre-registered",
+      "label": "POST-HOC: per-universe verdict bootstrap seed varied; seed 7 is the planned seed",
       "by_seed": {
         "7": {
           "H5": 0.19444444444444445,
@@ -192,6 +237,17 @@
       "S3-256/coverage": {
         "stored_pooled_sd": 0.03649849677001171,
         "equal_weight_estimand": 0.03640741116573088
+      }
+    },
+    "normal_verdict_point_estimates": {
+      "label": "POST-HOC: hypothesis statistics with normal-approximation verdicts on the full sample (the statistic the joint-bootstrap replicates use); the planned estimates use percentile-bootstrap verdicts",
+      "estimates": {
+        "H1": 0.7087673611111112,
+        "H1b": 0.27083333333333326,
+        "H5": 0.21527777777777776,
+        "H4": 0.5555555555555556,
+        "H4b": 0.6527777777777778,
+        "H5b": 0.5833333333333333
       }
     }
   }

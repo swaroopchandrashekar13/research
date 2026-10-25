@@ -4,13 +4,16 @@ Usage: python -I tools/posthoc_summary_e1.py WORKDIR OUT.json
 WORKDIR holds posthoc/e1_confirmatory/<variant>/ (from `python -I -m ragmv.posthoc study1 ... --out
 WORKDIR/posthoc/e1_confirmatory`) and posthoc/e1_analysis_<variant>/ (from `python -I -m ragmv.analyze --label POSTHOC`).
 """
-import json, sys
+import argparse, json, sys
 from pathlib import Path
 import numpy as np
-sys.path.insert(0, "tools")
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
 import independent_stats as IS
-sp = Path(sys.argv[1]); out = Path(sys.argv[2])
-stored = json.loads(Path("experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json").read_text())
+ap = argparse.ArgumentParser(description="Summarise the Study 1 character-metric sensitivity.")
+ap.add_argument("workdir", type=Path); ap.add_argument("out", type=Path)
+args = ap.parse_args(); sp, out = args.workdir, args.out
+stored = json.loads((ROOT / "experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json").read_text())
 res = {"stored (word, float16)": stored}
 for v in ("word64", "char", "char_nows"):
     res[v] = json.loads((sp / f"posthoc/e1_analysis_{v}/results.json").read_text())
@@ -27,7 +30,7 @@ for name, r in res.items():
         "P1 budget 512/128": f"{pp(p1['budget']['support_B'])}/{pp(p1['budget']['support_A'])}",
         "sens": ", ".join(f"{k.split('_')[0]} {pp(s['estimate'])}" for k, s in r["H1_sensitivity"].items())})
 # universe-level verdict changes vs stored
-runs = {"stored": IS.load_run(Path("experiments/E1_retrieval_multiverse/runs/confirmatory-20261018"))}
+runs = {"stored": IS.load_run(ROOT / "experiments/E1_retrieval_multiverse/runs/confirmatory-20261018")}
 for v in ("word64", "char", "char_nows"):
     runs[v] = IS.load_run(sp / f"posthoc/e1_confirmatory/{v}")
 flips = {v: {"total": 0, "changed": 0, "to_inconclusive": 0, "from_inconclusive": 0, "sign_reversal": 0} for v in ("word64", "char", "char_nows")}

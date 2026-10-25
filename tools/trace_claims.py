@@ -4,7 +4,7 @@ For each macro in manuscript/main.tex that numbers.tex defines, this script stat
 recomputes the value without using make_numbers.py, and compares it with numbers.tex. It also lists the literal
 numbers in the manuscript prose so they can be classified (design constants vs. results).
 
-Usage: python -I tools/trace_claims.py --out docs/repair/CLAIM_TRACE_MACROS.md   (exit 1 on any mismatch/untraced)
+Usage: python -I tools/trace_claims.py --out docs/remediation/CLAIM_TRACE_MACROS.md   (exit 1 on any mismatch/untraced)
 """
 from __future__ import annotations
 
@@ -22,8 +22,8 @@ P = {"E1": "experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/r
      "E3": "experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json",
      "PH1": "experiments/E1_retrieval_multiverse/analysis/posthoc-charmetric-20261024",
      "PH3": "experiments/E3_semantic_dense/analysis/posthoc-charmetric-bm25-20261024",
-     "SV": "docs/repair/statistical_verification.json", "AUD": "literature/protocol_audit/coding.csv",
-     "E3RUN": "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu"}
+     "SV": "docs/remediation/statistical_verification.json", "AUD": "literature/protocol_audit/coding.csv",
+     "E3RUN": "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu", "UB": "docs/remediation/underfill_bound.json"}
 DSN = {"squad2": "Squadtwo", "covidqa": "Covidqa", "cuad": "Cuad", "qasper": "Qasper"}
 WORDS = {"128": "OneTwoEight", "256": "TwoFiveSix", "512": "FiveTwelve", "64": "SixFour"}
 
@@ -151,6 +151,18 @@ def table() -> dict[str, tuple[str, str]]:
     add("HFiveSeedN", str(len(h5)), f"{P['SV']}: number of alternative seeds (POST-HOC)")
     add("SensBHPooledEst", pct(sv["BH_family_P1"]["pooled_over_datasets"]), f"{P['SV']}: posthoc.BH_family_P1.pooled_over_datasets (POST-HOC)")
     add("EtwoPoneFoneMdeStrat", f"{sv['tier2_mde']['P1/f1']['equal_weight_estimand']:.3f}", f"{P['SV']}: posthoc.tier2_mde['P1/f1'] (POST-HOC)")
+    nv = sv["normal_verdict_point_estimates"]["estimates"]
+    add("HFiveNormalEst", pct(nv["H5"]), f"{P['SV']}: posthoc.normal_verdict_point_estimates.H5 (POST-HOC)")
+    gaps = [abs(nv[h] - src[h]["estimate"]) for h, src in (("H1", e1), ("H1b", e1), ("H4", e3), ("H4b", e3), ("H5b", e3))]
+    add("NormalGapMaxOther", pct(max(gaps)), f"{P['SV']}: max |normal-verdict - planned estimate| over H1, H1b, H4, H4b, H5b")
+    ub = j("UB")
+    cells = sorted(ub["cells"], key=lambda c: c["chunking"])
+    add("UnderfillCells", str(len(cells)), f"{P['UB']}: number of cells")
+    add("UnderfillWordsA", f"{cells[0]['words']:,}", f"{P['UB']}: cells[{cells[0]['chunking']}].words")
+    add("UnderfillWordsB", f"{cells[1]['words']:,}", f"{P['UB']}: cells[{cells[1]['chunking']}].words")
+    up = next(f["upper_bound"] for f in ub["runs"]["confirmatory-kaggle-gpu"]["changed_fields"] if f["field"] == "H4.estimate")
+    add("UnderfillHFourMax", pct(up), f"{P['UB']}: changed_fields[H4.estimate].upper_bound (POST-HOC)")
+    add("UnderfillHFourDelta", pct(up - e3["H4"]["estimate"]), f"{P['UB']}: upper bound minus {P['E3']}: H4.estimate")
     for key, d in (("PosthocEquivElements", "PH1"), ("PosthocEquivElementsB", "PH3")):
         rep = json.loads((ROOT / P[d] / "selection_equivalence.json").read_text())
         tot = sum(v["elements_scores"] + v["elements_words"] for ds, cs in rep.items() if not ds.startswith("_")
