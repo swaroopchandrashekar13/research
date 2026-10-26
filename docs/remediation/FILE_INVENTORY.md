@@ -402,13 +402,13 @@ Every tracked file (480), its size in bytes, component, whether it is protected 
 | `manuscript/figures/study1b_dumbbell.pdf` | 19,728 | manuscript |  | regenerated-and-compared | coordinate sidecars and PDF bytes compared |
 | `manuscript/figures/verdict_dumbbell.coords.json` | 1,196 | manuscript |  | regenerated-and-compared | coordinate sidecars and PDF bytes compared |
 | `manuscript/figures/verdict_dumbbell.pdf` | 20,925 | manuscript |  | regenerated-and-compared | coordinate sidecars and PDF bytes compared |
-| `manuscript/main.tex` | 58,731 | manuscript |  | runtime-tested | compiled (named and anonymous); claims in CLAIM_MATRIX.md |
-| `manuscript/make_bib.py` | 5,487 | manuscript |  | regenerated-and-compared | displays regenerated into a new directory and compared |
+| `manuscript/main.tex` | 58,727 | manuscript |  | runtime-tested | compiled (named and anonymous); claims in CLAIM_MATRIX.md |
+| `manuscript/make_bib.py` | 5,542 | manuscript |  | regenerated-and-compared | displays regenerated into a new directory and compared |
 | `manuscript/make_numbers.py` | 12,400 | manuscript |  | regenerated-and-compared | displays regenerated into a new directory and compared |
-| `manuscript/make_tables.py` | 20,911 | manuscript |  | regenerated-and-compared | displays regenerated into a new directory and compared |
+| `manuscript/make_tables.py` | 20,925 | manuscript |  | regenerated-and-compared | displays regenerated into a new directory and compared |
 | `manuscript/matplotlibrc` | 456 | manuscript |  | semantically inspected | read |
 | `manuscript/numbers.tex` | 6,137 | manuscript |  | regenerated-and-compared | regenerated; every macro traced to its source field |
-| `manuscript/refs.bib` | 14,175 | manuscript |  | regenerated-and-compared | regenerated from literature/bibliography.yaml |
+| `manuscript/refs.bib` | 14,125 | manuscript |  | regenerated-and-compared | regenerated from literature/bibliography.yaml |
 | `manuscript/tables/audit.tex` | 2,297 | manuscript |  | regenerated-and-compared | regenerated and compared |
 | `manuscript/tables/chunk_lengths.tex` | 1,480 | manuscript |  | regenerated-and-compared | regenerated and compared |
 | `manuscript/tables/data.tex` | 732 | manuscript |  | regenerated-and-compared | regenerated and compared |
@@ -418,7 +418,7 @@ Every tracked file (480), its size in bytes, component, whether it is protected 
 | `manuscript/tables/e1_h3.tex` | 689 | manuscript |  | regenerated-and-compared | regenerated and compared |
 | `manuscript/tables/e1_sensitivity.tex` | 904 | manuscript |  | regenerated-and-compared | regenerated and compared |
 | `manuscript/tables/e2_diagnostics.tex` | 860 | manuscript |  | regenerated-and-compared | regenerated and compared |
-| `manuscript/tables/e2_did.tex` | 1,867 | manuscript |  | regenerated-and-compared | regenerated and compared |
+| `manuscript/tables/e2_did.tex` | 1,881 | manuscript |  | regenerated-and-compared | regenerated and compared |
 | `manuscript/tables/e3_claims.tex` | 1,371 | manuscript |  | regenerated-and-compared | regenerated and compared |
 | `manuscript/tables/e3_sensitivity.tex` | 1,042 | manuscript |  | regenerated-and-compared | regenerated and compared |
 | `manuscript/tables/posthoc_charmetric.tex` | 1,568 | manuscript |  | regenerated-and-compared | regenerated and compared |
