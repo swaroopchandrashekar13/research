@@ -70,8 +70,8 @@ Both `ragmv.posthoc` commands exit 0 only if every stored score and word count i
 .venv/bin/python -I tools/trace_claims.py --out W/claims.md                                # every result macro recomputed
 ```
 
-`build_displays.py` sets `SOURCE_DATE_EPOCH` and uses `manuscript/matplotlibrc`; it needs the Inter font (Debian or
-Ubuntu: `fonts-inter`) and stops if it is missing. `build_pdf.py` builds the named and the anonymous variant and fails
+`build_displays.py` sets `SOURCE_DATE_EPOCH` and uses `manuscript/matplotlibrc` (DejaVu Sans, bundled with matplotlib;
+fonts embedded as TrueType); with the pinned matplotlib the figure PDFs are byte-identical. `build_pdf.py` builds the named and the anonymous variant and fails
 on undefined references or on identifying text, metadata or links in the anonymous PDF. Promote regenerated displays
 only deliberately (`--promote`), after reviewing the comparison.
 

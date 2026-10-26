@@ -7,7 +7,7 @@ Usage:
 Figures are drawn by `ragmv.figures` from the validated results (dumbbells: stored shares; specification curves:
 per-universe intervals with the analysis' recorded resample count and seed). SOURCE_DATE_EPOCH is fixed and the
 matplotlib settings come from manuscript/matplotlibrc (not from the machine), so PDF bytes are reproducible; the build
-stops if the Inter font named there is not installed (Debian/Ubuntu: fonts-inter). --compare reports, per file, identical / different (text files exactly; figures by their coordinate
+stops unless the font used is the DejaVu Sans that ships with matplotlib. --compare reports, per file, identical / different (text files exactly; figures by their coordinate
 sidecars and PDF bytes) and exits 1 on any difference. --promote copies the regenerated files into manuscript/ only
 after the comparison has been printed (use it deliberately, after reviewing the differences).
 """
@@ -37,13 +37,14 @@ def run(cmd: list[str]) -> None:
 
 def check_font() -> None:
     probe = ("import matplotlib as mpl, matplotlib.font_manager as fm; "
-             "print(mpl.matplotlib_fname()); print(fm.findfont('Inter', fallback_to_default=False))")
+             "print(mpl.matplotlib_fname()); print(fm.findfont('DejaVu Sans', fallback_to_default=False)); "
+             "print(mpl.get_data_path())")
     r = subprocess.run([sys.executable, "-I", "-c", probe], cwd=ROOT, env=ENV, capture_output=True, text=True)
     lines = r.stdout.split()
-    if r.returncode or not lines or Path(lines[0]) != RC:
-        raise SystemExit("the Inter font (Debian/Ubuntu package fonts-inter) is required for the manuscript figures, "
-                         f"and {RC} must be the matplotlib settings in use\n{r.stderr.strip()[-400:]}")
-    print(f"matplotlib settings: {lines[0]}; Inter: {lines[1]}", flush=True)
+    if r.returncode or len(lines) < 3 or Path(lines[0]) != RC or not lines[1].startswith(lines[2]):
+        raise SystemExit("the manuscript figures need the DejaVu Sans font bundled with matplotlib, and "
+                         f"{RC} must be the matplotlib settings in use\n{r.stderr.strip()[-400:]}")
+    print(f"matplotlib settings: {lines[0]}; font: {lines[1]}", flush=True)
 
 
 def build(out: Path) -> None:
