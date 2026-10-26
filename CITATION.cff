@@ -3,15 +3,16 @@ message: "If you use this code or these results, please cite them as below."
 type: software
 title: "Chunking verdicts under count- and budget-matched retrieval: code, analysis plans and results"
 abstract: >-
-  Code, written analysis plans (pre-registration documents), deviation logs, run manifests and per-query results for a
-  multiverse analysis of how the retrieval-selection protocol (a fixed number of chunks vs a fixed word budget) changes
-  chunking verdicts in retrieval-augmented generation, with an extension to semantic chunking and dense retrieval,
-  an exploratory answer-quality check and a provisional, single-coded protocol audit of recent chunking studies. The
-  original version history is unavailable, so the timing of the analysis plans cannot be independently verified.
+  Code, written analysis plans, deviation logs, run manifests, per-query results and analyses for a multiverse
+  analysis of how the retrieval-selection protocol (a fixed number of chunks vs a fixed word budget) changes chunking
+  verdicts in retrieval-augmented generation, with an extension to semantic chunking and dense retrieval, an
+  exploratory answer-quality check (per-row metric values) and a provisional, single-coded protocol audit of recent
+  chunking studies. The source datasets are not included; a fetch script downloads them and checks their digests.
+  The original version history is not available, so the timing of the analysis plans cannot be independently
+  verified.
 authors:
   - family-names: "Chand J C"
     given-names: "Swaroop"
-repository-code: "https://github.com/swaroopchandrashekar13/research"
 license:
   - MIT
   - CC-BY-4.0
@@ -20,5 +21,4 @@ keywords:
   - chunking
   - evaluation methodology
   - multiverse analysis
-  - pre-registration
   - information retrieval

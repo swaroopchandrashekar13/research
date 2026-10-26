@@ -6,7 +6,8 @@ Options: --chunkings fixed-128 semantic-bp ...  --retrievers bm25 dense  --max-q
          --cache-dir DIR (embeddings; split-independent, reused between the pilot and the confirmatory run)
 
 Output per dataset (same layout as Study 1, so the analysis code is shared): `<chunking>.npz` with scores
-[n_retrievers, n_queries, n_ops, 3], words [n_retrievers, n_queries, n_ops], rr10 [n_retrievers, n_queries];
+[n_retrievers, n_queries, n_ops, 3], words [n_retrievers, n_queries, n_ops], rr10 [n_retrievers, n_queries], and the
+adaptive-depth record (`ragmv.budgetfill`) depth, expansions and exhausted [n_retrievers, n_queries];
 `queries.json`; `manifest.json` (code content digest, input digests, versions, encoder identity, hardware, chunk
 statistics); and for semantic chunkings the chunk boundaries (`chunks_<name>.json.gz`) so every chunk can be
 inspected and re-evaluated.
@@ -37,11 +38,13 @@ import numpy as np
 
 from . import data as D
 from .chunking import ChunkSpec, chunk_document
-from .dense import dense_rank
+from .budgetfill import SELECTION_RULE
+from .dense import dense_rank_filled
 from .evaluate import METRICS
 from .evaluate_multi import evaluate_rankings
 from .integrity import atomic_write_bytes, atomic_write_text, fingerprint, sha256_file, source_digest, text_list_digest
-from .retrieval import RetrieverSpec, rank, tokenize
+from .provenance import RUN_SCHEMA
+from .retrieval import RetrieverSpec, rank_filled, tokenize
 from .run import BUDGETS, KS, OPS, existing_results
 from .semantic import CAP, breakpoint_chunks, chunk_text, chunk_words, clustering_chunks, sentence_units
 
@@ -202,14 +205,15 @@ def main(argv=None, encoder=None) -> int:
         status, error = "failed", f"{type(exc).__name__}: {exc}"
 
     config = {
-        "study": "1b", "dataset": args.dataset, "split": args.split, "max_queries": args.max_queries,
+        "study": "1b", "selection": SELECTION_RULE, "dataset": args.dataset, "split": args.split,
+        "max_queries": args.max_queries,
         "chunkings": args.chunkings, "retrievers": args.retrievers, "bm25": BM25.name, "ops": OPS,
         "metrics": list(METRICS), "split_seed": 20261018, "split_frac_exploratory": 0.2,
         "mode": "full" if (args.max_queries is None and sorted(args.chunkings) == sorted(CHUNKINGS)
                            and sorted(args.retrievers) == sorted(RETRIEVERS)) else "smoke",
     }
     manifest = {
-        "status": status, "error": error, "config": config,
+        "schema": RUN_SCHEMA, "status": status, "error": error, "config": config,
         "config_sha256": hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest(),
         "encoder": getattr(encoder, "name", None), "encoder_identity": encoder_identity(encoder) if encoder else None,
         "code_sha256": source_digest()["sha256"], "inputs_sha256": inputs, "ignored_legacy_caches": legacy_caches,
@@ -242,21 +246,25 @@ def _run_all(args, docs, queries, encoder, cache, out, chunk_stats, timings) -> 
         if name.startswith("semantic"):
             atomic_write_bytes(out / f"chunks_{name}.json.gz", gzip.compress(json.dumps(
                 {"doc": chunk_doc.tolist(), "intervals": [list(map(list, c)) for c in chunk_ivs]}).encode(), mtime=0))
-        scores, words, rr = [], [], []
+        scores, words, rr, depths, expansions, exhausted, fill = [], [], [], [], [], [], {}
         for r in args.retrievers:
             if r == "bm25":
-                ranked = rank(tokenize(texts, True), tokenize([q.question for q in queries], True), BM25, depth)
+                res_fill = rank_filled(tokenize(texts, True), tokenize([q.question for q in queries], True), BM25,
+                                       depth, lengths, max(BUDGETS))
             else:
                 c_emb = cached_embeddings(cache, "chunks", texts, encoder,
                                           {"chunking": name, "text": "ragmv.semantic.chunk_text"})
-                ranked = dense_rank(c_emb.astype(np.float32), q_emb, depth)
-            res = evaluate_rankings(ranked, chunk_doc, chunk_ivs, queries, KS, BUDGETS)
+                res_fill = dense_rank_filled(c_emb.astype(np.float32), q_emb, depth, lengths, max(BUDGETS))
+            res = evaluate_rankings(res_fill.rows, chunk_doc, chunk_ivs, queries, KS, BUDGETS)
             scores.append(res["scores"]), words.append(res["words"]), rr.append(res["rr10"])
+            depths.append(res_fill.depth), expansions.append(res_fill.expansions), exhausted.append(res_fill.exhausted)
+            fill[r] = res_fill.summary()
         buf = io.BytesIO()
-        np.savez_compressed(buf, scores=np.stack(scores), words=np.stack(words), rr10=np.stack(rr))
+        np.savez_compressed(buf, scores=np.stack(scores), words=np.stack(words), rr10=np.stack(rr),
+                            depth=np.stack(depths), expansions=np.stack(expansions), exhausted=np.stack(exhausted))
         atomic_write_bytes(out / f"{name}.npz", buf.getvalue())
         chunk_stats.append({
-            "chunking": name, "n_chunks": len(texts), "depth": int(depth),
+            "chunking": name, "n_chunks": len(texts), "depth": int(depth), "budget_fill": fill,
             "chunk_words_mean": float(lengths.mean()), "chunk_words_median": float(np.median(lengths)),
             "chunk_words_p10": float(np.percentile(lengths, 10)), "chunk_words_max": int(lengths.max()),
             "noncontiguous_share": float(np.mean([len(c) > 1 for c in chunk_ivs])), "seconds": round(time.time() - t0, 1),

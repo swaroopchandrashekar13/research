@@ -4,7 +4,7 @@ A token is 7-64 lowercase hex characters with at least one digit and one letter.
 provenance: dataset question IDs (from queries.json / jobs_meta.json), prompt and configuration digests, dataset and
 model digests (data/MANIFEST.yaml, src/ragmv), model revisions, upload digests, third-party build logs. Anything left
 over in *active publication material* (manuscript, README, guides, citation metadata, result summaries,
-pre-registrations) is reported as unclassified and makes the exit code 1.
+analysis plans) is reported as unclassified and makes the exit code 1.
 
 Usage: python -I tools/scan_hex_refs.py [--root .] [--verbose]
 """
@@ -88,8 +88,8 @@ def classify(tok: str, f: str, line: str, known: dict[str, str]) -> str | None:
         return "ordinary word"
     if re.fullmatch(r"[0-9]+e[0-9]*", tok):
         return "float mantissa"
-    if len(tok) == 64 and f.startswith("docs/repair/"):
-        return "file content SHA-256 (repair ledger)"
+    if len(tok) == 64 and f.startswith("docs/remediation/"):
+        return "file content SHA-256 (protected-evidence list or file inventory)"
     return None
 
 

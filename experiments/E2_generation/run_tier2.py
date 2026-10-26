@@ -5,11 +5,13 @@ and requirements/generation.txt -> right-click this file -> Run 'run_tier2'. Ter
 python experiments/E2_generation/run_tier2.py
 
 Resumable: stop it any time and run it again; finished jobs are skipped. When it prints ALL 1600 JOBS DONE it has
-run the pre-specified analysis and written tier2_results_<run>.zip in the repository folder (upload that file).
-Options: --gpu (offload to an NVIDIA or Apple GPU), --run NAME (default: qwen3-4b-<computer name>).
+run the planned analysis and written tier2_results_<run>.zip in the repository folder (upload that file).
+Options: --gpu (offload to an NVIDIA or Apple GPU), --run NAME (default: qwen3-4b-local; letters, digits, ".", "_"
+and "-" only).
 """
 import argparse
 import platform
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -22,9 +24,11 @@ DATASETS = ("squad2", "covidqa", "cuad", "qasper")
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--gpu", action="store_true", help="offload all layers to the GPU (CUDA or Metal build needed)")
-    ap.add_argument("--run", default=f"qwen3-4b-{platform.node().split('.')[0].lower() or 'pc'}")
+    ap.add_argument("--run", default="qwen3-4b-local", help="run name (a new directory under runs/)")
     ap.add_argument("--threads", type=int, default=None, help="CPU threads (default: all cores)")
     args = ap.parse_args()
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", args.run):
+        ap.error("--run may contain only letters, digits, '.', '_' and '-' (it names a directory under runs/)")
 
     if sys.version_info < (3, 12):
         sys.exit(f"Python 3.12 or newer is needed (this is {platform.python_version()}).")

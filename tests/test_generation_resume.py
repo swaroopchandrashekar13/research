@@ -1,4 +1,4 @@
-"""PY-003 / PY-004: strict JSONL, interruption/resume through a new segment, immutable run identity, locking,
+"""Strict JSONL, interruption/resume through a new segment, immutable run identity, locking,
 non-mutating dry runs and truthful exit codes, exercised end to end with a synthetic dataset and a fake model."""
 import hashlib
 import json

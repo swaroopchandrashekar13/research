@@ -1,7 +1,9 @@
 # Study 1b (E3: semantic chunking + dense retrieval) on Kaggle — run from ONE notebook cell:
 #
-#   import os; os.environ["RAGMV_CODE_REF"] = "<release tag or full commit id>"   # never a branch name
-#   !wget -q -O /tmp/notebook_study1b.py https://raw.githubusercontent.com/swaroopchandrashekar13/research/<same ref>/experiments/E3_semantic_dense/notebook_study1b.py
+#   import os
+#   os.environ["RAGMV_REPO_URL"] = "<clone URL of the repository that holds this code>"
+#   os.environ["RAGMV_CODE_REF"] = "<release tag or full commit id>"   # never a branch name
+#   # save this file, at the same revision, as /tmp/notebook_study1b.py (the hosting service's raw-file link), then
 #   %run /tmp/notebook_study1b.py
 #
 # Kaggle settings: Accelerator GPU T4 x2 (GPU is needed: ~5M words are embedded with bge-m3), Internet On.
@@ -29,7 +31,9 @@ def _bootstrap_checkout():
     import re
 
     ref = os.environ.get("RAGMV_CODE_REF", "")
-    url = os.environ.get("RAGMV_TEST_REPO") or "https://github.com/swaroopchandrashekar13/research.git"
+    url = os.environ.get("RAGMV_TEST_REPO") or os.environ.get("RAGMV_REPO_URL", "")
+    if not url:
+        raise SystemExit("Set RAGMV_REPO_URL to the clone URL of the repository that holds this code.")
     if not ref:
         raise SystemExit("Set RAGMV_CODE_REF to a release tag or a full 40-character commit id.")
     if not re.fullmatch(r"[0-9a-f]{40}", ref):

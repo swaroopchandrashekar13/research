@@ -56,7 +56,7 @@ def bh_reject(p: np.ndarray, q: float = 0.05) -> np.ndarray:
 
 def joint_bootstrap(diffs: dict[str, np.ndarray], fn: Callable[[dict], float], reps: int = 1000, seed: int = 11,
                     clusters: dict[str, np.ndarray] | None = None) -> np.ndarray:
-    """Replicates of a statistic over universes (preregistration §3).
+    """Replicates of a statistic over universes (analysis plan §3).
 
     Queries (or, with `clusters`, whole documents) are resampled within each dataset; one resample per dataset is
     shared by all of its universes. `fn` receives {dataset: (mean[U], sd[U], n)} computed on the resample, where n

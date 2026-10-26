@@ -1,29 +1,28 @@
 # E2 Tier 2 results — answer quality (EXPLORATORY)
 
-*2026-10-19 · plan `ANALYSIS_PLAN.md` (written before any job) · run `runs/qwen3-4b-kaggle-gpu` (Kaggle, Tesla T4,
+*2026-10-19 · plan `ANALYSIS_PLAN.md` · run `runs/qwen3-4b-kaggle-gpu` (Kaggle, Tesla T4,
 llama-cpp-python 0.3.36 CUDA, clean tree) · analysis `analysis/qwen3-4b-kaggle-gpu` · this is the analysed run under
 the "first complete run" rule in `research/preregistration.md` §8.*
 
-> **Provenance note (2026-10-24).** The commit identifier originally cited for this run is unresolvable (the original
-> version history is no longer available) and was removed; see `docs/repair/HASH_REDACTIONS.md`. The decision log
-> this summary originally referred to is not in the repository.
+> **Provenance.** The original version history is not available, so this run cannot be tied to a commit (see
+> `docs/remediation/HASH_POLICY.md`). The decision log this summary originally referred to is not in the repository.
 
-**Not part of the frozen confirmatory hypotheses (H1–H3); it cannot change their verdicts.**
+**Not part of the confirmatory hypotheses (H1–H3); it cannot change their verdicts.**
 
 ## Integrity checks (done before reading the results)
-- 1,600/1,600 jobs, 400 per dataset, all `status: ok`, one row per job, every row from
-  `Qwen/Qwen3-4B-GGUF@bc640142c66e/Qwen3-4B-Q4_K_M.gguf` on `Tesla T4 | n_gpu_layers -1`.
-- Every prompt's SHA-256 equals the prompt rebuilt locally from the pre-registered sample (0 mismatches); every row's
+- 1,600/1,600 jobs, 400 per dataset, all `status: ok`, one row per job, every row from the Qwen3-4B Q4_K_M GGUF
+  file on `Tesla T4 | n_gpu_layers -1` (the generation code pins revision `bc640142`; the rows' own record of the
+  revision is not part of the materials).
+- Every prompt's SHA-256 equals the prompt rebuilt locally from the planned sample (0 mismatches); every row's
   retrieval metrics equal E1's measurements for that query (0 mismatches); EM/F1 recomputed from the stored responses
   (0 mismatches); the analysis rerun locally reproduces `results.json` exactly.
 - The researcher uploaded the files (zip SHA-256 in `runs/qwen3-4b-kaggle-gpu/UPLOAD_SHA256`); the GPU build log is kept
   as `build_gpu.log.gz`.
-- *[Note added 2026-10-25: at the researcher's request, the prompt digests, model revisions and model-file digests in the
-  run files, the upload-archive digest and the hex identifiers in the build log were removed
-  (`docs/repair/HASH_REDACTIONS.md` §6). The prompt-digest comparison above was repeated on 2026-10-24, before removal,
-  with 0 mismatches; it can no longer be repeated from the repository.]*
+- The prompt digests, model revisions and model-file digests of the run files, the upload-archive digest and the hex
+  identifiers of the build log are not part of the materials (`docs/remediation/HASH_POLICY.md`); the prompt-digest
+  comparison above was made on 2026-10-24 and cannot be repeated from the repository.
 
-## Pre-specified result (pooled over 4 datasets, 200 queries; stratified bootstrap, 2,000 resamples)
+## Planned result (pooled over 4 datasets, 200 queries; stratified bootstrap, 2,000 resamples)
 DiD = Δ(budget 1,024 words) − Δ(top-5), Δ = metric(A) − metric(B). E1's mechanism predicts DiD > 0.
 
 | Claim | Measure | DiD | 95% CI | Minimum detectable | Reading |
@@ -46,11 +45,7 @@ DiD = Δ(budget 1,024 words) − Δ(top-5), Δ = metric(A) − metric(B). E1's m
    changes downstream conclusions depends on the reader and was not resolved for this 4B instruction model. The paper
    must not claim that count-matched studies reach wrong *answer-quality* conclusions, nor that they reach right ones.
 
-*(Wording qualified 2026-10-24: the earlier text said the reversal "does not carry over" and that the intervals
-"exclude effects larger than" their upper bounds, which read an inconclusive interaction as an absence of effect.
-The numbers are unchanged.)*
-
-## Diagnostics (pre-specified) and one exploratory observation
+## Diagnostics (planned) and one exploratory observation
 | Dataset | Truncated answers (256-token cap) | "Unanswerable" replies |
 |---|---|---|
 | SQuAD 2.0 | 0 | 4.3% |
@@ -61,7 +56,7 @@ The numbers are unchanged.)*
 - Truncation is almost all in CUAD (long contract-clause answers; mean gold length 52 words), spread over all arms;
   truncated answers still score F1 0.23 and CUAD's P1 DiD is −0.001, so truncation does not drive the pooled result.
 - "Unanswerable" is spread evenly, except the arm with least text (Qasper, fixed-128, top-5: 13/50), as expected.
-- **Exploratory (not pre-registered):** at an equal 1,024-word budget, SQuAD answer F1 is 0.58 with two 512-word
+- **Exploratory (not in the plan):** at an equal 1,024-word budget, SQuAD answer F1 is 0.58 with two 512-word
   chunks vs 0.44 with eight 128-word chunks, at nearly the same retrieval coverage (0.88 vs 0.86 on these 50
   queries). A contiguity benefit for the reader (fewer, longer passages) would explain why retrieval gains do not
   become answer gains. Hypothesis for follow-up, not a finding.

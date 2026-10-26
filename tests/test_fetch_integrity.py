@@ -1,4 +1,4 @@
-"""DATA-001: atomic downloads, verified extraction, path traversal refusal, corrupt members never overwritten."""
+"""Atomic downloads, verified extraction, path traversal refusal, corrupt members never overwritten."""
 import hashlib
 import io
 import tarfile

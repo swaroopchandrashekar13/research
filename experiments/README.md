@@ -15,5 +15,5 @@ SMOKE or POSTHOC. Failed runs are kept and logged. Historical runs and analyses 
 go to new directories (`analysis/posthoc-*` are the 2026-10-24 post-hoc sensitivity analyses).
 
 Historical manifests originally recorded Git commit identifiers; the original repository history is unavailable, so
-those values were replaced by a marker (`docs/repair/HASH_REDACTIONS.md`). The Gemini (`runs/gemini36flash-20261019`,
+those values were replaced by a marker (`docs/remediation/HASH_POLICY.md`). The Gemini (`runs/gemini36flash-20261019`,
 21 rows) and CPU (`runs/qwen3-4b-20261019`, 198 rows) generation runs are aborted runs kept as evidence and not analysed.

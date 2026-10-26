@@ -1,9 +1,10 @@
 """Generate refs.bib from literature/bibliography.yaml for every key cited in the manuscript .tex files.
 
 Usage: python -I manuscript/make_bib.py [--tex-dir manuscript] [--bib-yaml literature/bibliography.yaml] [--out refs.bib]
-Only verified entries (L1+) exist in bibliography.yaml, so nothing from memory can enter the paper. Entries below L3
-get a visible note in the reference list ("not yet read in full"). Keys are collected from the canonical manuscript
-(main.tex and the files it inputs) and the generated tables.
+Only verified entries (L1+) exist in bibliography.yaml, so nothing from memory can enter the paper. The verification
+level of each entry is kept in bibliography.yaml (and gated by tools/check_bibliography.py --min-level); the run prints
+how many cited entries are below L3. Keys are collected from the canonical manuscript (main.tex and the files it
+inputs) and the generated tables.
 """
 from __future__ import annotations
 
@@ -26,6 +27,10 @@ def cited_keys(tex_dir: Path = HERE) -> list[str]:
 
 
 def authors(e: dict) -> str:
+    """BibTeX author list. `bibtex_authors` (\"Last, First\" form) overrides `authors` where the surname has several
+    parts or starts with an accented letter; hyphenated given names are braced so that they print unchanged."""
+    if e.get("bibtex_authors"):
+        return " and ".join(e["bibtex_authors"])
     names = e.get("authors") or []
     if not names:
         return "{[authors not yet verified]}"
@@ -34,9 +39,29 @@ def authors(e: dict) -> str:
         n = re.sub(r"\s*\(.*?\)", "", n).strip()
         if n.endswith("et al."):
             out += [n[: -len("et al.")].strip(), "others"]
-        else:
-            out.append(n)
+            continue
+        parts = n.split()
+        out.append(" ".join([f"{{{t}}}" if "-" in t else t for t in parts[:-1]] + parts[-1:]))
     return " and ".join(out)
+
+
+VOLUME = re.compile(r"^(?P<name>.*?)\s+(?P<vol>\d+)\((?P<num>\d+)\):(?P<p1>\d+)-(?P<p2>\d+)$")
+PAGES = re.compile(r"^(?P<name>.*?),\s*pp\.\s*(?P<p1>\d+)-(?P<p2>\d+)$")
+
+
+def venue_fields(venue: str, year) -> dict:
+    """Split "Journal 4(11):1208-1214" and "Proceedings, pp. 1-9" into name, volume, number and pages; drop a
+    trailing year that repeats the entry's year."""
+    out = {}
+    m = VOLUME.match(venue) or PAGES.match(venue)
+    if m:
+        venue = m["name"]
+        out["pages"] = f"{m['p1']}--{m['p2']}"
+        if "vol" in m.groupdict():
+            out["volume"], out["number"] = m["vol"], m["num"]
+    venue = re.sub(rf"\s+{year}$", "", venue)
+    out["name"] = venue
+    return out
 
 
 def esc(s: str) -> str:
@@ -44,23 +69,33 @@ def esc(s: str) -> str:
 
 
 def entry(e: dict) -> str:
-    level = e["verification"]
     venue = str(e["venue"])
     fields = {"author": authors(e), "title": "{" + esc(e["title"]) + "}", "year": str(e["year"])}
+    ids = [x for x in str(e.get("id") or "").split("; ") if x]
+    doi = e.get("doi") or next((x[4:] for x in ids if x.startswith("doi:")), None)
     if venue.lower().startswith("arxiv"):
         kind = "misc"
-        fields["howpublished"] = esc(f"{venue}, {e['id']}" if e.get("id") else venue)
+        arxiv = next((x for x in ids if x.lower().startswith("arxiv:")), None)
+        fields["howpublished"] = esc(f"arXiv preprint {arxiv}" if arxiv else "arXiv preprint")
     else:
         kind = "inproceedings" if any(w in venue for w in ("Findings", "ACL", "EMNLP", "NeurIPS", "CIKM", "SIGIR",
                                                           "NAACL")) else "article"
-        fields["booktitle" if kind == "inproceedings" else "journal"] = esc(venue)
-        if e.get("id"):
-            fields["note"] = esc(str(e["id"]))
-    if e.get("url"):
+        v = venue_fields(venue, e["year"])
+        fields["booktitle" if kind == "inproceedings" else "journal"] = esc(v["name"])
+        for k in ("volume", "number", "pages"):
+            if k in v:
+                fields[k] = v[k]
+        # the DOI and the URL are printed from their own fields; an Anthology ID repeats the Anthology URL
+        url = str(e.get("url") or "")
+        rest = [x for x in ids if not x.startswith("doi:") and not x.startswith("ACL Anthology") and x not in url]
+        if rest:
+            fields["note"] = esc("; ".join(rest))
+    if e.get("pages") and kind != "misc" and "pages" not in fields:
+        fields["pages"] = str(e["pages"]).replace("-", "--")
+    if doi:
+        fields["doi"] = doi
+    if e.get("url") and not (doi and "doi.org/" in e["url"]):
         fields["url"] = e["url"]
-    if level != "L3":
-        fields["note"] = (fields.get("note", "") + ". " if fields.get("note") else "") + \
-            f"[Verification {level}: not yet read in full]"
     body = ",\n".join(f"  {k} = {{{v}}}" for k, v in fields.items())
     return f"@{kind}{{{e['key']},\n{body}\n}}\n"
 
@@ -81,7 +116,7 @@ def main(argv=None) -> None:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(text)
     below = [k for k in keys if entries[k]["verification"] != "L3"]
-    print(f"{len(keys)} entries written; {len(below)} below L3 (must be read in full before submission)")
+    print(f"{len(keys)} entries written; {len(below)} below verification level L3 (see literature/bibliography.yaml)")
 
 
 if __name__ == "__main__":

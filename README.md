@@ -4,25 +4,25 @@ A reproducible research project studying how retrieval-selection protocols—fix
 budgets—affect chunking comparisons in retrieval-augmented generation (RAG).
 
 Canonical manuscript: `manuscript/main.tex` (title: *Chunking Verdicts in Retrieval-Augmented Generation Depend on
-the Evaluation Protocol: A Multiverse Analysis*). The repair carried out on 2026-10-24, its evidence and its open
-release blockers are documented in [`docs/repair/REPAIR_REPORT.md`](docs/repair/REPAIR_REPORT.md).
+the Evaluation Protocol: A Multiverse Analysis*). The current verification status, the open limitations and the owner
+decisions before a release are in [`docs/remediation/VERIFICATION.md`](docs/remediation/VERIFICATION.md).
 
 ## Repository layout
 
 | Path | Contents |
 |---|---|
 | `data/MANIFEST.yaml` | Dataset sources, SHA-256 digests of the downloads and of the extracted files the loaders read, licence status |
-| `docs/guides/` | Setup/access guide and Zenodo archiving guide |
-| `docs/repair/` | Repair report and register, verification matrices, redaction ledger, reproducibility guide |
-| `docs/reports/` | Research assessment, research direction, opportunity landscape, and roadmap reports (historical) |
-| `env/` | Historical environment record (`environment.json`) and the 2026-10-24 validation lock (`validation/`) |
+| `docs/guides/` | Zenodo archiving and ORCID guide |
+| `docs/remediation/` | Verification report, claim and citation matrices, statistical verification, hash policy, budget-underfill census, rights inventory, reproducibility guide, protected-file digests |
+| `env/` | Historical environment record (`environment.json`) and the validation lock (`validation/`) |
 | `experiments/` | Experiment runs, analysis outputs, figures, result summaries (historical evidence; never overwritten) |
-| `literature/` | Literature protocol, search log, bibliography, evidence matrix, and provisional protocol-audit materials |
-| `research/` | Problem statement, pre-registrations and their errata |
+| `literature/` | Literature protocol, search log, bibliography, evidence matrix, identity checks and the provisional protocol audit |
+| `release/` | Licence notes and description that the metrics-only release package carries |
+| `research/` | Problem statement, analysis plans and their errata |
 | `requirements/` | Dependency sets (core, test, generation, dense) |
 | `src/ragmv/` | Python package: data, chunking, retrieval, evaluation, analysis, generation |
 | `tests/` | Automated tests |
-| `tools/` | Artefact validation, result comparison, bibliography, environment probe and hash-scan tools |
+| `tools/` | Artefact validation, result comparison, independent statistics, claim tracing, bibliography, release staging and metadata tools |
 
 ## Install and run the checks
 
@@ -39,8 +39,10 @@ python3 -m venv .venv
 
 Tests that need the four datasets are skipped unless the data are present (see below), and the tests of the optional
 Gemini and llama.cpp back ends are skipped unless `requirements/generation.txt` is installed; pytest lists every skip.
-To write a new environment record, pass a new file: `.venv/bin/python tools/env_probe.py --out /tmp/environment.json`
-(`env/environment.json` is a historical record and is not overwritten).
+`tools/validate_artifacts.py` reports structure (PASS/FAIL) and provenance (complete/incomplete) separately; the
+historical runs are structurally valid with incomplete provenance. To write a new environment record, pass a new
+file: `.venv/bin/python tools/env_probe.py --out /tmp/environment.json` (`env/environment.json` is a historical record
+and is not overwritten).
 
 ### Datasets
 
@@ -54,23 +56,26 @@ RAGMV_DATA_ROOT=data/raw .venv/bin/python -m pytest -q
 ```
 
 The full reproduction guide, including the analysis, figure, table and manuscript commands, is
-[`docs/repair/REPRODUCIBILITY.md`](docs/repair/REPRODUCIBILITY.md).
+[`docs/remediation/REPRODUCIBILITY.md`](docs/remediation/REPRODUCIBILITY.md).
 
 ## Research integrity
 
-Do not fabricate results or citations. Preserve negative results and record deviations from the pre-registered
-methodology. Historical run outputs under `experiments/` are evidence: new analyses go to new directories. The
-bibliography validator can enforce a minimum reference-verification level for specified citations:
+Do not fabricate results or citations. Preserve negative results and record deviations from the analysis plans.
+Historical run outputs under `experiments/` are evidence: new analyses go to new directories. The bibliography
+validator can enforce a minimum reference-verification level for specified citations:
 
 ```bash
 .venv/bin/python -I tools/check_bibliography.py --cite KEY1 KEY2 --min-level L3
 ```
 
-## License and citation
+## License, citation and archiving
 
 Code is licensed under MIT (see [LICENSE](LICENSE)). Results, documents and figures are described in
-[LICENSE-DATA.md](LICENSE-DATA.md), which also lists the third-party material whose redistribution status is
-unresolved. Dataset source files are not redistributed; see [data/MANIFEST.yaml](data/MANIFEST.yaml).
+[LICENSE-DATA.md](LICENSE-DATA.md), which also lists the third-party material (gold answer strings and model answers
+in the generation logs, dataset question identifiers, quotations) that is not covered by the project's licences.
+Dataset source files are not redistributed; see [data/MANIFEST.yaml](data/MANIFEST.yaml).
 
-For citation metadata, see [CITATION.cff](CITATION.cff). For Zenodo archiving guidance, see
+Citation metadata: [CITATION.cff](CITATION.cff) and [.zenodo.json](.zenodo.json), checked by
+`python -I tools/check_release_metadata.py` (which also records an ORCID iD with `--set-orcid`). The metrics-only
+release package is built and verified with `tools/stage_release.py`; how to deposit it on Zenodo:
 [docs/guides/ZENODO.md](docs/guides/ZENODO.md).

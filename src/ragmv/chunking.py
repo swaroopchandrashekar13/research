@@ -105,7 +105,7 @@ def chunk_document(doc: Document, spec: ChunkSpec) -> list[tuple[int, int]]:
 
 
 def default_specs() -> list[ChunkSpec]:
-    """The 16 pre-registered chunkings (preregistration §2.1)."""
+    """The 16 planned chunkings (analysis plan §2.1)."""
     sizes = (64, 128, 256, 512)
     return (
         [ChunkSpec("fixed", s) for s in sizes]

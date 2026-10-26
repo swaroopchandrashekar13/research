@@ -18,11 +18,13 @@ E1 = ROOT / "experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/
 E2 = ROOT / "experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json"
 E3 = ROOT / "experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json"
 E3RUN = ROOT / "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu"
+E3PILOT = ROOT / "experiments/E3_semantic_dense/analysis/exploratory-kaggle-gpu/results.json"
 AUDIT = ROOT / "literature/protocol_audit/coding.csv"
 OUT = ROOT / "manuscript" / "numbers.tex"
 POSTHOC_E1 = ROOT / "experiments/E1_retrieval_multiverse/analysis/posthoc-charmetric-20261024"
 POSTHOC_E3 = ROOT / "experiments/E3_semantic_dense/analysis/posthoc-charmetric-bm25-20261024"
-STATVER = ROOT / "docs/repair/statistical_verification.json"
+STATVER = ROOT / "docs/remediation/statistical_verification.json"
+UNDERFILL = ROOT / "docs/remediation/underfill_bound.json"
 
 
 def equivalence_elements(path: Path) -> tuple[int, int]:
@@ -59,11 +61,13 @@ def main(argv=None) -> None:
     ap.add_argument("--e2", type=Path, default=E2)
     ap.add_argument("--e3", type=Path, default=E3)
     ap.add_argument("--e3-run", type=Path, default=E3RUN)
+    ap.add_argument("--e3-pilot", type=Path, default=E3PILOT)
     ap.add_argument("--audit", type=Path, default=AUDIT)
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--posthoc-e1", type=Path, default=POSTHOC_E1)
     ap.add_argument("--posthoc-e3", type=Path, default=POSTHOC_E3)
     ap.add_argument("--stat-verification", type=Path, default=STATVER)
+    ap.add_argument("--underfill-bound", type=Path, default=UNDERFILL)
     args = ap.parse_args(argv)
     m: dict[str, str] = {}
     e1 = json.loads(args.e1.read_text())
@@ -116,6 +120,9 @@ def main(argv=None) -> None:
         m[f"{key}Est"], m[f"{key}Lo"], m[f"{key}Hi"] = pp(r["estimate"]), pp(r["ci95"][0]), pp(r["ci95"][1])
         m[f"{key}Count"], m[f"{key}Budget"] = pp(r["count_share"]), pp(r["budget_share"])
     m["HFiveCountFiveTwelve"], m["HFiveBudgetFiveTwelve"] = pp(e3["H5"]["count"]["support_B"]), pp(e3["H5"]["budget"]["support_B"])
+    e3p = json.loads(args.e3_pilot.read_text())  # exploratory pilot: the observations behind the H5b amendment
+    m["HFiveBPilotCount"], m["HFiveBPilotBudget"] = pp(e3p["H5b"]["count_share"]), pp(e3p["H5b"]["budget_share"])
+    m["HFivePilotCountFiveTwelve"] = pp(e3p["H5"]["count"]["support_B"])
     for c, key in (("semantic-bp", "SemBp"), ("semantic-cl", "SemCl")):
         lens = [e3["mean_chunk_words"][d][c] for d in e3["mean_chunk_words"]]
         m[f"{key}Min"], m[f"{key}Max"] = f"{min(lens):.0f}", f"{max(lens):.0f}"
@@ -137,7 +144,7 @@ def main(argv=None) -> None:
     v = e1["verdict_shares"]["S1-64"]
     m["SoneSixFourBudgetA"], m["SoneSixFourBudgetB"] = pp(v["budget"]["support_A"]), pp(v["budget"]["support_B"])
     m["SoneSixFourCountB"] = pp(v["count"]["support_B"])
-    sq = e2["datasets"]["squad2"]["means"]  # exploratory observation (E2 RESULTS.md), not a pre-specified estimate
+    sq = e2["datasets"]["squad2"]["means"]  # exploratory observation (E2 RESULTS.md), not a planned estimate
     for arm, key in (("fixed-512", "FiveTwelve"), ("fixed-128", "OneTwoEight")):
         m[f"EtwoSquad{key}BudgetFone"] = f"{sq[arm + '|budget1024']['f1']:.2f}"
         m[f"EtwoSquad{key}BudgetCov"] = f"{sq[arm + '|budget1024']['coverage']:.2f}"
@@ -155,7 +162,7 @@ def main(argv=None) -> None:
     lo, hi = wilson(exposed, n)
     m["AuditExposed"], m["AuditExposedPct"], m["AuditExposedLo"], m["AuditExposedHi"] = str(exposed), pp(exposed / n), pp(lo), pp(hi)
 
-    # post-hoc checks of 2026-10-24 (labelled as such in the text)
+    # post-hoc checks (labelled as such in the text)
     ver = json.loads(args.stat_verification.read_text())["posthoc"]
     m["SensBHPooledEst"] = pp(ver["BH_family_P1"]["pooled_over_datasets"])
     h5 = [v["H5"] for s, v in ver["H5_seed_sensitivity"]["by_seed"].items() if s != "7"]
@@ -164,8 +171,22 @@ def main(argv=None) -> None:
     for key, path in (("PosthocEquivElements", args.posthoc_e1), ("PosthocEquivElementsB", args.posthoc_e3)):
         n, bad = equivalence_elements(path / "selection_equivalence.json")
         if bad:
-            raise SystemExit(f"{path}: selection equivalence failed ({bad} mismatches); post-hoc numbers not usable")
+            raise SystemExit(f"{path}: stored scores/word counts not reproduced ({bad} mismatches); post-hoc numbers not usable")
         m[key] = f"{n:,}"
+    normal = ver["normal_verdict_point_estimates"]["estimates"]
+    m["HFiveNormalEst"] = pp(normal["H5"])
+    planned = {"H1": e1["H1"], "H1b": e1["H1b"], "H4": e3["H4"], "H4b": e3["H4b"], "H5b": e3["H5b"]}
+    m["NormalGapMaxOther"] = pp(max(abs(normal[h] - r["estimate"]) for h, r in planned.items()))
+    ub = json.loads(args.underfill_bound.read_text())
+    cells = sorted(ub["cells"], key=lambda c: c["chunking"])
+    m["UnderfillCells"] = str(len(cells))
+    m["UnderfillWordsA"], m["UnderfillWordsB"] = (f"{c['words']:,}" for c in cells)
+    run = ub["runs"]["confirmatory-kaggle-gpu"]
+    if run["verdict_changes"]:
+        raise SystemExit("underfill bound changes a verdict; the manuscript text must be revised")
+    h4 = {f["field"]: f["upper_bound"] for f in run["changed_fields"]}["H4.estimate"]
+    m["UnderfillHFourMax"] = pp(h4)
+    m["UnderfillHFourDelta"] = pp(h4 - e3["H4"]["estimate"])
     flips = json.loads((args.posthoc_e1 / "summary.json").read_text())["universe_verdict_changes_vs_stored"]
     m["PosthocCharFlips"], m["PosthocUniverses"] = f"{flips['char']['changed']:,}", f"{flips['char']['total']:,}"
     out = ["% Generated by manuscript/make_numbers.py from logged results. Do not edit by hand."]

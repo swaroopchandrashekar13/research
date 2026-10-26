@@ -48,7 +48,8 @@ def exposure(r: dict) -> str:
 
 
 def main() -> None:
-    rows = [r for r in csv.DictReader(open(HERE / "coding.csv")) if r["included"] == "yes"]
+    with open(HERE / "coding.csv", newline="", encoding="utf-8") as f:
+        rows = [r for r in csv.DictReader(f) if r["included"] == "yes"]
     n = len(rows)
     for r in rows:
         r["exposure"] = exposure(r)
@@ -66,7 +67,7 @@ def main() -> None:
         "blind double-coding (`reliability_order.txt`) and Cohen's κ are still pending, so these shares are "
         "**provisional**.*",
         "",
-        "## Pre-specified shares (Wilson 95% CIs)",
+        "## Planned shares (Wilson 95% CIs)",
         "",
         "| Quantity | k/n | Share | 95% CI (%) |",
         "|---|---:|---:|---|",

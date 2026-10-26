@@ -1,6 +1,7 @@
 # matplotlib settings for the manuscript displays (used by manuscript/build_displays.py via MATPLOTLIBRC).
-# The committed figures were drawn with the Inter font from the Ubuntu 24.04 package fonts-inter (4.0+ds-1) and
-# matplotlib 3.11.2; with other font files the PDFs are still correct but no longer byte-identical.
-# Inter is named in font.family (not font.sans-serif) so that matplotlib falls back glyph by glyph to DejaVu Sans.
-font.family: Inter, sans-serif, DejaVu Sans
+# DejaVu Sans ships with matplotlib, so the figures need no system font; with the same matplotlib version (3.11.2 for
+# the committed figures) the PDFs are byte-identical across machines. Fonts are embedded as TrueType (Type 42), not
+# Type 3, which many submission systems reject.
+font.family: DejaVu Sans
 text.hinting: no_hinting
+pdf.fonttype: 42

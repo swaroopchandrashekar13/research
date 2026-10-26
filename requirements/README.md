@@ -14,5 +14,5 @@ Supported interpreters: **Python 3.12 and 3.13** (`numpy==2.5.3` and `scipy==1.1
 `../requirements.txt` and `../requirements-study1b.txt` are the original combined pin lists. They are kept unchanged
 as historical environment records; new installs use the split files above.
 
-A complete lock of the validation environment used for the 2026-10-24 repair (every transitive package) is in
+A complete lock of the validation environment (every transitive package) is in
 `../env/validation/`.

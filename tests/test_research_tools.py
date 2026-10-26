@@ -1,12 +1,4 @@
-"""Bibliography validator tests.
-
-The opportunity-scoring tests that used to live here imported `research/scoring.py` and read
-`research/opportunity_matrix.yaml`; neither file is in this repository, and the Phase-0 direction-scoring workflow they
-tested is obsolete (the study direction was chosen; see docs/reports/R3). They were retired on 2026-10-24 rather than
-satisfied by an unrelated `scoring` package or by invented scores. Their source is preserved verbatim in
-docs/repair/retired_tests/test_research_tools.baseline.py.txt; the baseline collection error is recorded in
-docs/repair/REPAIR_REPORT.md.
-"""
+"""Bibliography validator tests."""
 import sys
 from pathlib import Path
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Tier 2 (E2) on an Apple-silicon Mac (Metal GPU). One command, resumable, free.
 #
-#   git clone https://github.com/swaroopchandrashekar13/research.git && cd research
+#   git clone <clone URL of the repository> research && cd research
 #   git checkout <release tag or full commit id>      # one fixed revision, never a moving branch
 #   bash experiments/E2_generation/run_mac.sh [run-name]
 #

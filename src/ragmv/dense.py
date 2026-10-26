@@ -1,4 +1,4 @@
-"""Dense retrieval for Study 1b: BAAI/bge-m3 dense embeddings, cosine similarity (preregistration_study1b §3.2)."""
+"""Dense retrieval for Study 1b: BAAI/bge-m3 dense embeddings, cosine similarity (Study 1b analysis plan §3.2)."""
 from __future__ import annotations
 
 import numpy as np
@@ -60,3 +60,28 @@ def dense_rank(chunk_emb: np.ndarray, query_emb: np.ndarray, depth: int, block: 
         sims = query_emb[i: i + block] @ chunk_emb.T
         out[i: i + block] = np.argsort(-sims, axis=1, kind="stable")[:, :depth]
     return out
+
+
+def _block_sims(chunk_emb: np.ndarray, query_emb: np.ndarray, i: int, block: int) -> np.ndarray:
+    """Similarities of query i, computed in the same block product as `dense_rank` (bit-identical values)."""
+    start = (i // block) * block
+    return (query_emb[start: start + block] @ chunk_emb.T)[i - start]
+
+
+def dense_rank_filled(chunk_emb: np.ndarray, query_emb: np.ndarray, depth: int, chunk_words, budget: int,
+                      block: int = 256):
+    """`dense_rank` extended per query until `budget` words are ranked or the corpus is exhausted
+    (`ragmv.budgetfill`). Only underfilled queries are re-ranked, one query at a time."""
+    from .budgetfill import fill_to_budget
+
+    ids = dense_rank(chunk_emb, query_emb, depth, block)
+    scores = np.empty(ids.shape, dtype=np.float64)
+    for i in range(len(query_emb)):
+        scores[i] = _block_sims(chunk_emb, query_emb, i, block)[ids[i]]
+
+    def retrieve_one(i: int, d: int):
+        sims = _block_sims(chunk_emb, query_emb, i, block)
+        order = np.argsort(-sims, kind="stable")[:d]
+        return order.astype(np.int64), sims[order].astype(np.float64)
+
+    return fill_to_budget(ids, scores, chunk_words, budget, len(chunk_emb), retrieve_one)

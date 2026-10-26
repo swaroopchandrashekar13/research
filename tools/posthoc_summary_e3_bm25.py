@@ -4,11 +4,14 @@ and the character-metric variants on re-executed BM25 selections. Dense retrieva
 Usage: python -I tools/posthoc_summary_e3_bm25.py WORKDIR   (reads WORKDIR/posthoc/e3_confirmatory_bm25/<variant>,
 writes WORKDIR/logs/posthoc_summary_e3_bm25.json)
 """
-import json, sys
+import argparse, json, sys
 from pathlib import Path
-sys.path.insert(0, "src")
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
 from ragmv import analyze as A, analyze1b as B
-sp = Path(sys.argv[1])
+ap = argparse.ArgumentParser(description="Study 1b BM25-arm quantities for the character-metric variants.")
+ap.add_argument("workdir", type=Path)
+sp = ap.parse_args().workdir
 def quantities(run, retr):
     lengths = B.mean_lengths(run)
     claims = B.study1b_claims()
@@ -27,13 +30,14 @@ def quantities(run, retr):
     out["semantic_wins_bm25"] = sw
     return out
 res = {}
-stored = A.Run(Path("experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu"), study="1b")
+stored = A.Run(ROOT / "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu", study="1b")
 stored.validate("CONFIRMATORY", list(B.CHUNKINGS), {"chunkings": list(B.CHUNKINGS), "retrievers": list(B.RETRIEVERS)})
 res["stored (word, float16)"] = quantities(stored, ["bm25"])
 for v in ("word64", "char", "char_nows"):
     run = A.Run(sp / f"posthoc/e3_confirmatory_bm25/{v}", study="1b")
     run.validate("POSTHOC", list(B.CHUNKINGS), None)
     res[v] = quantities(run, ["bm25"])
+(sp / "logs").mkdir(parents=True, exist_ok=True)
 (sp / "logs/posthoc_summary_e3_bm25.json").write_text(json.dumps(res, indent=1))
 for v, q in res.items():
     print(v, {k: (round(100 * x["estimate"], 1), [round(100 * c, 1) for c in x.get("ci95", [])], x.get("verdict_rule_at_threshold"))

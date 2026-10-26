@@ -1,4 +1,4 @@
-"""FIG-001: plotted coordinates come from the validated results (dumbbells) or match the analysis' own CIs."""
+"""Plotted coordinates come from the validated results (dumbbells) or match the analysis' own CIs."""
 import json
 
 import numpy as np
@@ -29,7 +29,7 @@ def test_specification_curve_points_equal_per_universe_bootstrap_cis(tmp_path):
     run = A.Run(root)
     Fg.specification_curve(run, "P1", "coverage", tmp_path, "SMOKE", reps=80, seed=7)
     pts = json.loads((tmp_path / "speccurve_P1_coverage.coords.json").read_text())["panels"]["squad2"]
-    claim = next(c for c in A.preregistered_claims() if c.cid == "P1")
+    claim = next(c for c in A.planned_claims() if c.cid == "P1")
     for prot in ("count", "budget"):
         diff, labels = A.claim_diffs(run, claim, prot)["squad2"]
         mean, lo, hi, _ = S.paired_bootstrap_ci(diff, reps=80, seed=7)
