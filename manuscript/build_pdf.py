@@ -1,4 +1,4 @@
-"""Build the named manuscript and its anonymous variant, both from main.tex, in a clean directory.
+r"""Build the named manuscript and its anonymous variant, both from main.tex, in a clean directory.
 
 Usage: python -I manuscript/build_pdf.py --workdir DIR [--render-pages] [--report FILE]
 

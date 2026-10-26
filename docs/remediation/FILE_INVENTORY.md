@@ -393,7 +393,7 @@ Every tracked file (480), its size in bytes, component, whether it is protected 
 | `literature/protocol_audit/coding.csv` | 16,607 | literature | yes | semantically inspected | read; counts traced |
 | `literature/search_log.md` | 6,392 | literature | yes | semantically inspected | read |
 | `manuscript/build_displays.py` | 5,185 | manuscript |  | regenerated-and-compared | displays regenerated into a new directory and compared |
-| `manuscript/build_pdf.py` | 6,786 | manuscript |  | runtime-tested | both variants built; reference and identifier checks |
+| `manuscript/build_pdf.py` | 6,787 | manuscript |  | runtime-tested | both variants built; reference and identifier checks |
 | `manuscript/figures/speccurve_P1_coverage.coords.json` | 103,114 | manuscript |  | regenerated-and-compared | coordinate sidecars and PDF bytes compared |
 | `manuscript/figures/speccurve_P1_coverage.pdf` | 32,402 | manuscript |  | regenerated-and-compared | coordinate sidecars and PDF bytes compared |
 | `manuscript/figures/speccurve_S3-256_coverage.coords.json` | 118,136 | manuscript |  | regenerated-and-compared | coordinate sidecars and PDF bytes compared |
