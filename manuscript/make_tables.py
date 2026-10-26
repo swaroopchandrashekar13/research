@@ -225,8 +225,8 @@ def e2_tables(e2: dict) -> None:
             rows.append([cid if d == DS[0] else "", name] + cells)
         p = e2["pooled"][cid]
         rows.append(["", "Minimum detectable effect"] + [f"{p[m]['mde']:.3f}" for m, _ in meas])
-    write("e2_did", "Answer-quality check (exploratory; written analysis plan"
-          "\\artifactref{experiments/E2_generation/ANALYSIS_PLAN.md}): "
+    write("e2_did", "Answer-quality check (exploratory), following its written analysis plan"
+          "\\artifactref{experiments/E2_generation/ANALYSIS_PLAN.md}: "
           "difference-in-differences DiD $= \\Delta(B{=}1{,}024) - \\Delta(k{=}5)$, $\\Delta$ = metric(A) $-$ "
           f"metric(B), with 95\\% bootstrap CIs ({reps_tex(e2)} resamples; pooled: stratified by dataset). The retrieval "
           "mechanism predicts DiD $> 0$; an interval that includes 0 does not establish the absence of an effect. "

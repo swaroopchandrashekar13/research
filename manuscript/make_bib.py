@@ -86,7 +86,8 @@ def entry(e: dict) -> str:
             if k in v:
                 fields[k] = v[k]
         # the DOI and the URL are printed from their own fields; an Anthology ID repeats the Anthology URL
-        rest = [x for x in ids if not x.startswith("doi:") and not x.startswith("ACL Anthology")]
+        url = str(e.get("url") or "")
+        rest = [x for x in ids if not x.startswith("doi:") and not x.startswith("ACL Anthology") and x not in url]
         if rest:
             fields["note"] = esc("; ".join(rest))
     if e.get("pages") and kind != "misc" and "pages" not in fields:

@@ -266,7 +266,7 @@ ID & Role & Quantity & Estimate & Interval or diagnostic & Verdict\\\midrule
 H1 & primary & Larger-arm decline, P1 & \HOneEst\pp & [\HOneLo, \HOneHi] & \HOneVerdict\\
 H1b & secondary & Paragraph-256 gain & \HOneBEst\pp & [\HOneBLo, \HOneBHi] & \HOneBVerdict\\
 H2 & secondary & Dataset main effect & $\eta^2=\HTwoDatasetEta$ & largest in \HTwoFraction\% & \HTwoVerdict\\
-H3 & secondary & Universes needing $n>500$ & \HThreeShare\% & median $n=\HThreeMedianN$ & \HThreeVerdict\\\midrule
+H3 & secondary & Universes needing $n>500$ & \HThreeShare\% & median $n=\mbox{\HThreeMedianN}$ & \HThreeVerdict\\\midrule
 H4 & primary & Shorter-arm gain, breakpoint & \HFourEst\pp & [\HFourLo, \HFourHi] & \HFourVerdict\\
 H4b & secondary & Shorter-arm gain, clustering & \HFourBEst\pp & [\HFourBLo, \HFourBHi] & \HFourBVerdict\\
 H5 & secondary & Larger-arm decline, dense P1 & \HFiveEst\pp & [\HFiveLo, \HFiveHi] & \HFiveVerdict\\
@@ -350,7 +350,6 @@ The research materials that accompany this paper contain the analysis plans and 
 \bibliographystyle{plainnat}
 \bibliography{refs}
 
-\clearpage
 \appendix
 \section{Deviations from the analysis plans}\label{app:deviations}
 Table~\ref{tab:deviations} summarizes the changes logged in the two plans' deviation logs and the differences between the plans' text and the implementation. The timing column reports what the logs record; with the original version-control history unavailable, it cannot be independently verified. H5b adds a secondary hypothesis without replacing H5. The post-run Study 1 correction changes the document-cluster sensitivity interval, not its point estimate or verdict. Section-number errors in the plans' cross-references are corrected in an erratum that leaves the plans' text unchanged. Two exploratory items in the plans are not reported: the chunk-level reciprocal rank RR@10 of Study 1 (stored with the results) and an optional answer check for S5-256 in Study 1b, which was not run.
