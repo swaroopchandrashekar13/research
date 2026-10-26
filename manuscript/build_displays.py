@@ -52,9 +52,9 @@ def build(out: Path) -> None:
     py = sys.executable
     raw = out / "figures_raw"
     run([py, "-I", "-c", "import sys; sys.path.insert(0, 'src'); from ragmv.figures import main; "
-         f"sys.exit(main(['--run', '{E1RUN}', '--results', '{E1RES}', '--out', '{raw}', '--label', 'CONFIRMATORY']))"])
+         f"sys.exit(main(['--run', '{E1RUN}', '--results', '{E1RES}', '--out', '{raw}', '--label', 'CONFIRMATORY', '--publication']))"])
     run([py, "-I", "-c", "import sys; sys.path.insert(0, 'src'); from ragmv.figures import main; "
-         f"sys.exit(main(['--study', '1b', '--results', '{E3RES}', '--out', '{raw}', '--label', 'CONFIRMATORY']))"])
+         f"sys.exit(main(['--study', '1b', '--results', '{E3RES}', '--out', '{raw}', '--label', 'CONFIRMATORY', '--publication']))"])
     run([py, "-I", "manuscript/make_numbers.py", "--out", str(out / "numbers.tex")])
     run([py, "-I", "manuscript/make_tables.py", "--out-tables", str(out / "tables"), "--figures-from", str(raw),
          "--out-figures", str(out / "figures")])

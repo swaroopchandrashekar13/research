@@ -55,12 +55,19 @@ def _style(ax):
 
 
 def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, reps: int = 2000,
-                        seed: int = SEEDS["verdict_bootstrap"]):
+                        seed: int = SEEDS["verdict_bootstrap"], publication: bool = False):
+    """One panel per dataset. `publication`: 2x2 panels, legend below, no in-figure title (for the manuscript)."""
     claim = next(c for c in planned_claims() if c.cid == cid)
     coords = {"claim": cid, "metric": metric, "reps": reps, "seed": seed, "panels": {}}
-    fig, axes = plt.subplots(1, len(run.datasets), figsize=(3.0 * len(run.datasets), 2.8), sharey=True)
-    axes = np.atleast_1d(axes)
-    for ax, d in zip(axes, run.datasets):
+    n = len(run.datasets)
+    cols = min(2, n) if publication else n
+    rows = -(-n // cols)
+    size = (3.4 * cols, 2.5 * rows + 0.4) if publication else (3.0 * n, 2.8)
+    fig, axes = plt.subplots(rows, cols, figsize=size, sharey=True, squeeze=False)
+    axes = axes.ravel()
+    for ax in axes[n:]:
+        ax.set_visible(False)
+    for i, (ax, d) in enumerate(zip(axes, run.datasets)):
         _style(ax)
         pts = []
         for prot in ("count", "budget"):
@@ -81,18 +88,26 @@ def specification_curve(run: Run, cid: str, metric: str, out: Path, label: str, 
                         ecolor=st["color"], elinewidth=0.6, capsize=0, label=st["label"], zorder=2)
         ax.set_title(DATASET_TITLES.get(d, d), fontsize=9, color=INK)
         ax.set_xticks([])
-        ax.set_xlabel("universes, sorted by effect", fontsize=8, color=INK2)
-    axes[0].set_ylabel(f"Δ {metric}  ({claim.a} − {claim.b})", fontsize=8, color=INK)
-    axes[-1].legend(loc="lower right", fontsize=7, frameon=False, labelcolor=INK2)
-    fig.suptitle(f"{cid}: {claim.a} vs {claim.b} — 95% paired-bootstrap CIs  [{label}]", fontsize=9.5, color=INK, x=0.01, ha="left")
-    fig.tight_layout()
+        if not publication or i >= n - cols:
+            ax.set_xlabel("universes, sorted by effect", fontsize=8, color=INK2)
+        if i % cols == 0:
+            ax.set_ylabel(f"Δ {metric}  ({claim.a} − {claim.b})", fontsize=8, color=INK)
+    if publication:
+        handles, names = axes[0].get_legend_handles_labels()
+        fig.legend(handles, names, loc="lower center", ncol=2, fontsize=8, frameon=False, labelcolor=INK2)
+        fig.tight_layout(rect=(0, 0.06, 1, 1))
+    else:
+        axes[n - 1].legend(loc="lower right", fontsize=7, frameon=False, labelcolor=INK2)
+        fig.suptitle(f"{cid}: {claim.a} vs {claim.b} — 95% paired-bootstrap CIs  [{label}]", fontsize=9.5, color=INK,
+                     x=0.01, ha="left")
+        fig.tight_layout()
     for ext in ("png", "pdf"):
         fig.savefig(out / f"speccurve_{cid}_{metric}.{ext}", dpi=200, facecolor=SURFACE)
     plt.close(fig)
     _write_coords(out, f"speccurve_{cid}_{metric}", coords)
 
 
-def verdict_dumbbell(results: dict, cids: list[str], out: Path, label: str):
+def verdict_dumbbell(results: dict, cids: list[str], out: Path, label: str, publication: bool = False):
     """Net verdict = share(A significantly better) - share(B significantly better), per protocol, read from the
     validated Study 1 results.json (no independent recomputation with a different resample count)."""
     shares = results["verdict_shares"]
@@ -101,10 +116,10 @@ def verdict_dumbbell(results: dict, cids: list[str], out: Path, label: str):
         raise KeyError(f"claims {missing} not in results.json")
     rows = [(f"{c}: {shares[c]['A']} vs {shares[c]['B']}",
              {p: shares[c][p]["support_A"] - shares[c][p]["support_B"] for p in PROTOCOL_STYLE}) for c in cids]
-    _dumbbell(rows, out, "verdict_dumbbell", f"Chunking verdicts by selection protocol  [{label}]")
+    _dumbbell(rows, out, "verdict_dumbbell", None if publication else f"Chunking verdicts by selection protocol  [{label}]")
 
 
-def study1b_dumbbell(results: dict, out: Path, label: str):
+def study1b_dumbbell(results: dict, out: Path, label: str, publication: bool = False):
     """Same encoding as verdict_dumbbell, from the shares stored in a Study 1b results.json (analyze1b)."""
     rows = []
     for cid, v in results["semantic_wins"].items():
@@ -113,10 +128,11 @@ def study1b_dumbbell(results: dict, out: Path, label: str):
                      {p: v[p]["support_A"] - v[p]["support_B"] for p in PROTOCOL_STYLE}))
     rows.append(("P1-dense: fixed-128 vs fixed-512",
                  {p: results["H5"][p]["support_A"] - results["H5"][p]["support_B"] for p in PROTOCOL_STYLE}))
-    _dumbbell(rows, out, "study1b_dumbbell", f"Semantic chunking and dense retrieval by selection protocol  [{label}]")
+    _dumbbell(rows, out, "study1b_dumbbell",
+              None if publication else f"Semantic chunking and dense retrieval by selection protocol  [{label}]")
 
 
-def _dumbbell(rows: list[tuple[str, dict]], out: Path, stem: str, title: str):
+def _dumbbell(rows: list[tuple[str, dict]], out: Path, stem: str, title: str | None):
     fig, ax = plt.subplots(figsize=(7.0, 0.36 * len(rows) + 1.3))
     _style(ax)
     ax.grid(axis="x", color=GRID, linewidth=0.6)
@@ -136,7 +152,8 @@ def _dumbbell(rows: list[tuple[str, dict]], out: Path, stem: str, title: str):
     ax.text(1.0, len(rows) - 0.35, "A wins →", fontsize=7.5, color=INK2, ha="right", va="center")
     ax.set_ylim(len(rows) - 0.1, -0.6)
     ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2, fontsize=7.5, frameon=False, labelcolor=INK2)
-    fig.suptitle(title, fontsize=9.5, color=INK, x=0.01, ha="left")
+    if title:
+        fig.suptitle(title, fontsize=9.5, color=INK, x=0.01, ha="left")
     fig.tight_layout()
     for ext in ("png", "pdf"):
         fig.savefig(out / f"{stem}.{ext}", dpi=200, facecolor=SURFACE)
@@ -152,12 +169,14 @@ def main(argv=None) -> int:
     ap.add_argument("--results", required=True, help="validated results.json of the same run")
     ap.add_argument("--out", required=True)
     ap.add_argument("--label", required=True)
+    ap.add_argument("--publication", action="store_true",
+                    help="manuscript layout: no in-figure titles, specification curves as 2x2 panels")
     args = ap.parse_args(argv)
     results = json.loads(Path(args.results).read_text())
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     if args.study == "1b":
-        study1b_dumbbell(results, out, args.label)
+        study1b_dumbbell(results, out, args.label, args.publication)
     else:
         if not args.run:
             ap.error("--run is required for Study 1 figures")
@@ -166,8 +185,9 @@ def main(argv=None) -> int:
         seed = (settings.get("seeds") or {}).get("verdict_bootstrap", SEEDS["verdict_bootstrap"])
         run = Run(Path(args.run))
         for cid in ("P1", "S3-256"):
-            specification_curve(run, cid, "coverage", out, args.label, reps=reps, seed=seed)
-        verdict_dumbbell(results, DUMBBELL_CLAIMS, out, args.label)
+            specification_curve(run, cid, "coverage", out, args.label, reps=reps, seed=seed,
+                                publication=args.publication)
+        verdict_dumbbell(results, DUMBBELL_CLAIMS, out, args.label, args.publication)
     print(f"figures written to {out}")
     return 0
 
