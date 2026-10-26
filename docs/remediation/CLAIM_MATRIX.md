@@ -25,7 +25,7 @@ from the materials. Results of the latest runs: `VERIFICATION.md`.
 
 | ID | Location | Text or macro (value) | Source and field | Independent check | Status |
 |---|---|---|---|---|---|
-| R1 | Abstract; Study 1 data | `\EoneNq` (9,253 confirmatory queries; 4,744 / 1,771 / 996 / 1,742) | E1 run `queries.json` lengths; `tables/data.tex` | query lists rebuilt from the data and the deterministic split (`validate_artifacts --data-root`) | PASS |
+| R1 | Abstract; Study 1 data; Limitations | `\EoneNq` (9,253 confirmatory queries; 4,744 / 1,771 / 996 / 1,742; `\EoneNqSquadtwo`, `\EoneNqCuad`) | E1 `n_queries`; E1 run `queries.json` lengths; `tables/data.tex` | query lists rebuilt from the data and the deterministic split (`validate_artifacts --data-root`) | PASS |
 | R2 | Abstract; Study 1 results; hypotheses table; Conclusion | H1 `\HOneEst` 71.1 pp [64.8, 81.9], supported | E1 `results.json` `H1` | H1 joint bootstrap and verdict rule | PASS |
 | R3 | Study 1 results | P1 shares count 78.8 % / 0.0 %, budget 7.6 % / 81.2 % | E1 `verdict_shares.P1` | Study 1 verdict shares (480 quantities) | PASS |
 | R4 | Study 1 results | H1 sensitivities 68.0, 61.5, 70.8, 69.7, 74.2 pp | E1 `H1_sensitivity` | sensitivity (a) and (b)–(e) with CIs | PASS |
@@ -42,13 +42,14 @@ from the materials. Results of the latest runs: `VERIFICATION.md`.
 | R15 | Study 1b results; hypotheses table | H5 19.4 pp [16.7, 41.7], inconclusive; 25.0 % → 5.6 % | E3 `H5` | H5 joint bootstrap, equal to the recorded values | PASS |
 | R16 | Study 1b results | H5 with 9 other seeds 21.5–24.3 pp; normal-verdict estimate 21.5 pp (post-hoc) | `posthoc.H5_seed_sensitivity`, `posthoc.normal_verdict_point_estimates` | independent checker | PASS (post-hoc) |
 | R17 | Study 1b results; hypotheses table | H5b 58.3 pp [45.1, 64.6], supported; amendment | E3 `H5b`; plan's deviation log | H5b joint bootstrap | PASS |
+| R17b | Study 1b design | exploratory pilot behind the H5b amendment: larger arm 8.3 % (count); shorter arm 31.2 % → 91.7 %; H5b formulated after its effect was observed | E3 pilot `results.json` `H5.count.support_B`, `H5b`; plan's deviation log | pilot analysis recomputed (449 fields, 0 differences); traced | PASS (exploratory) |
 | R18 | Study 1b design; chunk-length table | semantic chunk means 278–320 and 452–458 words; ≥ 92.0 % non-contiguous | E3 manifests `chunk_stats` | chunk files partition every document exactly (`validate_artifacts --data-root`) | PASS |
 | R19 | Study 1 design; Study 1b design | universe counts 768 / 576; 96 / 72; 48 / 36 | `n_universes` in E1 `verdict_shares.P1`, E3 `semantic_wins`, E3 `H5` | traced; the text's products 4×16×4×3 = 768 and 4×16×3×3 = 576 hold | PASS |
 | R20 | Answer check results | Tier 2 coverage DiD +0.089 [+0.050, +0.132] and +0.035 [+0.015, +0.060] | E2 `pooled` | Tier 2 pooled DiD | PASS |
-| R21 | Answer check results; Abstract | answer-F1 DiD −0.017 [−0.065, +0.033] and +0.004 [−0.024, +0.036], inconclusive | E2 `pooled` | Tier 2 pooled DiD | PASS |
+| R21 | Answer check results; Abstract; Conclusion | answer-F1 DiD −0.017 [−0.065, +0.033] and +0.004 [−0.024, +0.036], inconclusive; both intervals lie inside ± their MDEs (0.068, 0.044) | E2 `pooled` | Tier 2 pooled DiD; MDE comparison read off the traced values | PASS |
 | R22 | Answer check results; Abstract | P1 exact-match DiD −0.055 [−0.100, −0.010], opposite | E2 `pooled` | Tier 2 pooled DiD | PASS |
 | R23 | Answer check results | cell means 0.105 / 0.090 / 0.085 / 0.125; SQuAD F1 0.58 / 0.44 at coverage 0.88 / 0.86 | E2 `datasets.*.means`, `pooled` | Tier 2 per-dataset contrasts and cell means (236) | PASS |
-| R24 | Answer check results | MDE 0.068 (pooled SD) and 0.068 (equal-weight, post-hoc) | E2 `pooled.*.mde`, `mde_stratified` | `posthoc.tier2_mde` | PASS |
+| R24 | Answer check results | MDE = (1.96 + 0.8416) SD/√n: P1 F1 0.068 (pooled SD) and 0.068 (equal-weight, post-hoc); S3 F1 0.044 | E2 `pooled.*.mde`, `mde_stratified`; `ragmv.analyze_generation` | `posthoc.tier2_mde` | PASS |
 | R25 | Answer check results; diagnostics appendix | 65 / 400 CUAD and 2 / 400 Qasper outputs at the cap; all 1,600 generations completed | E2 `diagnostics.finish_reasons`; generation logs | log scan (1,600 rows, all `ok`) | PASS |
 | R26 | Audit | audit 19 papers; 12 fixed-count, 1 budget-matched, 3 with uncertainty; 9 exposed, 47.4 % [27.3, 68.3] | `literature/protocol_audit/coding.csv` | counts and Wilson interval recomputed from the coding by the trace | PARTIAL: no independent coding or reliability statistic |
 | R27 | Limitations; deviations appendix | 2 underfilled selections (1,880 and 1,789 words); bound: no verdict changes, H4 at most 55.9 pp (+0.5) | `budget_underfill_census.json`, `underfill_bound.json` | census over all 168 stored arrays; bound computed with the plan written first (`POSTHOC_PLAN_underfill_bound.md`) | PASS (post-hoc bound) |
@@ -75,3 +76,4 @@ from the materials. Results of the latest runs: `VERIFICATION.md`.
 | M14 | Reproducibility | identities removed from the stored runs cannot be checked; dense retrieval and generation not re-executed | `HASH_POLICY.md`; GPU not available | PASS |
 | M15 | Limitations | metrics on words, not characters as the plans state; dense arm unquantified | erratum B1; post-hoc analysis | PASS |
 | M16 | Related work; Audit | literature claims | `CITATION_SUPPORT.md` | PARTIAL: 4 uses at L3; 5 at L1 (identities of all 39 works confirmed) |
+| M17 | deviations appendix | answer check planned (two hosted readers, 200 queries, two samples) versus executed (one local reader, 50 queries); two partial runs not analyzed; the Study 1 plan file has no version block; the shorter arm oriented on the full corpus (same arm in all 24 cases); RR@10 and S5-256 not reported | `experiments/E2_generation/ANALYSIS_PLAN.md` and its log; `runs/gemini36flash-20261019`, `runs/qwen3-4b-20261019` (row counts); `research/preregistration.md`; `research/ERRATA_preregistrations.md`; orientation check in `tools/independent_stats.py` | PASS (timing as logged) |

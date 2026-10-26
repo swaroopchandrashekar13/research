@@ -13,6 +13,8 @@ Each result macro used in `manuscript/main.tex`, its value in `numbers.tex`, the
 | `\AuditN` | 19 | 19 | literature/protocol_audit/coding.csv: rows with included=yes |
 | `\AuditUncertainty` | 3 | 3 | literature/protocol_audit/coding.csv: uncertainty_reported in CI/test |
 | `\EoneNq` | 9,253 | 9,253 | experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json: sum(n_queries) |
+| `\EoneNqCuad` | 996 | 996 | experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json: n_queries.cuad |
+| `\EoneNqSquadtwo` | 4,744 | 4,744 | experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/results.json: n_queries.squad2 |
 | `\EtwoEmFiveTwelveBudget` | 0.125 | 0.125 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: mean over datasets of means['fixed-512|budget1024'].em |
 | `\EtwoEmFiveTwelveCount` | 0.090 | 0.090 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: mean over datasets of means['fixed-512|count5'].em |
 | `\EtwoEmOneTwoEightBudget` | 0.085 | 0.085 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: mean over datasets of means['fixed-128|budget1024'].em |
@@ -40,6 +42,7 @@ Each result macro used in `manuscript/main.tex`, its value in `numbers.tex`, the
 | `\EtwoSthreeFone` | +0.004 | +0.004 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: pooled.S3-256.f1.did |
 | `\EtwoSthreeFoneHi` | +0.036 | +0.036 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: pooled.S3-256.f1.hi |
 | `\EtwoSthreeFoneLo` | \ensuremath{-}0.024 | \ensuremath{-}0.024 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: pooled.S3-256.f1.lo |
+| `\EtwoSthreeFoneMde` | 0.044 | 0.044 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: pooled.S3-256.f1.mde |
 | `\EtwoTruncCuad` | 65 | 65 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: datasets.cuad.diagnostics.finish_reasons.length |
 | `\EtwoTruncQasper` | 2 | 2 | experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json: datasets.qasper.diagnostics.finish_reasons.length |
 | `\HFiveBBudget` | 91.7 | 91.7 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5b.budget_share |
@@ -47,6 +50,8 @@ Each result macro used in `manuscript/main.tex`, its value in `numbers.tex`, the
 | `\HFiveBEst` | 58.3 | 58.3 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5b.estimate |
 | `\HFiveBHi` | 64.6 | 64.6 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5b.ci95[1] |
 | `\HFiveBLo` | 45.1 | 45.1 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5b.ci95[0] |
+| `\HFiveBPilotBudget` | 91.7 | 91.7 | experiments/E3_semantic_dense/analysis/exploratory-kaggle-gpu/results.json: H5b.budget_share (exploratory pilot) |
+| `\HFiveBPilotCount` | 31.2 | 31.2 | experiments/E3_semantic_dense/analysis/exploratory-kaggle-gpu/results.json: H5b.count_share (exploratory pilot) |
 | `\HFiveBVerdict` | supported | supported | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5b.verdict |
 | `\HFiveBudgetFiveTwelve` | 5.6 | 5.6 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.budget.support_B |
 | `\HFiveCountFiveTwelve` | 25.0 | 25.0 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.count.support_B |
@@ -54,6 +59,7 @@ Each result macro used in `manuscript/main.tex`, its value in `numbers.tex`, the
 | `\HFiveHi` | 41.7 | 41.7 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.ci95[1] |
 | `\HFiveLo` | 16.7 | 16.7 | experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json: H5.ci95[0] |
 | `\HFiveNormalEst` | 21.5 | 21.5 | docs/remediation/statistical_verification.json: posthoc.normal_verdict_point_estimates.H5 (POST-HOC) |
+| `\HFivePilotCountFiveTwelve` | 8.3 | 8.3 | experiments/E3_semantic_dense/analysis/exploratory-kaggle-gpu/results.json: H5.count.support_B (exploratory pilot) |
 | `\HFiveSeedMax` | 24.3 | 24.3 | docs/remediation/statistical_verification.json: max posthoc.H5_seed_sensitivity (seeds != 7) (POST-HOC) |
 | `\HFiveSeedMin` | 21.5 | 21.5 | docs/remediation/statistical_verification.json: min posthoc.H5_seed_sensitivity (seeds != 7) (POST-HOC) |
 | `\HFiveSeedN` | 9 | 9 | docs/remediation/statistical_verification.json: number of alternative seeds (POST-HOC) |
@@ -127,4 +133,4 @@ Each result macro used in `manuscript/main.tex`, its value in `numbers.tex`, the
 | `\UnderfillWordsA` | 1,880 | 1,880 | docs/remediation/underfill_bound.json: cells[fixed-128].words |
 | `\UnderfillWordsB` | 1,789 | 1,789 | docs/remediation/underfill_bound.json: cells[fixed-256].words |
 
-122 macros used; 122 recomputed identically; 0 mismatched or untraced.
+128 macros used; 128 recomputed identically; 0 mismatched or untraced.
