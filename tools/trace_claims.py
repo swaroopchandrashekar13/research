@@ -23,7 +23,8 @@ P = {"E1": "experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/r
      "PH1": "experiments/E1_retrieval_multiverse/analysis/posthoc-charmetric-20261024",
      "PH3": "experiments/E3_semantic_dense/analysis/posthoc-charmetric-bm25-20261024",
      "SV": "docs/remediation/statistical_verification.json", "AUD": "literature/protocol_audit/coding.csv",
-     "E3RUN": "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu", "UB": "docs/remediation/underfill_bound.json"}
+     "E3RUN": "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu", "UB": "docs/remediation/underfill_bound.json",
+     "E3P": "experiments/E3_semantic_dense/analysis/exploratory-kaggle-gpu/results.json"}
 DSN = {"squad2": "Squadtwo", "covidqa": "Covidqa", "cuad": "Cuad", "qasper": "Qasper"}
 WORDS = {"128": "OneTwoEight", "256": "TwoFiveSix", "512": "FiveTwelve", "64": "SixFour"}
 
@@ -117,6 +118,10 @@ def table() -> dict[str, tuple[str, str]]:
         add(f"SfiveUniverses{prot.capitalize()}", str(sw[prot]["n_universes"]), f"{P['E3']}: semantic_wins.S5-128.{prot}.n_universes")
         add(f"PoneDenseUniverses{prot.capitalize()}", str(e3["H5"][prot]["n_universes"]), f"{P['E3']}: H5.{prot}.n_universes")
         add(f"HFive{prot.capitalize()}FiveTwelve", pct(e3["H5"][prot]["support_B"]), f"{P['E3']}: H5.{prot}.support_B")
+    e3p = j("E3P")
+    add("HFiveBPilotCount", pct(e3p["H5b"]["count_share"]), f"{P['E3P']}: H5b.count_share (exploratory pilot)")
+    add("HFiveBPilotBudget", pct(e3p["H5b"]["budget_share"]), f"{P['E3P']}: H5b.budget_share (exploratory pilot)")
+    add("HFivePilotCountFiveTwelve", pct(e3p["H5"]["count"]["support_B"]), f"{P['E3P']}: H5.count.support_B (exploratory pilot)")
     for k, key in (("f_bm25_only", "HFourBmOnly"), ("f_dense_only", "HFourDenseOnly")):
         r = e3["H4_sensitivity"][k]
         add(f"{key}Est", pct(r["estimate"]), f"{P['E3']}: H4_sensitivity.{k}.estimate")

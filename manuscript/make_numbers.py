@@ -18,6 +18,7 @@ E1 = ROOT / "experiments/E1_retrieval_multiverse/analysis/confirmatory-20261018/
 E2 = ROOT / "experiments/E2_generation/analysis/qwen3-4b-kaggle-gpu/results.json"
 E3 = ROOT / "experiments/E3_semantic_dense/analysis/confirmatory-kaggle-gpu/results.json"
 E3RUN = ROOT / "experiments/E3_semantic_dense/runs/confirmatory-kaggle-gpu"
+E3PILOT = ROOT / "experiments/E3_semantic_dense/analysis/exploratory-kaggle-gpu/results.json"
 AUDIT = ROOT / "literature/protocol_audit/coding.csv"
 OUT = ROOT / "manuscript" / "numbers.tex"
 POSTHOC_E1 = ROOT / "experiments/E1_retrieval_multiverse/analysis/posthoc-charmetric-20261024"
@@ -60,6 +61,7 @@ def main(argv=None) -> None:
     ap.add_argument("--e2", type=Path, default=E2)
     ap.add_argument("--e3", type=Path, default=E3)
     ap.add_argument("--e3-run", type=Path, default=E3RUN)
+    ap.add_argument("--e3-pilot", type=Path, default=E3PILOT)
     ap.add_argument("--audit", type=Path, default=AUDIT)
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--posthoc-e1", type=Path, default=POSTHOC_E1)
@@ -118,6 +120,9 @@ def main(argv=None) -> None:
         m[f"{key}Est"], m[f"{key}Lo"], m[f"{key}Hi"] = pp(r["estimate"]), pp(r["ci95"][0]), pp(r["ci95"][1])
         m[f"{key}Count"], m[f"{key}Budget"] = pp(r["count_share"]), pp(r["budget_share"])
     m["HFiveCountFiveTwelve"], m["HFiveBudgetFiveTwelve"] = pp(e3["H5"]["count"]["support_B"]), pp(e3["H5"]["budget"]["support_B"])
+    e3p = json.loads(args.e3_pilot.read_text())  # exploratory pilot: the observations behind the H5b amendment
+    m["HFiveBPilotCount"], m["HFiveBPilotBudget"] = pp(e3p["H5b"]["count_share"]), pp(e3p["H5b"]["budget_share"])
+    m["HFivePilotCountFiveTwelve"] = pp(e3p["H5"]["count"]["support_B"])
     for c, key in (("semantic-bp", "SemBp"), ("semantic-cl", "SemCl")):
         lens = [e3["mean_chunk_words"][d][c] for d in e3["mean_chunk_words"]]
         m[f"{key}Min"], m[f"{key}Max"] = f"{min(lens):.0f}", f"{max(lens):.0f}"

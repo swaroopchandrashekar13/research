@@ -27,7 +27,7 @@ HERE = Path(__file__).resolve().parent
 SOURCES = ["main.tex", "numbers.tex", "refs.bib"]
 AUTHOR = "Swaroop Chand J C"
 IDENTIFIERS = ("swaroop", "chand j c", "github.com", "src/ragmv", "docs/remediation", "manuscript/make_",
-               "literature/bibliography")
+               "literature/", "experiments/", "analyze_audit", "analysis_plan.md")  # names and repository paths
 
 
 def classify(log: str) -> dict:

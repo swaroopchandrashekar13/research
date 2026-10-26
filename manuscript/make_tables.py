@@ -35,7 +35,10 @@ def pct(x: float) -> str:
 
 
 def signed(x: float, fmt: str = "+.3f") -> str:
-    return f"{x:{fmt}}".replace("-", "$-$")
+    s = f"{x:{fmt}}"
+    if float(s) == 0:  # a value that rounds to zero is shown without a sign
+        s = s.lstrip("+-")
+    return s.replace("-", "$-$")
 
 
 def ci(lo: float, hi: float, scale: float = 100, fmt: str = ".1f") -> str:
@@ -180,8 +183,8 @@ def e3_tables(e3: dict) -> None:
                  pct(h5["budget"]["support_B"]), str(h5["budget"]["n_universes"])])
     write("e3_claims", "Study~1b: share of universes (\\%) supporting arm A or B per claim and protocol (confirmatory). "
           "S5/S6 pool BM25 and dense retrieval; P1-dense uses the dense retriever only. Admissible budgets "
-          "$B \\in \\{512, 1024, 2048\\}$. The S5/S6 rows are the quantity reported by semantic-chunking studies "
-          "(planned descriptive analysis g).", "tab:e3claims", "@{}llrrrrrr@{}",
+          "$B \\in \\{512, 1{,}024, 2{,}048\\}$. The S5/S6 rows give semantic-arm (not shorter-arm) shares, the "
+          "analogue of the semantic-versus-fixed comparisons in semantic-chunking studies (planned descriptive analysis g).", "tab:e3claims", "@{}llrrrrrr@{}",
           ["Claim", "A vs B", "A (count)", "B (count)", "$n$", "A (budget)", "B (budget)", "$n$"], rows,
           size="\\footnotesize", midrules={3, 6})
     names = {"main": "Main analysis (H4 as planned)", "a_bh_fdr": "(a) Benjamini--Hochberg FDR 5\\% within claim, protocol and dataset",
@@ -194,7 +197,9 @@ def e3_tables(e3: dict) -> None:
                      pct(r["budget_share"]) if "budget_share" in r else "---", pct(r["estimate"]),
                      ci(*r["ci95"]) if "ci95" in r else "---"])
     write("e3_sensitivity", "Study~1b, H4 under the planned sensitivity analyses: share of S5 universes (\\%) "
-          "supporting the shorter arm under count- and budget-matched selection, and the difference (pp; threshold 20).",
+          "supporting the shorter arm under count- and budget-matched selection, and the difference (pp; threshold 20). "
+          "Study~1b uses only the default BM25 configuration, so sensitivity (c), the default-retriever restriction, "
+          "does not apply.",
           "tab:e3sens", "@{}lrrrl@{}", ["Analysis", "Count", "Budget", "Difference", "95\\% CI"], rows, midrules={1})
 
 
@@ -220,7 +225,8 @@ def e2_tables(e2: dict) -> None:
             rows.append([cid if d == DS[0] else "", name] + cells)
         p = e2["pooled"][cid]
         rows.append(["", "Minimum detectable effect"] + [f"{p[m]['mde']:.3f}" for m, _ in meas])
-    write("e2_did", "Answer-quality check (exploratory; analysis plan in experiments/E2\\_generation/ANALYSIS\\_PLAN.md): "
+    write("e2_did", "Answer-quality check (exploratory; written analysis plan"
+          "\\artifactref{experiments/E2_generation/ANALYSIS_PLAN.md}): "
           "difference-in-differences DiD $= \\Delta(B{=}1{,}024) - \\Delta(k{=}5)$, $\\Delta$ = metric(A) $-$ "
           f"metric(B), with 95\\% bootstrap CIs ({reps_tex(e2)} resamples; pooled: stratified by dataset). The retrieval "
           "mechanism predicts DiD $> 0$; an interval that includes 0 does not establish the absence of an effect. "
@@ -260,7 +266,8 @@ def audit_table() -> None:
     write("audit", "Protocol audit: coding of each included study (provisional; see Section~\\ref{sec:audit}). "
           "Protocol: how arms are compared; Length differs: whether the compared arms produce chunks of different "
           "length; Text reported: whether the amount of retrieved text is reported; Uncertainty: for chunking "
-          "contrasts; Exposure: derived by the coding rules in \\texttt{analyze\\_audit.py}.", "tab:audit",
+          "contrasts; Exposure: derived by the audit's coding rules\\artifactref{literature/protocol_audit/analyze_audit.py}.",
+          "tab:audit",
           "@{}lllllll@{}", ["Study", "Protocol", "Length differs", "Text reported", "Uncertainty", "Metric", "Exposure"],
           rows, size="\\footnotesize", star=True)
 
