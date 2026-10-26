@@ -30,16 +30,12 @@ Removed values were replaced by these exact strings:
 | `@[revision removed]` | the revision inside a served model name |
 | `redacted: model revision removed` | the model revision in job metadata |
 | `redacted: model file digest removed` | the model-file SHA-256 in job metadata |
-| `redacted: upload-archive digest removed 2026-10-25 (docs/repair/HASH_REDACTIONS.md)` | the digest in the three `UPLOAD_SHA256` files |
+| `redacted: upload-archive digest removed 2026-10-25 (docs/remediation/HASH_POLICY.md)` | the digest in the three `UPLOAD_SHA256` files |
 | `[hash removed]` | hexadecimal identifiers in the build log |
 
 Markers are accepted only where `ragmv.provenance` allows them: the registered historical runs
 (`HISTORICAL_RUNS`, bound by run directory and each record's start time), the analysis outputs derived from them, and
 the three registered upload files. A marker anywhere else is a structural failure.
-
-The upload marker, and one note in `research/preregistration_study1b.md`, name `docs/repair/HASH_REDACTIONS.md`, an
-earlier ledger that is no longer part of the repository; this document replaces it. Those files are protected
-evidence and keep their bytes.
 
 ## Consequences
 

@@ -718,14 +718,16 @@ entries:
   # ---------- Added during the C5 novelty challenge ----------
   - key: smucker2007sigtests
     title: "A Comparison of Statistical Significance Tests for Information Retrieval Evaluation"
-    authors: ["Smucker", "Allan", "Carterette (given names not seen)"]
+    authors: ["Mark D. Smucker", "James Allan", "Ben Carterette"]
     year: 2007
     venue: "CIKM 2007"
-    id: null
+    id: "doi:10.1145/1321440.1321528"
+    doi: 10.1145/1321440.1321528
     url: https://ciir-publications.cs.umass.edu/getpdf.php?id=744
     peer_reviewed: true
-    verification: L1
-    identity_check: "2026-10-25: no primary record reachable from the verification environment (publisher, DOI and proceedings hosts blocked); identity not re-checked; content not read"
+    verification: L2
+    identity_check: "2026-10-26: identity confirmed against the Semantic Scholar record for DOI 10.1145/1321440.1321528 (title, authors, year, venue)"
+    verification_note: "2026-10-26: abstract read (Semantic Scholar record); supports the background statement only (paired significance tests compared for IR evaluation)."
     snippet_summary: "Compares paired t, Wilcoxon, sign, bootstrap and randomization tests on TREC MAP differences; little practical difference between randomization, bootstrap and t tests."
     directions: [C5]
 
@@ -1142,7 +1144,7 @@ entries:
     url: https://www.nowpublishers.com/article/Details/INR-019
     peer_reviewed: true
     verification: L1
-    identity_check: "2026-10-25: no primary record reachable from the verification environment (publisher, DOI and proceedings hosts blocked); identity not re-checked; content not read"
+    identity_check: "2026-10-26: identity confirmed against the Semantic Scholar record for the DOI (title, authors, year, venue); content not read"
     snippet_summary: >-
       Conceptual account of the probabilistic relevance framework and the ranking models derived from it: binary
       independence model, relevance feedback, BM25 and BM25F; parameter optimisation.
@@ -1218,7 +1220,7 @@ entries:
     url: https://doi.org/10.1038/s41562-020-0912-z
     peer_reviewed: true
     verification: L1
-    identity_check: "2026-10-25: no primary record reachable from the verification environment (publisher, DOI and proceedings hosts blocked); identity not re-checked; content not read"
+    identity_check: "2026-10-26: identity confirmed against the Semantic Scholar record for the DOI (title, authors, year, venue); content not read"
     snippet_summary: >-
       Results depend on arbitrary analytic choices; proposes identifying all reasonable specifications, displaying all
       results in one curve and joint inference across specifications; publisher correction in 4(11):1215.

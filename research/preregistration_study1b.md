@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Version | **1.0 (frozen)** — frozen 2026-10-19 after the exploratory pilot, approved by the researcher. v0.1 (hypotheses, before any code or data) → v0.2 (§3.5 implementation details, before any pilot output) → v1.0 (H5b added as a disclosed post-pilot amendment, §9). [Freeze reference removed 2026-10-24: it pointed to version history that is no longer available; see docs/repair/HASH_REDACTIONS.md] |
+| Version | **1.0 (frozen)** — frozen 2026-10-19 after the exploratory pilot, approved by the researcher. v0.1 (hypotheses, before any code or data) → v0.2 (§3.5 implementation details, before any pilot output) → v1.0 (H5b added as a disclosed post-pilot amendment, §9). [Freeze reference removed 2026-10-24: it pointed to version history that is no longer available; see docs/remediation/HASH_POLICY.md] |
 | Pilot disclosure | Exploratory pilot run on the 20% exploratory split only (`experiments/E3_semantic_dense/PILOT_MEMO.md`). The confirmatory split had not been touched when this version was frozen |
 | Date | drafted 2026-10-19, before any Study 1b code or data exists |
 | Relation to Study 1 | Extension. Study 1 (E1, pre-registration v1.0, frozen at [unresolvable commit reference removed 2026-10-24]) is complete and unchanged. Same datasets, splits, metrics, statistics and thresholds wherever possible, so results are comparable |

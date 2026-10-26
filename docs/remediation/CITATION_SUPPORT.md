@@ -1,13 +1,12 @@
-# Citation-support matrix (2026-10-25)
+# Citation-support matrix (2026-10-26)
 
 Every citation in `manuscript/main.tex` and `manuscript/tables/audit.tex`: what the manuscript attributes to the work,
 what was read, and whether that reading supports the attribution. Identity (title, authors, year, venue) was checked
-against primary records with `tools/verify_bib_identity.py` (`literature/identity_checks/2026-10-25.md`): 36 of the
-39 cited works were confirmed; for the other 3 no primary record was reachable (DOI resolvers, publishers, Crossref
-and Semantic Scholar were blocked or rate-limited from the checking environment). Verification levels are those of
-`literature/bibliography.yaml` (L1 identity from a secondary record; L2 abstract or the relevant sections read; L3 read
-in full for the claim). Entries below L3 carry a visible "[Verification Lx: not yet read in full]" note in the
-reference list.
+against ACL Anthology, arXiv and Semantic Scholar records with `tools/verify_bib_identity.py`
+(`literature/identity_checks/2026-10-25.md` and `2026-10-26.md`): all 39 cited works were confirmed. Verification
+levels are those of `literature/bibliography.yaml` (L1 identity confirmed, content not read; L2 abstract or the
+relevant sections read; L3 read in full for the claim). DOI resolvers, publishers and preprint servers other than
+arXiv were not reachable from the checking environment, so the classical references below could not be read.
 
 Status: **PASS** the attribution is supported by what was read; **PARTIAL** consistent with the abstract or the
 sections read, full text not read; **UNVERIFIED** not read beyond the bibliographic record.
@@ -16,35 +15,35 @@ sections read, full text not read; **UNVERIFIED** not read beyond the bibliograp
 
 | # | Location | Attributed to the work | Key | Level | Identity | What was read | Status |
 |---|---|---|---|---|---|---|---|
-| C1 | §1 Introduction | RAG combines a language model with retrieved material | `lewis2020rag` | L2 | ok (arXiv) | abstract | PARTIAL |
-| C2 | §1 | (same, survey) | `gao2023ragsurvey` | L2 | ok (arXiv) | abstract | PARTIAL |
-| C3 | §1 | multiverse analysis evaluates a declared grid of settings | `steegen2016multiverse` | L1 | ok (Semantic Scholar) | record only | UNVERIFIED |
-| C4 | §2 Related work | fixed-size chunks in long-document retrieval | `bhat2025chunksize` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
-| C5 | §2 | financial-report chunking as an alternative to uniform segmentation | `jimenoyepes2024financial` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
-| C6 | §2 | LumberChunker, same | `duarte2024lumberchunker` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
-| C7 | §2 | late chunking changes when chunk representations are formed | `gunther2024latechunking` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
-| C8 | §2 | close reference for the semantic-chunking extension (fixed chunks of consecutive sentences, breakpoint thresholds, clustering) | `qu2025semanticchunking` | L3 | ok (ACL Anthology) | full text, appendices A–E | PASS |
-| C9 | §2 | MoC holds average chunk length consistent across methods | `moc2025` | L3 | ok (arXiv) | full main text, App. A.1–A.2 (quoted: "consistent average chunk length of 178") | PASS |
-| C10 | §2 | HiChunk limits retrieved context by a token budget, not a chunk count | `hichunk2025` | L3 | ok (arXiv) | full main text (§5.3: 4,096-token limit "for a fair comparison"; §5.6: 2k–4k budgets) | PASS |
-| C11 | §2 | BERGEN organizes RAG evaluation around retrieval, generation and scoring choices | `rau2024bergen` | L2 | ok (ACL Anthology) | abstract, the authors' slide deck | PARTIAL |
-| C12 | §2 | a single answer metric can be an incomplete measure of correctness | `kamalloo2023evaluating` | L2 | ok (ACL Anthology) | abstract | PARTIAL |
-| C13 | §2 | multiverse analysis exposes dependence on analytical choices | `steegen2016multiverse` | L1 | ok | record only | UNVERIFIED |
-| C14 | §2 | specification-curve analysis, same | `simonsohn2020speccurve` | L1 | no primary record reachable | record only | UNVERIFIED |
-| C15 | §2 | the dependence is studied in machine learning | `bell2022multiverse` | L2 | ok (arXiv) | abstract | PARTIAL |
-| C16 | §2 | reporting expected performance as a function of the computation budget changes what a comparison can establish | `dodge2019showyourwork` | L2 | ok (ACL Anthology) | abstract | PARTIAL |
-| C17 | §2 | significance testing in IR motivates the paired design | `smucker2007sigtests` | L1 | no primary record reachable | record only | UNVERIFIED |
-| C18 | §2 | same | `urbano2019sigtesting` | L2 | ok (arXiv; ACM reference and DOI from the authors' version) | abstract, first page | PARTIAL |
-| C19 | §2 | uncertainty in language-model evaluation, power planning | `miller2024errorbars` | L2 | ok (arXiv) | abstract | PARTIAL |
-| C20 | §3 Data | SQuAD 2.0 | `rajpurkar2018squad2` | L2 | ok (ACL Anthology) | abstract; dataset properties checked on the data | PASS (attribution) |
-| C21 | §3 | COVID-QA | `moller2020covidqa` | L2 | ok (ACL Anthology) | abstract; dataset properties checked on the data | PASS (attribution) |
-| C22 | §3 | CUAD | `hendrycks2021cuad` | L2 | ok (arXiv) | abstract; dataset properties checked on the data | PASS (attribution) |
-| C23 | §3 | Qasper | `dasigi2021qasper` | L2 | ok (ACL Anthology) | abstract; dataset properties checked on the data | PASS (attribution) |
-| C24 | §3 Retrieval | BM25 | `robertson2009bm25` | L1 | no primary record reachable | record only | UNVERIFIED |
-| C25 | §3 | `bm25s` 0.2.13 is the BM25 library used | `lu2024bm25s` | L2 | ok (arXiv) | abstract; version from the pinned requirements | PASS (attribution) |
-| C26 | §4 Analysis | Benjamini–Hochberg adjustment | `benjamini1995fdr` | L1 | ok (Semantic Scholar) | record only | UNVERIFIED |
-| C27 | §5 Study 1b | the positional–semantic distance of Qu et al. | `qu2025semanticchunking` | L3 | ok | full text (Eqs. 1–3; stop at 0.5; cap by a sentence count from the target number of chunks) | PASS |
-| C28 | §5 | BGE-M3 dense retrieval | `chen2024bgem3` | L2 | ok (ACL Anthology) | abstract; model pinned in code | PASS (attribution) |
-| C29 | §6 Tier 2 | Qwen3-4B reader | `qwen2025qwen3` | L2 | ok (arXiv) | abstract; model pinned in code | PASS (attribution) |
+| C1 | Introduction | RAG combines a language model with retrieved material | `lewis2020rag` | L2 | ok (arXiv) | abstract | PARTIAL |
+| C2 | Introduction | (same, survey) | `gao2023ragsurvey` | L2 | ok (arXiv) | abstract | PARTIAL |
+| C3 | Introduction | multiverse analysis evaluates a declared grid of settings | `steegen2016multiverse` | L1 | ok (Semantic Scholar) | record only | UNVERIFIED |
+| C4 | Related work | fixed-size chunks in long-document retrieval | `bhat2025chunksize` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
+| C5 | Related work | financial-report chunking as an alternative to uniform segmentation | `jimenoyepes2024financial` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
+| C6 | Related work | LumberChunker, same | `duarte2024lumberchunker` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
+| C7 | Related work | late chunking changes when chunk representations are formed | `gunther2024latechunking` | L2 | ok (arXiv) | abstract, experimental setup | PARTIAL |
+| C8 | Related work | close reference for the semantic-chunking extension (fixed chunks of consecutive sentences, breakpoint thresholds, clustering) | `qu2025semanticchunking` | L3 | ok (ACL Anthology) | full text, appendices A–E | PASS |
+| C9 | Related work | MoC holds average chunk length consistent across methods | `moc2025` | L3 | ok (arXiv) | full main text, App. A.1–A.2 (quoted: "consistent average chunk length of 178") | PASS |
+| C10 | Related work | HiChunk limits retrieved context by a token budget, not a chunk count | `hichunk2025` | L3 | ok (arXiv) | full main text (§5.3: 4,096-token limit "for a fair comparison"; §5.6: 2k–4k budgets) | PASS |
+| C11 | Related work | BERGEN organizes RAG evaluation around retrieval, generation and scoring choices | `rau2024bergen` | L2 | ok (ACL Anthology) | abstract, the authors' slide deck | PARTIAL |
+| C12 | Related work | a single answer metric can be an incomplete measure of correctness | `kamalloo2023evaluating` | L2 | ok (ACL Anthology) | abstract | PARTIAL |
+| C13 | Related work | multiverse analysis exposes dependence on analytical choices | `steegen2016multiverse` | L1 | ok | record only | UNVERIFIED |
+| C14 | Related work | specification-curve analysis, same | `simonsohn2020speccurve` | L1 | ok (Semantic Scholar) | record only | UNVERIFIED |
+| C15 | Related work | the dependence is studied in machine learning | `bell2022multiverse` | L2 | ok (arXiv) | abstract | PARTIAL |
+| C16 | Related work | reporting expected performance as a function of the computation budget changes what a comparison can establish | `dodge2019showyourwork` | L2 | ok (ACL Anthology) | abstract | PARTIAL |
+| C17 | Related work | significance testing in IR motivates the paired design | `smucker2007sigtests` | L2 | ok (Semantic Scholar) | abstract (paired tests compared on TREC runs) | PARTIAL |
+| C18 | Related work | same | `urbano2019sigtesting` | L2 | ok (arXiv; ACM reference and DOI from the authors' version) | abstract, first page | PARTIAL |
+| C19 | Related work | uncertainty in language-model evaluation, power planning | `miller2024errorbars` | L2 | ok (arXiv) | abstract | PARTIAL |
+| C20 | Study 1 data | SQuAD 2.0 | `rajpurkar2018squad2` | L2 | ok (ACL Anthology) | abstract; dataset properties checked on the data | PASS (attribution) |
+| C21 | Study 1 data | COVID-QA | `moller2020covidqa` | L2 | ok (ACL Anthology) | abstract; dataset properties checked on the data | PASS (attribution) |
+| C22 | Study 1 data | CUAD | `hendrycks2021cuad` | L2 | ok (arXiv) | abstract; dataset properties checked on the data | PASS (attribution) |
+| C23 | Study 1 data | Qasper | `dasigi2021qasper` | L2 | ok (ACL Anthology) | abstract; dataset properties checked on the data | PASS (attribution) |
+| C24 | Study 1 design | BM25 | `robertson2009bm25` | L1 | ok (Semantic Scholar) | record only | UNVERIFIED |
+| C25 | Study 1 design | `bm25s` 0.2.13 is the BM25 library used | `lu2024bm25s` | L2 | ok (arXiv) | abstract; version from the pinned requirements | PASS (attribution) |
+| C26 | Study 1 analysis plan | Benjamini–Hochberg adjustment | `benjamini1995fdr` | L1 | ok (Semantic Scholar) | record only | UNVERIFIED |
+| C27 | Study 1b design | the positional–semantic distance of Qu et al. | `qu2025semanticchunking` | L3 | ok | full text (Eqs. 1–3; stop at 0.5; cap by a sentence count from the target number of chunks) | PASS |
+| C28 | Study 1b design | BGE-M3 dense retrieval | `chen2024bgem3` | L2 | ok (ACL Anthology) | abstract; model pinned in code | PASS (attribution) |
+| C29 | Answer check setup | Qwen3-4B reader | `qwen2025qwen3` | L2 | ok (arXiv) | abstract; model pinned in code | PASS (attribution) |
 
 C16 was checked against the abstract ("expected validation performance of the best-found model as a function of
 computation budget"; comparisons "would have reached a different conclusion if they had used more (or less)
@@ -83,7 +82,8 @@ The re-check of the three L3 records was a second reading by the same kind of co
 
 ## 3. Open items
 
-- Read in full (L3) the works cited for specific claims at L1/L2, in particular C3/C13, C14, C17, C24 and C26
-  (classical method references whose primary records were unreachable here) and C16.
+- The five L1 uses (C3/C13, C14, C24, C26) attribute standard methods by name (multiverse analysis, specification-curve
+  analysis, BM25, Benjamini–Hochberg); their identities are confirmed but their text could not be reached from here.
+  Reading them, and C16 in full, would raise these entries to L3.
 - Independent blind second coding of the 19 audit records and a reliability statistic (Cohen's κ); no codes or κ
   values have been invented.

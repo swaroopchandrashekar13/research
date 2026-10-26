@@ -1,4 +1,4 @@
-# Manuscript claim matrix (2026-10-25)
+# Manuscript claim matrix (2026-10-26)
 
 Entry point: `manuscript/main.tex`, which inputs `numbers.tex` (generated result macros), `tables/*.tex` (generated
 tables), `figures/*.pdf` (generated figures) and `refs.bib` (generated from `literature/bibliography.yaml`). Two
@@ -50,7 +50,7 @@ from the materials. Results of the latest runs: `VERIFICATION.md`.
 | R23 | Answer check results | cell means 0.105 / 0.090 / 0.085 / 0.125; SQuAD F1 0.58 / 0.44 at coverage 0.88 / 0.86 | E2 `datasets.*.means`, `pooled` | Tier 2 per-dataset contrasts and cell means (236) | PASS |
 | R24 | Answer check results | MDE 0.068 (pooled SD) and 0.068 (equal-weight, post-hoc) | E2 `pooled.*.mde`, `mde_stratified` | `posthoc.tier2_mde` | PASS |
 | R25 | Answer check results; diagnostics appendix | 65 / 400 CUAD and 2 / 400 Qasper outputs at the cap; all 1,600 generations completed | E2 `diagnostics.finish_reasons`; generation logs | log scan (1,600 rows, all `ok`) | PASS |
-| R26 | Audit | audit 19 papers; 12 fixed-count, 1 budget-matched, 3 with uncertainty; 9 exposed, 47.4 % [27.3, 68.3] | `literature/protocol_audit/coding.csv` | counts and Wilson interval recomputed from the coding by the trace | PARTIAL: single coder, no reliability statistic |
+| R26 | Audit | audit 19 papers; 12 fixed-count, 1 budget-matched, 3 with uncertainty; 9 exposed, 47.4 % [27.3, 68.3] | `literature/protocol_audit/coding.csv` | counts and Wilson interval recomputed from the coding by the trace | PARTIAL: no independent coding or reliability statistic |
 | R27 | Limitations; deviations appendix | 2 underfilled selections (1,880 and 1,789 words); bound: no verdict changes, H4 at most 55.9 pp (+0.5) | `budget_underfill_census.json`, `underfill_bound.json` | census over all 168 stored arrays; bound computed with the plan written first (`POSTHOC_PLAN_underfill_bound.md`) | PASS (post-hoc bound) |
 | R28 | Post-hoc appendix | character-metric sensitivity: 965 of 24,960 Study 1 universe verdicts change, no hypothesis verdict changes; 85,275,648 and 1,665,540 stored elements reproduced | posthoc analyses and `selection_equivalence.json` | BM25 re-executed from the data; dense arm not covered | PARTIAL: BM25 only |
 | R29 | all tables and figures | every table cell and plotted coordinate | the result files above | regenerated and compared (0 differences) | PASS |
@@ -70,8 +70,8 @@ from the materials. Results of the latest runs: `VERIFICATION.md`.
 | M9 | implementation appendix | code pins bge-m3 revision `5617a9f61b02` and the Qwen3-4B GGUF file revision `bc640142` with its SHA-256; the runs' own records of these are not part of the materials | `src/ragmv/dense.py`, `src/ragmv/generate.py`; `HASH_POLICY.md` | PASS (the stored runs' model identity is UNVERIFIED) |
 | M10 | Study 1 analysis plan; Study 1b design; Limitations | the timing of the plans cannot be verified; no claim about it is made | original version history unavailable | PASS |
 | M11 | deviations appendix | deviations as logged (timing as the logs record it) | plans' deviation logs; `research/ERRATA_preregistrations.md` | PARTIAL: timing UNVERIFIED |
-| M12 | Audit | audit coded by a single coder (an AI research assistant); candidate frame partly unlogged (4 of 19 from logged searches) | `coding.csv` (`coder`), `literature/search_log.md` | PASS |
+| M12 | Audit | audit provisional: no blind independent coding, no reliability coefficient; candidate frame partly unlogged (4 of 19 from logged searches) | `coding.csv` (its `coder` column records who coded), `literature/search_log.md` | PASS |
 | M13 | Reproducibility | every stored statistic recomputed with no difference; principal results recomputed independently | compare (E1 975, E3 449, E2 639 fields identical); independent checks | PASS |
 | M14 | Reproducibility | identities removed from the stored runs cannot be checked; dense retrieval and generation not re-executed | `HASH_POLICY.md`; GPU not available | PASS |
 | M15 | Limitations | metrics on words, not characters as the plans state; dense arm unquantified | erratum B1; post-hoc analysis | PASS |
-| M16 | Related work; Audit | literature claims | `CITATION_SUPPORT.md` | PARTIAL: 4 claims at L3; 6 at L1 |
+| M16 | Related work; Audit | literature claims | `CITATION_SUPPORT.md` | PARTIAL: 4 uses at L3; 5 at L1 (identities of all 39 works confirmed) |

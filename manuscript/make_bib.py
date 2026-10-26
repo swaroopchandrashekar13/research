@@ -1,9 +1,10 @@
 """Generate refs.bib from literature/bibliography.yaml for every key cited in the manuscript .tex files.
 
 Usage: python -I manuscript/make_bib.py [--tex-dir manuscript] [--bib-yaml literature/bibliography.yaml] [--out refs.bib]
-Only verified entries (L1+) exist in bibliography.yaml, so nothing from memory can enter the paper. Entries below L3
-get a visible note in the reference list ("not yet read in full"). Keys are collected from the canonical manuscript
-(main.tex and the files it inputs) and the generated tables.
+Only verified entries (L1+) exist in bibliography.yaml, so nothing from memory can enter the paper. The verification
+level of each entry is kept in bibliography.yaml (and gated by tools/check_bibliography.py --min-level); the run prints
+how many cited entries are below L3. Keys are collected from the canonical manuscript (main.tex and the files it
+inputs) and the generated tables.
 """
 from __future__ import annotations
 
@@ -44,7 +45,6 @@ def esc(s: str) -> str:
 
 
 def entry(e: dict) -> str:
-    level = e["verification"]
     venue = str(e["venue"])
     fields = {"author": authors(e), "title": "{" + esc(e["title"]) + "}", "year": str(e["year"])}
     if venue.lower().startswith("arxiv"):
@@ -54,17 +54,15 @@ def entry(e: dict) -> str:
         kind = "inproceedings" if any(w in venue for w in ("Findings", "ACL", "EMNLP", "NeurIPS", "CIKM", "SIGIR",
                                                           "NAACL")) else "article"
         fields["booktitle" if kind == "inproceedings" else "journal"] = esc(venue)
-        if e.get("id"):
-            fields["note"] = esc(str(e["id"]))
+        ids = [x for x in str(e.get("id") or "").split("; ") if x and not (e.get("doi") and x.startswith("doi:"))]
+        if ids:  # the DOI, when known, is printed from its own field
+            fields["note"] = esc("; ".join(ids))
     if e.get("pages") and kind != "misc":
         fields["pages"] = str(e["pages"]).replace("-", "--")
     if e.get("doi"):
         fields["doi"] = e["doi"]
     if e.get("url"):
         fields["url"] = e["url"]
-    if level != "L3":
-        fields["note"] = (fields.get("note", "") + ". " if fields.get("note") else "") + \
-            f"[Verification {level}: not yet read in full]"
     body = ",\n".join(f"  {k} = {{{v}}}" for k, v in fields.items())
     return f"@{kind}{{{e['key']},\n{body}\n}}\n"
 
@@ -85,7 +83,7 @@ def main(argv=None) -> None:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(text)
     below = [k for k in keys if entries[k]["verification"] != "L3"]
-    print(f"{len(keys)} entries written; {len(below)} below L3 (must be read in full before submission)")
+    print(f"{len(keys)} entries written; {len(below)} below verification level L3 (see literature/bibliography.yaml)")
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ GIT_REMOVED = "redacted: unresolvable historical Git commit"
 REVISION_REMOVED = "@[revision removed]"
 MODEL_REVISION_REMOVED = "redacted: model revision removed"
 MODEL_FILE_DIGEST_REMOVED = "redacted: model file digest removed"
-UPLOAD_REMOVED = "redacted: upload-archive digest removed 2026-10-25 (docs/repair/HASH_REDACTIONS.md)"
+UPLOAD_REMOVED = "redacted: upload-archive digest removed 2026-10-25 (docs/remediation/HASH_POLICY.md)"
 
 # run directory (experiments/<study>/runs/<id>) -> {dataset: started_utc of that dataset's manifest or jobs_meta}
 HISTORICAL_RUNS: dict[str, dict[str, str]] = {

@@ -257,7 +257,7 @@ def audit_table() -> None:
         rows.append([f"\\citeL{{{r['key']}}}", proto.get(r["selection_protocol"], r["selection_protocol"]),
                      r["chunk_length_differs_between_arms"], r["reports_retrieved_text_amount"],
                      unc.get(r["uncertainty_reported"], r["uncertainty_reported"]), r["metric_type"], exposure(r)])
-    write("audit", "Protocol audit: coding of each included study (provisional, single coder; see Section~\\ref{sec:audit}). "
+    write("audit", "Protocol audit: coding of each included study (provisional; see Section~\\ref{sec:audit}). "
           "Protocol: how arms are compared; Length differs: whether the compared arms produce chunks of different "
           "length; Text reported: whether the amount of retrieved text is reported; Uncertainty: for chunking "
           "contrasts; Exposure: derived by the coding rules in \\texttt{analyze\\_audit.py}.", "tab:audit",

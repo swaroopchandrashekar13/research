@@ -1,0 +1,70 @@
+{
+ "checked": "2026-10-26",
+ "results": {
+  "robertson2009bm25": {
+   "source": "Semantic Scholar DOI:10.1561/1500000019",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "S. Robertson",
+    "H. Zaragoza"
+   ],
+   "record_year": 2009,
+   "year_gap": 0,
+   "record_venue": "Foundations and Trends in Information Retrieval",
+   "record_pages": null,
+   "record_ids": {
+    "MAG": "2155482025",
+    "DBLP": "journals/ftir/RobertsonZ09",
+    "DOI": "10.1561/1500000019",
+    "CorpusId": 207178704
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "simonsohn2020speccurve": {
+   "source": "Semantic Scholar DOI:10.1038/s41562-020-0912-z",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "U. Simonsohn",
+    "J. Simmons",
+    "Leif D. Nelson"
+   ],
+   "record_year": 2020,
+   "year_gap": 0,
+   "record_venue": "Nature Human Behaviour",
+   "record_pages": null,
+   "record_ids": {
+    "MAG": "3044225844",
+    "DOI": "10.1038/s41562-020-0912-z",
+    "CorpusId": 220810602,
+    "PubMed": "32719546"
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  },
+  "smucker2007sigtests": {
+   "source": "Semantic Scholar DOI:10.1145/1321440.1321528",
+   "title_similarity": 1.0,
+   "first_author_match": true,
+   "record_authors": [
+    "Mark D. Smucker",
+    "James Allan",
+    "Ben Carterette"
+   ],
+   "record_year": 2007,
+   "year_gap": 0,
+   "record_venue": "International Conference on Information and Knowledge Management",
+   "record_pages": null,
+   "record_ids": {
+    "MAG": "1990190154",
+    "DBLP": "conf/cikm/SmuckerAC07",
+    "DOI": "10.1145/1321440.1321528",
+    "CorpusId": 5893582
+   },
+   "authors_in_yaml_complete": true,
+   "identity_ok": true
+  }
+ }
+}
