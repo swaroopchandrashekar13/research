@@ -374,6 +374,7 @@ entries:
   - key: chunkingcost2026
     title: "Chunking Methods on Retrieval-Augmented Generation - Effectiveness Evaluation Against Computational Cost and Limitations"
     authors: ["Mateusz Śmigielski", "Michał Rajkowski", "Mateusz Zbrocki", "Michał Bernacki-Janson", "Karol Kunicki", "Julianna Godziszewska", "Maciej Piasecki", "Konrad Wojtasik"]
+    bibtex_authors: ["{\\'{S}}migielski, Mateusz", "Rajkowski, Michał", "Zbrocki, Mateusz", "Bernacki-Janson, Michał", "Kunicki, Karol", "Godziszewska, Julianna", "Piasecki, Maciej", "Wojtasik, Konrad"]  # surname order for sorting
     year: 2026
     venue: arXiv
     id: "arXiv:2606.00881"
@@ -388,6 +389,7 @@ entries:
   - key: pdfparsingfin2026
     title: "Empirical Evaluation of PDF Parsing and Chunking for Financial Question Answering with RAG"
     authors: ["Omar El Bachyr", "Yewei Song", "Saad Ezzini", "Jacques Klein", "Tegawendé F. Bissyandé", "Anas Zilali", "Ulrick Ble", "Anne Goujon"]
+    bibtex_authors: ["El Bachyr, Omar", "Song, Yewei", "Ezzini, Saad", "Klein, Jacques", "Bissyandé, Tegawendé F.", "Zilali, Anas", "Ble, Ulrick", "Goujon, Anne"]  # surname order for sorting
     year: 2026
     venue: arXiv
     id: "arXiv:2604.12047"
@@ -807,6 +809,7 @@ entries:
   - key: garrido2026chunksize
     title: "The Effect of Text Chunk Size on Retrieval-Augmented Generation Performance"
     authors: ["German Garrido-Lestache Belinchon", "Hugo Garrido-Lestache Belinchon"]
+    bibtex_authors: ["Garrido-Lestache Belinchon, German", "Garrido-Lestache Belinchon, Hugo"]  # surname order for sorting
     year: 2026
     venue: arXiv
     id: "arXiv:2607.24767"
@@ -950,6 +953,7 @@ entries:
   - key: jimenoyepes2024financial
     title: "Financial Report Chunking for Effective Retrieval Augmented Generation"
     authors: ["Antonio Jimeno Yepes", "Yao You", "Jan Milczek", "Sebastian Laverde", "Renyu Li"]
+    bibtex_authors: ["Jimeno Yepes, Antonio", "You, Yao", "Milczek, Jan", "Laverde, Sebastian", "Li, Renyu"]  # surname order for sorting
     year: 2024
     venue: arXiv
     id: "arXiv:2402.05131"
