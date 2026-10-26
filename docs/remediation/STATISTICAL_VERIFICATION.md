@@ -16,7 +16,7 @@ read were checked against `PROTECTED_SHA256.txt`.
 | E2 analysed run (Tier 2) | 639 | 0 | 0 | 0 |
 | E3 pilot (exploratory) | 449 | 0 | 0 | 0 |
 | E1 pilot (exploratory) | 967 | **8** | 0 | 0 |
-| E1 post-hoc character-metric analyses (3) | 1,002 each | 0 | 0 | — (new BM25 execution) |
+| E1 post-hoc character-metric analyses (3) | 993 each | 0 | 0 | — (new BM25 execution; only metadata differ: run times and validation notes) |
 
 **E1 pilot.** The 8 differing fields are bounds of the H1 sensitivity intervals (b)–(e) (largest difference 1.85
 points, the lower bound of the document-cluster interval); every point estimate, every verdict and all other fields

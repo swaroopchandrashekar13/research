@@ -59,7 +59,7 @@ copy) ran the full pipeline below.
 | Bibliography / metadata | `tools/check_bibliography.py`, `tools/check_release_metadata.py` | 88 entries (L1 53, L2 32, L3 3); 0 failures, 2 notes (no ORCID iD, no DOI) |
 | Recompute E1, E3, E2 | `ragmv.analyze`, `ragmv.analyze1b`, `ragmv.analyze_generation` into new directories; `tools/compare_results.py --inputs-against` | 975, 449, 639 fields identical; 0 different; 0 input mismatches (again from the package) |
 | Recompute pilots | same, E1 and E3 pilot runs | E3: 449 identical; E1: 967 identical, **8 different** (exit 1, explained in `STATISTICAL_VERIFICATION.md`) |
-| Post-hoc re-execution | `ragmv.posthoc study1`, `study1b`; three POSTHOC analyses; both summary tools | exit 0; all stored scores and word counts reproduced; analyses (1,002 fields each) and summaries equal the committed ones |
+| Post-hoc re-execution | `ragmv.posthoc study1`, `study1b`; three POSTHOC analyses; both summary tools | exit 0; all stored scores and word counts reproduced; analyses (993 fields identical each; only metadata differ: run times and validation notes) and summaries equal the committed ones |
 | Independent statistics | `tools/independent_stats.py` | 22 of 22 PASS; output equals `statistical_verification.json` |
 | Census and bound | `tools/budget_underfill_census.py`, `tools/underfill_bound.py` | equal to the committed records |
 | Claims | `tools/trace_claims.py` | 128 of 128 macros |
